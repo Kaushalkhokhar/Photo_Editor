@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block navbar %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        Image Processing
+        </a>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Link 1</a>
+        <a class="dropdown-item" href="#">Link 2</a>
+        <a class="dropdown-item" href="#">Link 3</a>
+    </div>            
+    </li>
+{% endblock navbar %}
+
+{% block content %}
+    <center>
+    <div class="card" style="width: 30rem;">
+        <img class="img-rounded" src="{{ url_for('show', filename=image_name)}}" alt="Image">
+        <div class="card-body">
+            <p class="card-text">You can apply a different filters using image processing icon on navigation bar.
+                Click on a given link and ckech the result</p>
+        </div>
+    </div>
+    </center>
+{% endblock content %}

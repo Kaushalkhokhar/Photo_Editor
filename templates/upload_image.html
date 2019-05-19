@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form action="" method="POST">
+        {{ form.csrf_token }}        
+        <fieldset>
+            <legend>Upload Image</legend>
+            <div>
+                {{ form.image.label(class="form-control-label") }}
+
+                {% if form.image.errors %}
+                    {{ form.image(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.image.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.image(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit }}
+        </div>
+    </form>
+{% endblock content %}
