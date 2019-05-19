@@ -13,14 +13,13 @@
 {% endblock navbar %}
 
 {% block content %}
-   
     <center>
     <div class="card" style="width: 30rem;">
-        <img class="img-rounded" src="{{ url_for('show', filename=image_name) }}" alt="Image">
+        <img class="img-rounded" src="{{ url_for('processed_image', filename=image_name) }}" alt="Image">
         <div class="card-body">
-            <p class="card-text">You can apply a different filters using image processing icon on navigation bar.
-                Click on a given link and ckech the result</p>
+            <p class="card-text">You are seeing the filterd Image. It shows 2d Convoled image with simple 5x5 averaging filter kernel</p>
         </div>
     </div>
     </center>
 {% endblock content %}
+
