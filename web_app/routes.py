@@ -1,8 +1,11 @@
 import os
 import shutil
+import random
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
+from bokeh.embed import components
 from web_app import app, target, APP_ROOT, processed_target
 from web_app.image_processing import image_operations
+from web_app.chart import chart_layout
 
 """APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'Images/') #To create path for storing image in local directory"""
@@ -94,6 +97,27 @@ def processing(filename, method):
 @app.route('/processed/<filename>', methods=['GET', 'POST'])
 def processed_image(filename):                   
     return send_from_directory('processed_images', filename)
+
+@app.route("/chart/<int:bars_count>/")
+def chart(bars_count):
+    if bars_count <= 0:
+        bars_count = 1   
+
+    data = {"days": [], "bugs": [], "costs": []}
+    for i in range(1, bars_count + 1):
+        data['days'].append(i)
+        data['bugs'].append(random.randint(1,100))
+        data['costs'].append(random.uniform(1.00, 1000.00))
+
+    chart_class = chart_layout()   
+
+    hover = chart_class.create_hover_tool()
+    plot = chart_class.create_bar_chart(data, "Bugs found per day", "days",
+                            "bugs", hover)
+    script, div = components(plot)
+
+    return render_template("chart.html", bars_count=bars_count,
+                           the_div=div, the_script=script)
 
 @app.route('/bootstrap', methods=['GET', 'POST'])
 def bootstrap():        
