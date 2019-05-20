@@ -5,9 +5,11 @@
         Image Processing
         </a>
     <div class="dropdown-menu">
-        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name) }}">Link 1</a>
-        <a class="dropdown-item" href="#">Link 2</a>
-        <a class="dropdown-item" href="#">Link 3</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method1) }}">Convolution</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method2) }}">Averaging</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method3) }}">Gaussian Blur</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method4) }}">Median Blur</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method5) }}">Bilateral Blur</a>
     </div>            
     </li>
 {% endblock navbar %}
