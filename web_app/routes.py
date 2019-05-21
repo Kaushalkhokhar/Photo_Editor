@@ -1,11 +1,17 @@
-import os
+import os, cv2
 import shutil
 import random
+import numpy as np
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
 from web_app import app, target, APP_ROOT, processed_target
 from web_app.image_processing import image_operations
-from web_app.chart import chart_layout
+from bokeh.plotting import figure, show, output_file, save
+from bokeh.models import ColumnDataSource
+from bokeh.models.glyphs import VBar
+from bokeh.embed import components
+from web_app.histogram import histogram_plot
+
 
 """APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'Images/') #To create path for storing image in local directory"""
@@ -48,7 +54,7 @@ def upload_image():
             file.save(destination)        
         
         # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
-        return render_template('upload.html', image_name=filename, method1=method1, method2=method2, \
+        return render_template('upload.html', filename=filename, method1=method1, method2=method2, \
                                 method3=method3, method4=method4, method5=method5) # In this filename will be the name of image file which is uploaded last in all files
 
 @app.route('/upload/<filename>', methods=['GET', 'POST'])
@@ -71,55 +77,61 @@ def processing(filename, method):
     method2 = "averaging"
     method3 = "gaussian_blur"
     method4 = "median_blur"
-    method5 = "bilateral_blur"
+    method5 = "bilateral_blur"     
 
     #processing the image based on reference link and method attached to that link
     if method ==  "convolution":
         convo = image_operations()      
-        filename = convo.convolution(plotting=False)
-    elif method ==  "averaging":
+        filename = convo.convolution(plotting=False)       
+    elif method ==  "averaging":        
         avrg = image_operations()   
-        filename = avrg.averaging(plotting=False)    
+        filename = avrg.averaging(plotting=False)           
     elif method ==  "gaussian_blur":
         gblur = image_operations()      
         filename = gblur.gaussian_blur(plotting=False)
     elif method ==  "median_blur":    
         mblur = image_operations()
-        filename = mblur.median_blur(plotting=False)    
+        filename = mblur.median_blur(plotting=False)
     elif method ==  "bilateral_blur":    
         bblur = image_operations()
         filename = bblur.bilateral_blur(plotting=False)
     
     # we need to store processed file in our static folder then we can render by giving filename qual to our processed file 
-    return render_template('processing.html', image_name=filename, method1=method1, method2=method2, \
+    return render_template('processing.html', filename=filename, method1=method1, method2=method2, \
                                 method3=method3, method4=method4, method5=method5)
 
 @app.route('/processed/<filename>', methods=['GET', 'POST'])
 def processed_image(filename):                   
-    return send_from_directory('processed_images', filename)
+    return send_from_directory('processed_images', filename=filename)
 
-@app.route("/chart/<int:bars_count>/")
-def chart(bars_count):
+@app.route('/load_chart/<filename>', methods=['GET', 'POST'])
+def load_chart(filename):
+
+    script, div, method = histogram_plot()        
+    return render_template('histogram.html', scripts=script, div=div, filename=filename, method=method)
+
+
+
+
+@app.route('/testing', methods=['GET', 'POST'])
+def testing():
+    """
     if bars_count <= 0:
         bars_count = 1   
 
-    data = {"days": [], "bugs": [], "costs": []}
+    data = {"days": [], "bugs": [], "bugs_2": [],"costs": []}
     for i in range(1, bars_count + 1):
         data['days'].append(i)
         data['bugs'].append(random.randint(1,100))
+        data['bugs_2'].append(random.randint(1,100))
         data['costs'].append(random.uniform(1.00, 1000.00))
 
     chart_class = chart_layout()   
 
     hover = chart_class.create_hover_tool()
-    plot = chart_class.create_bar_chart(data, "Bugs found per day", "days",
-                            "bugs", hover)
+    plot = chart_class.create_bar_chart(data, "Bugs found per day", "days", 
+                            "bugs", "bugs_2", hover)
     script, div = components(plot)
 
     return render_template("chart.html", bars_count=bars_count,
-                           the_div=div, the_script=script)
-
-@app.route('/bootstrap', methods=['GET', 'POST'])
-def bootstrap():        
-    return render_template('chart.html')
-
+                           the_div=div, the_script=script)"""

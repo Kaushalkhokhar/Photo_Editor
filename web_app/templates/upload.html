@@ -5,11 +5,11 @@
         Image Processing
         </a>
     <div class="dropdown-menu">
-        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method1) }}">Convolution</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method2) }}">Averaging</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method3) }}">Gaussian Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method4) }}">Median Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=image_name, method=method5) }}">Bilateral Blur</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method1) }}">Convolution</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method2) }}">Averaging</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method3) }}">Gaussian Blur</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method4) }}">Median Blur</a>
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method5) }}">Bilateral Blur</a>
     </div>            
     </li>
 {% endblock navbar %}
@@ -18,7 +18,7 @@
    
     <center>
     <div class="card" style="width: 30rem;">
-        <img class="img-rounded" src="{{ url_for('show', filename=image_name) }}" alt="Image">
+        <img class="img-rounded" src="{{ url_for('show', filename=filename) }}" alt="Image">
         <div class="card-body">
             <p class="card-text">You can apply a different filters using image processing icon on navigation bar.
                 Click on a given link and ckech the result</p>
