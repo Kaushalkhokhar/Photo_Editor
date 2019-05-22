@@ -9,11 +9,13 @@ class image_operations():
         self.processed_image = os.path.join(self.APP_ROOT, 'processed_images/') #To store processed image
 
         self.file_original = []
-        for (dirpath, dirnames, filenames) in os.walk(os.path.join(self.APP_ROOT, 'Images/')):
+        for (dirpath, dirnames, filenames) in os.walk(os.path.join(self.APP_ROOT, 'Original/')):
             self.file_original.extend(filenames)
 
+        #self.file_original = os.listdir(os.path.join(self.APP_ROOT, 'Images/'))
+
         self.file_id, self.file_extension = os.path.splitext(self.file_original[0]) #self.file_extension of uploaded image
-        self.image_path = os.path.join(self.APP_ROOT, 'Images/', self.file_original[0]) #path of uploaded image        
+        self.image_path = os.path.join(self.APP_ROOT, 'Original/', self.file_original[0]) #path of uploaded image        
 
     def convolution(self, plotting):           
         img = cv2.imread(self.image_path)

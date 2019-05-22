@@ -18,14 +18,14 @@
 {% endblock navbar %}
 
 {% block content %}
-    
+   
     <center>
     <div class="card" style="width: 30rem;">
-        <img class="img-rounded" src="{{ url_for('processed_image', filename=filename) }}" alt="Image">
+        <img class="img-rounded" src="{{ url_for('show', filename=filename) }}" alt="Image">
         <div class="card-body">
-            <p class="card-text">You are seeing the processed Image. To load histogram of processed image click on the given link.<a href="{{ url_for('load_chart', filename=filename) }}">Load Histogram</a></p>
+            <p class="card-text">You can apply a different filters using image processing icon on navigation bar.
+                Click on a given link and check the result</p>
         </div>
     </div>
     </center>
 {% endblock content %}
-

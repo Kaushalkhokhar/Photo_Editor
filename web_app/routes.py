@@ -4,32 +4,46 @@ import random
 import numpy as np
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
-from web_app import app, target, APP_ROOT, processed_target
+from web_app import app, original, APP_ROOT, processed_target, second_img, bcrypt, db
 from web_app.image_processing import image_operations
+from web_app.histogram import Histogram 
 from bokeh.plotting import figure, show, output_file, save
 from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
-from web_app.histogram import histogram_plot
-
+from web_app.forms import RegistrationForm, LoginForm
+from web_app.model import User
+from flask_login import login_user, current_user, logout_user, login_required
 
 """APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 target = os.path.join(APP_ROOT, 'Images/') #To create path for storing image in local directory"""
 
+
 @app.route('/')
 @app.route('/home')
 def home():
-    #To delete previous uploaded image and directory and creates new directory every time it runs home route    
-    if os.path.isdir(target):
-        shutil.rmtree(target)            
-        os.mkdir(target)
-    else:    
-        os.mkdir(target)
-
+    logout_user()  
     return render_template('home.html', title='Home')
 
-@app.route('/upload', methods = ['GET', 'POST'])
-def upload_image():  
+@app.route('/upload')
+def upload():
+    #To delete previous uploaded image and directory and creates new directory every time it runs home route    
+    if os.path.isdir(original):
+        shutil.rmtree(original)
+        shutil.rmtree(second_img)
+        shutil.rmtree(processed_target)
+        os.mkdir(original)
+        os.mkdir(second_img)
+        os.mkdir(processed_target)
+    else:    
+        os.mkdir(original)
+        os.mkdir(second_img)
+        os.mkdir(processed_target)
+    
+    return render_template('upload.html', title='Upload')
+
+@app.route('/display', methods = ['GET', 'POST'])
+def display_image():  
     #To render this method to link for decision making
     method1 = "convolution"
     method2 = "averaging"
@@ -39,28 +53,28 @@ def upload_image():
 
     #if image is not uploaded in file field of home template then return to home again else executes the code given
     if not request.files.getlist('image'):
-        return redirect(url_for('home'))
+        return redirect(url_for('upload'))
 
     else:
-        if not os.path.isdir(target):#Creates direcotry if not, else passes it
-            os.mkdir(target) 
+        if not os.path.isdir(original):#Creates direcotry if not, else passes it
+            os.mkdir(original) 
         
         #To get the files uploaded to home page and stores it to target directory
         for file in request.files.getlist('image'):
             print(file)
             filename = file.filename
-            destination = "/".join([target, filename])
+            destination = "/".join([original, filename])
             print(destination)
             file.save(destination)        
         
         # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
-        return render_template('upload.html', filename=filename, method1=method1, method2=method2, \
+        return render_template('display.html', filename=filename, method1=method1, method2=method2, \
                                 method3=method3, method4=method4, method5=method5) # In this filename will be the name of image file which is uploaded last in all files
 
-@app.route('/upload/<filename>', methods=['GET', 'POST'])
+@app.route('/display/<filename>', methods=['GET', 'POST'])
 def show(filename):
     print(filename)   
-    return send_from_directory('images', filename)
+    return send_from_directory('Original', filename)
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
 def processing(filename, method):
@@ -106,9 +120,60 @@ def processed_image(filename):
 
 @app.route('/load_chart/<filename>', methods=['GET', 'POST'])
 def load_chart(filename):
-
-    script, div, method = histogram_plot()        
+    hist = Histogram()
+    script, div, method = hist.histogram_plot()        
     return render_template('histogram.html', scripts=script, div=div, filename=filename, method=method)
+
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('upload'))
+    
+    form = RegistrationForm()
+    
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Account created successfully. Now you can log in', 'success')
+        return redirect(url_for('login'))
+    
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('upload'))
+        
+    form = LoginForm()
+    if form.validate_on_submit():
+        
+        user = User.query.filter_by(email=form.email.data).first()     
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('upload'))
+
+        else:
+            flash('login Unsuccessful. Please enter correct email and password', 'danger')
+    
+    return render_template('login.html', title='Login', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+
+
+
+
+
 
 
 

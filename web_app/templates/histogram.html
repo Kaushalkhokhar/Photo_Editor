@@ -1,14 +1,16 @@
 {% extends "layout.html" %}
+
 {% block histogram %}
     <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" type="text/css" />
     <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
     <!-- COPY/PASTE SCRIPT HERE -->
     {{ scripts|safe }}
 {% endblock histogram %}
+
 {% block navbar %}
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('processing', filename=filename, method=method) }}">Back</a>
-    </li>
+    </li>    
 {% endblock navbar %}
 
 {% block histo_body %}
