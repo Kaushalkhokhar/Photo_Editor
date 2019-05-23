@@ -1,0 +1,26 @@
+body{
+  background-color:#DDDDDD !important;
+}
+
+
+.container{
+  margin-top:12px !important;
+  padding-top:12px;
+}
+
+
+.navbar .nav a{
+  color: rgb(10, 10, 9);
+}
+
+.navbar .collapse a{
+  color: rgb(10, 10, 9);
+}
+
+.navbar .nav a:hover {
+  color: rgb(80, 81, 87);
+}
+
+.navbar .collapse a:hover {
+  color: rgb(80, 81, 87);
+}

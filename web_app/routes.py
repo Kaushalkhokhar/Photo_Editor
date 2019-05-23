@@ -22,7 +22,7 @@ target = os.path.join(APP_ROOT, 'Images/') #To create path for storing image in 
 
 @app.route('/')
 @app.route('/home')
-def home():     
+def home():         
     return render_template('home.html', title='Home')
 
 @app.route('/upload')
@@ -72,8 +72,7 @@ def display_image():
                                 method3=method3, method4=method4, method5=method5) # In this filename will be the name of image file which is uploaded last in all files
 
 @app.route('/display/<filename>', methods=['GET', 'POST'])
-def show(filename):
-    print(filename)   
+def show(filename):          
     return send_from_directory('Original', filename)
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
@@ -221,7 +220,10 @@ def reset_token(token):
 
 
 @app.route('/testing', methods=['GET', 'POST'])
-def testing():
+def testing(): 
+    filename = os.listdir(os.path.join(APP_ROOT, 'static/'))  
+    return render_template("testing.html", filename=filename)
+
     """
     if bars_count <= 0:
         bars_count = 1   

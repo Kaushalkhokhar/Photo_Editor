@@ -1,0 +1,114 @@
+/*
+*{
+     * indicates for whole means for everything 
+    margin: 0%;
+    padding: 0%; 
+}
+*/
+
+
+body {
+    background-color: rgba(141, 115, 12, 0.705);
+    color: black;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 80;
+    /* alternative of above */
+    
+
+    margin: 0%
+
+}
+
+a {
+    color: blueviolet;
+    text-decoration: none;
+}
+
+a:hover {
+    color: royalblue;
+}
+
+.container{
+    width: 80%;
+    margin: auto;    
+}
+
+.box-1{
+    color: aliceblue;
+    background-color: darkcyan;
+    
+    border-right: 10px gray solid;
+    border-left: 10px gray solid;
+    border-top: 10px gray solid;
+    border-bottom: 10px gray solid;
+    border-top-width: 5px;
+    border-bottom-style: dotted;
+
+
+    /* alternative of above */
+    border: 5px gray solid;
+
+    
+    padding-left: 2px;    
+
+    margin: 20px 0;
+
+    line-height: 1.5em;
+}
+
+.box-1 h1{
+    font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+    color: #000;
+    font-style: italic;
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+
+.box-2{
+    border:3px dotted lightgray;
+    padding-left: 2px;
+}
+
+.categories{
+    border: 5px solid gray;
+    border-radius: 10px;
+    background-color: rgba(235, 232, 222, 0.87);
+    margin:10px 0px;    
+}
+
+.categories h2{
+    font-family: tahoma;
+    text-align: center;    
+}
+
+.categories li{
+    border-bottom: #000 3px solid;
+}
+
+.my-form{
+    padding: 10px;
+    width: 50%;
+}
+
+.my-form .form-group{
+    padding-bottom:8px;
+}
+
+.my-form label{
+    display: block;
+}
+
+.my-form input[type="text"]{
+    padding: 8px;
+    width: 100%;
+}
+
+.my-form input[type="submit"]{
+    color: aliceblue;
+    background-color: #000;
+    border:3px solid #1a1818;
+    padding: 10px 15px;
+
+}
