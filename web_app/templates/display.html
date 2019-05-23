@@ -11,10 +11,7 @@
         <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method4) }}">Median Blur</a>
         <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method5) }}">Bilateral Blur</a>
     </div>            
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-    </li>  
+    </li>     
 {% endblock navbar %}
 
 {% block content %}

@@ -1,13 +1,5 @@
 {% extends "layout.html" %}
 
-{% block navbar %}
-    <!-- Brand -->
-    <a class="navbar-brand" href="{{ url_for('home') }}">Home</a>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-    </li>    
-{% endblock navbar %}
-
 {% block content %}
     <div class="content-sectiion">
         <form method="POST" action="">
