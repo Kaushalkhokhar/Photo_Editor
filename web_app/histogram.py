@@ -8,17 +8,17 @@ from bokeh.embed import components
 class Histogram():    
     def __init__(self):
         APP_ROOT = os.path.dirname(os.path.abspath(__file__))    
-        file_processed = []
+        '''file_processed = []
         for (dirpath, dirnames, filenames) in os.walk(os.path.join(APP_ROOT, 'processed_images/')):
-            file_processed.extend(filenames)
+            file_processed.extend(filenames)'''
         
-        #file_processed = os.listdir(os.path.join(APP_ROOT, 'processed_images/'))
+        file_processed = os.listdir(os.path.join(APP_ROOT, 'processed_images/'))
         
-        file_source = []
+        '''file_source = []
         for (dirpath, dirnames, filenames) in os.walk(os.path.join(APP_ROOT, 'Original/')):
-            file_source.extend(filenames)
+            file_source.extend(filenames)'''
 
-        #file_source = os.listdir(os.path.join(APP_ROOT, 'Images/'))
+        file_source = os.listdir(os.path.join(APP_ROOT, 'Original/'))
 
         self.processed_image_path = os.path.join(APP_ROOT, 'processed_images/', file_processed[0])
 

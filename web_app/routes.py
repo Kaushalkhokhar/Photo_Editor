@@ -4,7 +4,7 @@ import random
 import numpy as np
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
-from web_app import app, original, APP_ROOT, processed_target, second_img, bcrypt, db, mail
+from web_app import app, original, processed_target, second_img, bcrypt, db, mail
 from web_app.image_processing import image_operations
 from web_app.histogram import Histogram 
 from bokeh.plotting import figure, show, output_file, save
@@ -16,30 +16,13 @@ from web_app.model import User
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
-"""APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-target = os.path.join(APP_ROOT, 'Images/') #To create path for storing image in local directory"""
-
-
 @app.route('/')
 @app.route('/home')
-def home():         
+def home():           
     return render_template('home.html', title='Home')
 
 @app.route('/upload')
 def upload():
-    #To delete previous uploaded image and directory and creates new directory every time it runs home route    
-    if os.path.isdir(original):
-        shutil.rmtree(original)
-        shutil.rmtree(second_img)
-        shutil.rmtree(processed_target)
-        os.mkdir(original)
-        os.mkdir(second_img)
-        os.mkdir(processed_target)
-    else:    
-        os.mkdir(original)
-        os.mkdir(second_img)
-        os.mkdir(processed_target)
-    
     return render_template('upload.html', title='Upload')
 
 @app.route('/display', methods = ['GET', 'POST'])
@@ -50,6 +33,9 @@ def display_image():
     method3 = "gaussian_blur"
     method4 = "median_blur"
     method5 = "bilateral_blur"
+    method6 = "addition" 
+    method7 = "substraction" 
+    method8 = "multiplication" 
 
     #if image is not uploaded in file field of home template then return to home again else executes the code given
     if not request.files.getlist('image'):
@@ -57,26 +43,69 @@ def display_image():
 
     else:
         if not os.path.isdir(original):#Creates direcotry if not, else passes it
-            os.mkdir(original) 
+            os.mkdir(original)
+            os.mkdir(second_img)
+        elif not os.path.isdir(second_img):#Creates direcotry if not, else passes it
+            os.mkdir(second_img)
         
         #To get the files uploaded to home page and stores it to target directory
-        for file in request.files.getlist('image'):
-            print(file)
-            filename = file.filename
-            destination = "/".join([original, filename])
-            print(destination)
-            file.save(destination)        
+        for file in request.files.getlist('image'):            
+            filename = file.filename            
+            if not os.listdir(original):
+                destination = "/".join([original, filename])                
+                file.save(destination)           
+            elif not os.listdir(second_img):
+                destination = "/".join([second_img, filename])
+                file.save(destination)
+                file_original = os.listdir(original)
+                file_second = os.listdir(second_img)
+                image_path = os.path.join(original, file_original[0]) #path of uploaded image  
+                image_path_2 = os.path.join(second_img, file_second[0])
+                img = cv2.imread(image_path)
+                img_2 = cv2.imread(image_path_2)                
+                if len(img.shape) != len(img_2.shape):
+                    shutil.rmtree(second_img)                                        
+                    os.mkdir(second_img)
+                    flash('Shape of image you have uploaded does not match with original image. \
+                        So please upload valid image', 'danger')
+                    return redirect(url_for('upload'))
+                filename = os.listdir(original)[0]
+                flash('Image is uploaded.Now you can perform arithmatic operations', 'success')                  
+            else:
+                flash('You have already ulpoaded two images. So select operations \
+                    from navigation bar', 'success')
+                filename = os.listdir(original)[0]                       
+                         
         
         # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
         return render_template('display.html', filename=filename, method1=method1, method2=method2, \
-                                method3=method3, method4=method4, method5=method5) # In this filename will be the name of image file which is uploaded last in all files
+                                method3=method3, method4=method4, method5=method5, method6=method6, \
+                                method7=method7, method8=method8) # In this filename will be the name of image file which is uploaded last in all files
 
 @app.route('/display/<filename>', methods=['GET', 'POST'])
 def show(filename):          
     return send_from_directory('Original', filename)
 
+@app.route('/session', methods=['GET', 'POST'])
+def new_session():
+    if os.path.isdir(original):
+        shutil.rmtree(original)
+        shutil.rmtree(second_img)
+        shutil.rmtree(processed_target)
+        os.mkdir(original)
+        os.mkdir(second_img)
+        os.mkdir(processed_target)
+    else:    
+        os.mkdir(original)
+        os.mkdir(second_img)
+        os.mkdir(processed_target)          
+    return redirect(url_for('upload'))
+
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
 def processing(filename, method):
+    if not os.listdir(original):
+        return redirect(url_for('upload'))
+    
     #To delete previous processes image and cirectory and creates new directory every time it runs processing
     #target = os.path.join(APP_ROOT, 'processed_images/') #To store processed image
     if os.path.isdir(processed_target):
@@ -90,28 +119,49 @@ def processing(filename, method):
     method2 = "averaging"
     method3 = "gaussian_blur"
     method4 = "median_blur"
-    method5 = "bilateral_blur"     
+    method5 = "bilateral_blur" 
+    method6 = "addition" 
+    method7 = "substraction" 
+    method8 = "multiplication" 
+        
 
     #processing the image based on reference link and method attached to that link
-    if method ==  "convolution":
+    if method ==  method1:
         convo = image_operations()      
         filename = convo.convolution(plotting=False)       
-    elif method ==  "averaging":        
+    elif method ==  method2:        
         avrg = image_operations()   
         filename = avrg.averaging(plotting=False)           
-    elif method ==  "gaussian_blur":
+    elif method ==  method3:
         gblur = image_operations()      
         filename = gblur.gaussian_blur(plotting=False)
-    elif method ==  "median_blur":    
+    elif method ==  method4:    
         mblur = image_operations()
         filename = mblur.median_blur(plotting=False)
-    elif method ==  "bilateral_blur":    
+    elif method ==  method5:    
         bblur = image_operations()
         filename = bblur.bilateral_blur(plotting=False)
-    
+    elif method ==  method6:
+        if not os.listdir(second_img):
+            flash('You have upload one more image to perform arithmatic operations', 'info')          
+            return redirect(url_for('upload'))
+        filename = image_operations().addition()
+    elif method ==  method7:
+        if not os.listdir(second_img):
+            flash('You have upload one more image to perform arithmatic operations', 'info')          
+            return redirect(url_for('upload'))
+        filename = image_operations().substraction()
+    elif method ==  method8:
+        if not os.listdir(second_img):
+            flash('You have upload one more image to perform arithmatic operations', 'info')          
+            return redirect(url_for('upload'))
+        filename = image_operations().multiplication()
+        
+        
     # we need to store processed file in our static folder then we can render by giving filename qual to our processed file 
     return render_template('processing.html', filename=filename, method1=method1, method2=method2, \
-                                method3=method3, method4=method4, method5=method5)
+                                method3=method3, method4=method4, method5=method5, method6=method6, \
+                                method7=method7, method8=method8)
 
 @app.route('/processed/<filename>', methods=['GET', 'POST'])
 def processed_image(filename):                   
@@ -164,6 +214,19 @@ def login():
 
 @app.route('/logout')
 def logout():
+    #To delete previous uploaded image and directory and creates new directory every time it runs home route    
+    if os.path.isdir(original):
+        shutil.rmtree(original)
+        shutil.rmtree(second_img)
+        shutil.rmtree(processed_target)
+        os.mkdir(original)
+        os.mkdir(second_img)
+        os.mkdir(processed_target)
+    else:    
+        os.mkdir(original)
+        os.mkdir(second_img)
+        os.mkdir(processed_target)
+
     logout_user()
     return redirect(url_for('home'))
 
