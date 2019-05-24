@@ -1,7 +1,10 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from web_app import db, login_manager, app
-from flask_login import UserMixin
+from web_app import db, login_manager, app, admin_user
+from flask_login import UserMixin, current_user
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -12,7 +15,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    password = db.Column(db.String(60), nullable=False)    
+    password = db.Column(db.String(60), nullable=False)        
     
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
@@ -30,8 +33,35 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
+class Methods(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    method_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(50), unique=True, nullable=False)
 
+    def __repr__(self):
+        return f"Methods('{self.title}', '{self.method_id}')"
+    
 
+class MyModelView(ModelView):
+    # if this fucntion returns true then that user can see a this mdoel and if false then can not see model
+    def is_accessible(self):
+        return current_user.email == admin_user
+
+    # this defiens process to be performed when unallowed user try to access this model from admin route
+    def inaccessible_callback(self, username):
+        return 'You cannot view this page. You are not admin user'
+
+class MyAdminIndexView(AdminIndexView):
+    # if this fucntion returns true then that user can see a this mdoel and if false then can not see model
+    def is_accessible(self):
+        return current_user.email == admin_user
+    # this defiens process to be performed when unallowed user try to access this model from admin route
+    def inaccessible_callback(self, username):
+        return 'You cannot view page'
+
+admin = Admin(app, index_view=MyAdminIndexView())
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(Methods, db.session))
 
 
 

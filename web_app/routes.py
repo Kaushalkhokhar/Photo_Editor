@@ -12,7 +12,7 @@ from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
 from web_app.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
-from web_app.model import User
+from web_app.model import User, Methods
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
@@ -28,14 +28,14 @@ def upload():
 @app.route('/display', methods = ['GET', 'POST'])
 def display_image():  
     #To render this method to link for decision making
-    method1 = "convolution"
-    method2 = "averaging"
-    method3 = "gaussian_blur"
-    method4 = "median_blur"
-    method5 = "bilateral_blur"
-    method6 = "addition" 
-    method7 = "substraction" 
-    method8 = "multiplication" 
+    method1 = Methods.query.filter_by(method_id=1).first().title
+    method2 = Methods.query.filter_by(method_id=2).first().title
+    method3 = Methods.query.filter_by(method_id=3).first().title
+    method4 = Methods.query.filter_by(method_id=4).first().title
+    method5 = Methods.query.filter_by(method_id=5).first().title
+    method6 = Methods.query.filter_by(method_id=6).first().title
+    method7 = Methods.query.filter_by(method_id=7).first().title 
+    method8 = Methods.query.filter_by(method_id=8).first().title  
 
     #if image is not uploaded in file field of home template then return to home again else executes the code given
     if not request.files.getlist('image'):
@@ -103,6 +103,10 @@ def new_session():
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
 def processing(filename, method):
+    if method == "None":
+        flash('This method is not allowed for you. Please try different one', 'info')
+        return redirect('display_image')
+    
     if not os.listdir(original):
         return redirect(url_for('upload'))
     
@@ -115,15 +119,14 @@ def processing(filename, method):
         os.mkdir(processed_target)
 
     #To render this method to link for decision making
-    method1 = "convolution"
-    method2 = "averaging"
-    method3 = "gaussian_blur"
-    method4 = "median_blur"
-    method5 = "bilateral_blur" 
-    method6 = "addition" 
-    method7 = "substraction" 
-    method8 = "multiplication" 
-        
+    method1 = Methods.query.filter_by(method_id=1).first().title
+    method2 = Methods.query.filter_by(method_id=2).first().title
+    method3 = Methods.query.filter_by(method_id=3).first().title
+    method4 = Methods.query.filter_by(method_id=4).first().title
+    method5 = Methods.query.filter_by(method_id=5).first().title
+    method6 = Methods.query.filter_by(method_id=6).first().title
+    method7 = Methods.query.filter_by(method_id=7).first().title 
+    method8 = Methods.query.filter_by(method_id=8).first().title        
 
     #processing the image based on reference link and method attached to that link
     if method ==  method1:
