@@ -1,4 +1,190 @@
-2{% extends "layout.html" %}
-{% block content %}    
-    <h1>Helllo.Welcome to the Photo Editor</h1>
-{% endblock content %}  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+      
+    .container .col{
+        text-align: center;
+        background-color: gray;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        margin: 5px;
+        border-top: 2px solid black;
+        border-left: 2px solid black; 
+        border-right: 2px solid black;          
+    }  
+        
+    .container .col .row .col{
+        margin: 0 auto;
+        padding: 0%;
+        border-width: 0ch;
+        text-align: center;
+        background-color: lightgray;
+        border-radius: 0px;
+    }
+
+    .container .row .col .row-3{
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        border-bottom: 2px solid black;
+        
+        
+    }
+
+    
+
+    
+    
+
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <!--Content for method-->
+        <div>
+            <h3>Method Selection</h3>
+        </div>
+        <div>
+            <form action="" method="POST">
+                {{ method_form.hidden_tag() }}
+                {{ general_form.hidden_tag() }}
+                {{ filter_form.hidden_tag() }}
+                
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <h3>HPF</h3>
+                        </div> 
+                        
+                        <div class="row row-1">                           
+                            <div class="col cl-1">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col cl-2">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                        <div class="row row-2">                           
+                            <div class="col cl-1">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col cl-2">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                        <div class="row row-3">                           
+                            <div class="col cl-1">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col cl-2">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                                                
+                    </div>
+                    <div class="col">
+                        <div>
+                            <h3>HPF</h3>
+                        </div> 
+                        <div class="row">                           
+                            <div class="col">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                        <div class="row">                           
+                            <div class="col">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                        <div class="row">                           
+                            <div class="col">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>                          
+                    </div>
+                    <div class="col">
+                        <div>
+                            <h3>HPF</h3>
+                        </div> 
+                        <div class="row">                           
+                            <div class="col">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                        <div class="row">                           
+                            <div class="col">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>
+                        <div class="row">                           
+                            <div class="col">
+                                {{ method_form.method1.label }}
+                                {{ method_form.method1 }}
+                            </div>
+                            <div class="col">
+                                {{ method_form.method2.label }}
+                                {{ method_form.method2 }}
+                            </div>
+                        </div>                          
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <div class="conatiner">
+        <div class="row">
+            <div class="col-md-4">
+                <!--Content for general setting-->
+                <p>hello</p>
+            </div>
+            <div class="col-md-8">
+                <!--Content for Filter setting-->
+                <p>hello</p>
+            </div>            
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

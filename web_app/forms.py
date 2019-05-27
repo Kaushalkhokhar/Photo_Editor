@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.html5 import IntegerRangeField
 from web_app.model import User
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
@@ -47,3 +49,32 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+class AdminForm(FlaskForm):
+    color = IntegerRangeField('Color', default=50)
+    brightness = IntegerRangeField('Brightness', default=50)
+    hpf = SelectField('HPF', choices=[('one', 'Blur'), ('two', 'median blur')])
+    hpf_range = IntegerRangeField('HPF', default=50)
+    lpf = SelectField('LPF', choices=[('one', 'Blur'), ('two', 'median blur')])
+    lpf_range = IntegerRangeField('LPF')
+    submit = SubmitField('Submit', default=50)
+
+class MethodForm(FlaskForm):
+    method1 = BooleanField('Convolution', default=True)
+    method2 = BooleanField('Averaging', default=True)
+    method3 = BooleanField('Gaussian Blur', default=True)
+    method4 = BooleanField('Median Blur', default=True)
+    method5 = BooleanField('Bilateral Blur', default=True)
+    method6 = BooleanField('Addition', default=True)
+    method7 = BooleanField('Substraction', default=True)
+    method8 = BooleanField('Multiplication', default=True)
+    method9 = BooleanField('Not defined', default=True)
+
+class GeneralForm(FlaskForm):
+    color = IntegerRangeField('Color', default=50)
+    brightness = IntegerRangeField('Brightness', default=50)
+    other = IntegerRangeField('Other', default=50)
+
+class FilterForm(FlaskForm):
+    other = SelectField('Other', choices=[('one', 'one'), ('two', 'two'), ('three', 'three')])
+    kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])

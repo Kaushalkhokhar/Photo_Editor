@@ -11,7 +11,8 @@ from bokeh.plotting import figure, show, output_file, save
 from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
-from web_app.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
+from web_app.forms import (RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm, \
+                             AdminForm, MethodForm, GeneralForm, FilterForm) 
 from web_app.model import User, Methods
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -276,37 +277,23 @@ def reset_token(token):
     return render_template('reset_token.html', title='Reset Password', form=form)
 
 
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    form = AdminForm()
+    method_form = MethodForm()
+    general_form = GeneralForm()
+    filter_form = FilterForm()
+    #form.image_filter.choices = [(method.id, method.title) for method in Methods.query.all()]    
+    
+              
 
-
-
-
-
-
-
-
+    return render_template('settings.html', method_form=method_form, general_form=general_form, \
+                            filter_form=filter_form)
 
 @app.route('/testing', methods=['GET', 'POST'])
-def testing(): 
-    filename = os.listdir(os.path.join(APP_ROOT, 'static/'))  
-    return render_template("testing.html", filename=filename)
-
-    """
-    if bars_count <= 0:
-        bars_count = 1   
-
-    data = {"days": [], "bugs": [], "bugs_2": [],"costs": []}
-    for i in range(1, bars_count + 1):
-        data['days'].append(i)
-        data['bugs'].append(random.randint(1,100))
-        data['bugs_2'].append(random.randint(1,100))
-        data['costs'].append(random.uniform(1.00, 1000.00))
-
-    chart_class = chart_layout()   
-
-    hover = chart_class.create_hover_tool()
-    plot = chart_class.create_bar_chart(data, "Bugs found per day", "days", 
-                            "bugs", "bugs_2", hover)
-    script, div = components(plot)
-
-    return render_template("chart.html", bars_count=bars_count,
-                           the_div=div, the_script=script)"""
+def testing():
+    method_form = MethodForm()
+    general_form = GeneralForm()
+    filter_form = FilterForm()
+    return render_template("testing2.html", method_form=method_form, general_form=general_form, \
+                            filter_form=filter_form)    
