@@ -57,7 +57,7 @@ class AdminForm(FlaskForm):
     hpf_range = IntegerRangeField('HPF', default=50)
     lpf = SelectField('LPF', choices=[('one', 'Blur'), ('two', 'median blur')])
     lpf_range = IntegerRangeField('LPF')
-    submit = SubmitField('Submit', default=50)
+    submit = SubmitField('Submit')
 
 class MethodForm(FlaskForm):
     method1 = BooleanField('Convolution', default=True)
@@ -78,3 +78,4 @@ class GeneralForm(FlaskForm):
 class FilterForm(FlaskForm):
     other = SelectField('Other', choices=[('one', 'one'), ('two', 'two'), ('three', 'three')])
     kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
+    submit = SubmitField('Submit')

@@ -39,50 +39,56 @@ def display_image():
     method8 = Methods.query.filter_by(method_id=8).first().title  
 
     #if image is not uploaded in file field of home template then return to home again else executes the code given
-    if not request.files.getlist('image'):
-        return redirect(url_for('upload'))
+    '''if not request.files.getlist('image'):
+        return redirect(url_for('upload'))'''
 
-    else:
-        if not os.path.isdir(original):#Creates direcotry if not, else passes it
-            os.mkdir(original)
-            os.mkdir(second_img)
-        elif not os.path.isdir(second_img):#Creates direcotry if not, else passes it
-            os.mkdir(second_img)
-        
-        #To get the files uploaded to home page and stores it to target directory
-        for file in request.files.getlist('image'):            
-            filename = file.filename            
-            if not os.listdir(original):
-                destination = "/".join([original, filename])                
-                file.save(destination)           
-            elif not os.listdir(second_img):
-                destination = "/".join([second_img, filename])
-                file.save(destination)
-                file_original = os.listdir(original)
-                file_second = os.listdir(second_img)
-                image_path = os.path.join(original, file_original[0]) #path of uploaded image  
-                image_path_2 = os.path.join(second_img, file_second[0])
-                img = cv2.imread(image_path)
-                img_2 = cv2.imread(image_path_2)                
-                if len(img.shape) != len(img_2.shape):
-                    shutil.rmtree(second_img)                                        
-                    os.mkdir(second_img)
-                    flash('Shape of image you have uploaded does not match with original image. \
-                        So please upload valid image', 'danger')
-                    return redirect(url_for('upload'))
-                filename = os.listdir(original)[0]
-                flash('Image is uploaded.Now you can perform arithmatic operations', 'success')                  
-            else:
-                flash('You have already ulpoaded two images. So select operations \
-                    from navigation bar', 'success')
-                filename = os.listdir(original)[0]                       
-                         
-        
+    try:
+        if 'image' not in request.files:
+            return redirect(request.url)
+
+        else:
+            if not os.path.isdir(original):#Creates direcotry if not, else passes it
+                os.mkdir(original)
+                os.mkdir(second_img)
+            elif not os.path.isdir(second_img):#Creates direcotry if not, else passes it
+                os.mkdir(second_img)
+            
+            #To get the files uploaded to home page and stores it to target directory
+            for file in request.files.getlist('image'):            
+                filename = file.filename            
+                if not os.listdir(original):
+                    destination = "/".join([original, filename])                
+                    file.save(destination)           
+                elif not os.listdir(second_img):
+                    destination = "/".join([second_img, filename])
+                    file.save(destination)
+                    file_original = os.listdir(original)
+                    file_second = os.listdir(second_img)
+                    image_path = os.path.join(original, file_original[0]) #path of uploaded image  
+                    image_path_2 = os.path.join(second_img, file_second[0])
+                    img = cv2.imread(image_path)
+                    img_2 = cv2.imread(image_path_2)                
+                    if len(img.shape) != len(img_2.shape):
+                        shutil.rmtree(second_img)                                        
+                        os.mkdir(second_img)
+                        flash('Shape of image you have uploaded does not match with original image. \
+                            So please upload valid image', 'danger')
+                        return redirect(url_for('upload'))
+                    filename = os.listdir(original)[0]
+                    flash('Image is uploaded.Now you can perform arithmatic operations', 'success')                  
+                else:
+                    flash('You have already ulpoaded two images. So select operations \
+                        from navigation bar', 'success')
+                    filename = os.listdir(original)[0]
+
         # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
         return render_template('display.html', filename=filename, method1=method1, method2=method2, \
                                 method3=method3, method4=method4, method5=method5, method6=method6, \
                                 method7=method7, method8=method8) # In this filename will be the name of image file which is uploaded last in all files
-
+                       
+    except:
+        return redirect(url_for('upload '))
+   
 @app.route('/display/<filename>', methods=['GET', 'POST'])
 def show(filename):          
     return send_from_directory('Original', filename)

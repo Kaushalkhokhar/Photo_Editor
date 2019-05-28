@@ -193,7 +193,14 @@
     <div class="col">
         <div class="setting">
         <div class="jumbotron jumbotron-fluid">
-            <h1 class="display-4 text-center">Filter Setting</h1>
+            <div class="row">
+                <div class="col-md-9">
+                        <h1 class="display-4 text-right">Filter Setting</h1>
+                </div>
+                <div class="col-md-3 setting-submit text-center">
+                    {{ filter_form.submit(class="btn btn-outline-info") }}
+                </div>
+            </div>            
             <div class="container">
                 <div class="cl-general">
                     <div class="btn-general">            
