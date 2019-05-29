@@ -20,6 +20,7 @@ app.config['MAIL_USERNAME'] = 'admin@demo.com' #Any email id from that we want t
 app.config['MAIL_PASSWORD'] = 'pasword' #Login password for that email account
 mail = Mail(app)
 admin_user = "kaushal2413@gmail.com"
+current_method = {'name': 'None'}
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 original = os.path.join(APP_ROOT, 'Original/') #To create path for storing image in local directory

@@ -36,7 +36,26 @@ class User(db.Model, UserMixin):
 class Methods(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     method_id = db.Column(db.Integer, nullable=False)
-    title = db.Column(db.String(50), unique=True, nullable=False)    
+    method_title = db.Column(db.String(50), nullable=False)
+    image_operation = db.Column(db.String, default="Addition")
+    result_color = db.Column(db.Integer, default=50)
+
+    result_brightness = db.Column(db.Integer, default=50)
+    result_intensity = db.Column(db.Integer, default=50)
+    original_color = db.Column(db.Integer, default=50)
+    original_brightness = db.Column(db.Integer, default=50)
+    oroginal_intensity = db.Column(db.Integer, default=50)
+    copy_color = db.Column(db.Integer, default=50)
+    copy_brightness = db.Column(db.Integer, default=50)
+    copy_intensity = db.Column(db.Integer, default=50)
+    original_filter = db.Column(db.String, default="LPF")
+    original_kernal = db.Column(db.String, default="3*3")
+    copy_filter = db.Column(db.String, default="LPF")
+    copy_kernal = db.Column(db.String, default="3*3")
+    active_state = db.Column(db.Boolean, default=True)
+    #active_state = db.Column(db.Boolean, default=True)    
+    #kernal = db.Column(db.String(20), default="3*3")
+    #other = db.Column(db.String(20), default="other")
 
     def __repr__(self):
         return f"Methods('{self.title}', '{self.method_id}')"

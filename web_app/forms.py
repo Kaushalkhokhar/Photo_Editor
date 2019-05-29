@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from flask_wtf.html5 import IntegerRangeField
+from wtforms.fields.html5 import IntegerRangeField
+#from flask_wtf.html5 import IntegerRangeField
 from web_app.model import User
 
 
@@ -49,16 +50,7 @@ class ResetPasswordForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
-
-class AdminForm(FlaskForm):
-    color = IntegerRangeField('Color', default=50)
-    brightness = IntegerRangeField('Brightness', default=50)
-    hpf = SelectField('HPF', choices=[('one', 'Blur'), ('two', 'median blur')])
-    hpf_range = IntegerRangeField('HPF', default=50)
-    lpf = SelectField('LPF', choices=[('one', 'Blur'), ('two', 'median blur')])
-    lpf_range = IntegerRangeField('LPF')
-    submit = SubmitField('Submit')
-
+    
 class MethodForm(FlaskForm):
     method1 = BooleanField('Convolution', default=True)
     method2 = BooleanField('Averaging', default=True)
@@ -75,7 +67,42 @@ class GeneralForm(FlaskForm):
     brightness = IntegerRangeField('Brightness', default=50)
     other = IntegerRangeField('Other', default=50)
 
-class FilterForm(FlaskForm):
+class AdminForm(FlaskForm):
+    method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,11)])
+    image_operations = SelectField('Operations', choices=[('one', 'Addition'), \
+                                    ('two', 'Substraction'), ('three', 'Multiplication')])
+    method_title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
+    active_state = BooleanField('Active State',default=True)
+    original_color = IntegerRangeField('Color', default=50)
+    original_brightness = IntegerRangeField('Brightness', default=50)
+    original_intensity = IntegerRangeField('Intensity', default=50)
+    copy_color = IntegerRangeField('Color', default=50)
+    copy_brightness = IntegerRangeField('Brightness', default=50)
+    copy_intensity = IntegerRangeField('Intensity', default=50)
+    result_color = IntegerRangeField('Color', default=50)
+    result_brightness = IntegerRangeField('Brightness', default=50)
+    result_intensity = IntegerRangeField('Intensity', default=50)
+    original_filter = SelectField('Filter', choices=[('one', 'LPF'), ('two', 'HPF'), ('three', 'BPF')])
+    original_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
+    copy_filter = SelectField('Filter', choices=[('one', 'LPF'), ('two', 'HPF'), ('three', 'BPF')])
+    copy_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])    
+    submit = SubmitField('Submit')
+    
+    
+    # Privious Admin Panel Settings
+    '''method1 = BooleanField('Convolution', default=True)
+    method2 = BooleanField('Averaging', default=True)
+    method3 = BooleanField('Gaussian Blur', default=True)
+    method4 = BooleanField('Median Blur', default=True)
+    method5 = BooleanField('Bilateral Blur', default=True)
+    method6 = BooleanField('Addition', default=True)
+    method7 = BooleanField('Substraction', default=True)
+    method8 = BooleanField('Multiplication', default=True)
+    method9 = BooleanField('Not defined', default=True)
+    color = IntegerRangeField('Color', default=50)
+    brightness = IntegerRangeField('Brightness', default=50)
+    intensity = IntegerRangeField('Intensity', default=50)
+    other = IntegerRangeField('Other', default=50)
     other = SelectField('Other', choices=[('one', 'one'), ('two', 'two'), ('three', 'three')])
     kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Submit')'''

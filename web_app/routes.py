@@ -4,7 +4,7 @@ import random
 import numpy as np
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
-from web_app import app, original, processed_target, second_img, bcrypt, db, mail
+from web_app import app, original, processed_target, second_img, bcrypt, db, mail, current_method
 from web_app.image_processing import image_operations
 from web_app.histogram import Histogram 
 from bokeh.plotting import figure, show, output_file, save
@@ -12,7 +12,7 @@ from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
 from web_app.forms import (RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm, \
-                             AdminForm, MethodForm, GeneralForm, FilterForm) 
+                             AdminForm, MethodForm, GeneralForm) 
 from web_app.model import User, Methods
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
@@ -93,6 +93,10 @@ def display_image():
 def show(filename):          
     return send_from_directory('Original', filename)
 
+@app.route('/demo/<filename>', methods=['GET', 'POST'])
+def demo(filename):          
+    return send_from_directory('Original', filename)
+
 @app.route('/session', methods=['GET', 'POST'])
 def new_session():
     if os.path.isdir(original):
@@ -110,7 +114,7 @@ def new_session():
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
 def processing(filename, method):
-    if method == "None":
+    if Methods.query.filter_by(method_title=method).first().active_state == False:
         flash('This method is not allowed for you. Please try different one', 'info')
         return redirect('display_image')
     
@@ -138,19 +142,19 @@ def processing(filename, method):
     #processing the image based on reference link and method attached to that link
     if method ==  method1:
         convo = image_operations()      
-        filename = convo.convolution(plotting=False)       
+        filename = convo.convolution()       
     elif method ==  method2:        
         avrg = image_operations()   
-        filename = avrg.averaging(plotting=False)           
+        filename = avrg.averaging()           
     elif method ==  method3:
         gblur = image_operations()      
-        filename = gblur.gaussian_blur(plotting=False)
+        filename = gblur.gaussian_blur()
     elif method ==  method4:    
         mblur = image_operations()
-        filename = mblur.median_blur(plotting=False)
+        filename = mblur.median_blur()
     elif method ==  method5:    
         bblur = image_operations()
-        filename = bblur.bilateral_blur(plotting=False)
+        filename = bblur.bilateral_blur()
     elif method ==  method6:
         if not os.listdir(second_img):
             flash('You have upload one more image to perform arithmatic operations', 'info')          
@@ -284,22 +288,57 @@ def reset_token(token):
 
 
 @app.route('/settings', methods=['GET', 'POST'])
-def settings():
+def settings():    
     form = AdminForm()
-    method_form = MethodForm()
-    general_form = GeneralForm()
-    filter_form = FilterForm()
-    #form.image_filter.choices = [(method.id, method.title) for method in Methods.query.all()]    
-    
-              
 
-    return render_template('settings.html', method_form=method_form, general_form=general_form, \
-                            filter_form=filter_form)
+    if request.method == 'POST':
+        
+        if Methods.query.filter_by(method_id=form.method_id.data).first() is None:
+            method = Methods(method_id=form.method_id.data, method_title=form.method_title.data, 
+                            image_operations=form.image_operations.data, result_color=form.result_color.data, 
+                            result_brightness=form.result_brightness.data,result_intensity=form.result_intensity.data, 
+                            original_color=form.original_color.data, origianl_brightness=form.origianl_brightness.data, 
+                            original_intensity=form.original_intensity.data, copy_color=form.copy_color.data, 
+                            copy_brightness=form.copy_brightness.data, copy_intensity=form.copy_intensity.data, 
+                            original_filter=form.original_filter.data, original_kernal=form.original_kernal.data, 
+                            copy_filter=form.copy_filter.data, copy_kernal=form.copy_kernal.data, 
+                            active_state=form.active_state.data)
+            db.session.add(method)
+            db.session.commit()
 
-@app.route('/testing', methods=['GET', 'POST'])
+            flash('Method is created', 'info')
+        else:
+            method = Methods.query.filter_by(method_id=form.method_id.data).first()
+            #method.image_operations = dict(form.image_operations.choices).get(form.image_operations.data)
+            method.image_operations = form.image_operations.data            
+            method.method_title = form.method_title.data
+            method.active_state = form.active_state.data
+            method.original_color = form.original_color.data
+            method.original_brightness = form.original_brightness.data
+            method.original_intensity = form.original_intensity.data
+            method.copy_color = form.copy_color.data
+            method.copy_brightness = form.copy_brightness.data
+            method.copy_intensity = form.copy_intensity.data
+            method.result_color = form.result_color.data
+            method.result_brightness = form.result_brightness.data
+            method.result_intensity = form.result_intensity.data
+            method.original_filter = form.original_filter.data
+            method.original_kernal = form.original_kernal.data
+            method.copy_filter = form.copy_filter.data
+            method.copy_kernal = form.copy_kernal.data
+            db.session.commit()
+            flash('Method is updated')
+
+
+        #Methods.query.filter_by(method_id=1).first().state = form.method1.data
+
+
+    return render_template('settings.html', form=form)
+
+'''@app.route('/testing', methods=['GET', 'POST'])
 def testing():
     method_form = MethodForm()
     general_form = GeneralForm()
     filter_form = FilterForm()
     return render_template("testing2.html", method_form=method_form, general_form=general_form, \
-                            filter_form=filter_form)    
+                            filter_form=filter_form)    '''

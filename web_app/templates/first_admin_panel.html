@@ -1,0 +1,259 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+<script>
+    function outputUpdateColor(color) {
+        document.querySelector('#selected-color').value = color;
+    }
+    function outputUpdateBrightness(brightness) {
+        document.querySelector('#selected-brightness').value = brightness;
+    }
+</script>
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4 text-center">Method Selection Pannel</h1>
+            
+            <div class="row">
+                <div class="col">
+                    <div class="card text-center">
+                    <div class="card-header">
+                        HPF
+                    </div>
+                    <div class="card-body">                        
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method1(class="form-check-input")}}
+                                {{ form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method2(class="form-check-input")}}
+                                {{ form.method2.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method3(class="form-check-input")}}
+                                {{ form.method3.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method4(class="form-check-input")}}
+                                {{ form.method4.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method5(class="form-check-input")}}
+                                {{ form.method5.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method6(class="form-check-input")}}
+                                {{ form.method6.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>     
+                    </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center">
+                    <div class="card-header">
+                        HPF
+                    </div>
+                    <div class="card-body">                        
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method1(class="form-check-input")}}
+                                {{ form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method2(class="form-check-input")}}
+                                {{ form.method2.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method3(class="form-check-input")}}
+                                {{ form.method3.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method4(class="form-check-input")}}
+                                {{ form.method4.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method5(class="form-check-input")}}
+                                {{ form.method5.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method6(class="form-check-input")}}
+                                {{ form.method6.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>     
+                    </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center">
+                    <div class="card-header">
+                        HPF
+                    </div>
+                    <div class="card-body">                        
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method1(class="form-check-input")}}
+                                {{ form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method2(class="form-check-input")}}
+                                {{ form.method2.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method3(class="form-check-input")}}
+                                {{ form.method3.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method4(class="form-check-input")}}
+                                {{ form.method4.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ form.method5(class="form-check-input")}}
+                                {{ form.method5.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ form.method6(class="form-check-input")}}
+                                {{ form.method6.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>     
+                    </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="setting">        
+            <div class="jumbotron jumbotron-fluid">
+                <h1 class="display-4 text-center">General Setting</h1>
+                <div class="container">
+                    <div class="cl-general">
+                        <div class="btn-general">            
+                            <button class="btn" type="button" data-toggle="collapse" data-target="#color" aria-expanded="false" aria-controls="collapseExample">
+                                Color Setting
+                            </button>
+                        </div>
+                        <div class="collapse" id="color">
+                            
+                            <div class="data-general">
+                                <div>
+                                    {{ form.color.label }} = <output for="color" id="selected-color">
+                                    {{ form.color.data }}</output>
+                                </div>
+                                <div class="range"> 
+                                    {{ form.color(min=0, max=100, onchange="outputUpdateColor(value)") }}
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                    <div class="cl-general">
+                        <div class="btn-general">            
+                            <button class="btn" type="button" data-toggle="collapse" data-target="#brightness" aria-expanded="false" aria-controls="brightness">
+                                Brightness Setting
+                            </button>
+                        </div>
+                        <div class="collapse" id="brightness">
+                            
+                            <div class="data-general">
+                                <div>
+                                    {{ form.brightness.label }} = <output for="brightness" id="selected-brightness">
+                                    {{ form.brightness.data }}</output>
+                                </div>
+                                <div class="range"> 
+                                    {{ form.brightness(min=0, max=100, onchange="outputUpdateBrightness(value)") }}
+                                </div>
+                            </div>
+                        
+                        </div>                
+                    </div>
+                </div>
+            </div>                
+            </div>
+        </div>
+        <div class="col">
+            <div class="setting">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="row">
+
+                    <div class="col-md-9">
+                        <h1 class="display-4 text-right">Filter Setting</h1>
+                    </div>
+                    
+                    <div class="col-md-3 setting-submit text-center">
+                        {{ form.submit(class="btn btn-outline-info") }}
+                    </div>
+                
+                </div>            
+                <div class="container">
+                    <div class="cl-general">
+                        <div class="btn-general">            
+                            <button class="btn" type="button" data-toggle="collapse" data-target="#hpf" aria-expanded="false" aria-controls="collapseExample">
+                                HPF
+                            </button>
+                        </div>
+                        <div class="collapse" id="hpf">
+                            
+                            <div class="data-general">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.kernal.label }}  
+                                        {{ form.kernal }}                                                                            
+                                    </div>
+                                    <div class="col">
+                                        {{ form.kernal.label }}  
+                                        {{ form.kernal }}
+                                    </div>
+                                </div>
+                            </div>
+                              
+                        </div>
+                    </div>
+                    <div class="cl-general">
+                        <div class="btn-general">            
+                            <button class="btn" type="button" data-toggle="collapse" data-target="#lpf" aria-expanded="false" aria-controls="collapseExample">
+                                LPF
+                            </button>
+                        </div>
+                        <div class="collapse" id="lpf">
+                            
+                            <div class="data-general">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.kernal.label }}  
+                                        {{ form.kernal }}                                                                            
+                                    </div>
+                                    <div class="col">
+                                        {{ form.kernal.label }}  
+                                        {{ form.kernal }}
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</form>   
+    
+{% endblock content %}

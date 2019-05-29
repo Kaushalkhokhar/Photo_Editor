@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>      
+    .navbar-nav .navbar-item .nav-link{
+        color: black;
+    }
+
+    .row{
+        margin-right: 0%;
+    }
+
+    .nav-item .nav-link{
+        color:black;
+    }
+
+    .navbar{
+        color: black;
+    }
+    
+    .card-body .row{
+        margin: 0%;
+        padding: 0%;       
+    }
+    .form-check-label{
+        margin-left: 0.7rem;
+    }
+    .form-check-input{
+        margin-left: -0.1rem;     
+    }  
+
+    .card-body .row .cl-left{
+        border-right: 2px solid rgb(175, 155, 155);
+    }
+
+    .jumbotron{
+        padding: 1.25rem 1rem;
+    }
+    
+    .btn{        
+        background-color: rgb(20, 22, 22);        
+        width: 100%;
+        color: white;    
+    }   
+
+    .btn:hover{
+        color: white;        
+    }
+    .cl-general{
+        background-color: rgb(85, 102, 150);
+        text-align: center;
+        border: 2px solid rgba(219, 212, 212, 0.87);
+        border-radius: 5px;
+        margin: 0%;
+        padding: 0%;
+        margin-top: 3%;
+
+        
+    }
+    
+    .data-general{
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        font-size: 20px;         
+    }
+
+    .btn-element{
+        padding-top: 7px;
+    }
+    
+    .setting{
+        margin-left: 3%;
+        margin-right: 3px;        
+    }
+    
+    .setting label{
+        margin:0%;
+        margin-right: 9px;
+        font-size: 20px;
+            
+    }
+
+    select{
+        font-size: 16px;
+        border-radius: 3px;
+        border-width: 3px;         
+    }
+    
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function outputUpdateColor(color) {
+            document.querySelector('#selected-color').value = color;
+        }
+        function outputUpdateBrightness(brightness) {
+            document.querySelector('#selected-brightness').value = brightness;
+        }
+    </script>
+{% extends "layout.html" %}
+
+
+{% block content %}
+<script>
+    function outputUpdateColor(color) {
+        document.querySelector('#selected-color').value = color;
+    }
+    function outputUpdateBrightness(brightness) {
+        document.querySelector('#selected-brightness').value = brightness;
+    }
+</script>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4 text-center">Method Selection Pannel</h1>
+        <form action="" method="POST">
+            {{ filter_form.hidden_tag() }}
+            <div class="row">
+                <div class="col">
+                    <div class="card text-center">
+                    <div class="card-header">
+                        HPF
+                    </div>
+                    <div class="card-body">                        
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>     
+                    </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center">
+                    <div class="card-header">
+                        HPF
+                    </div>
+                    <div class="card-body">                        
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>     
+                    </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center">
+                    <div class="card-header">
+                        HPF
+                    </div>
+                    <div class="card-body">                        
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col cl-left">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}
+                            </div>
+                            <div class="col cl-right">
+                                {{ filter_form.method1(class="form-check-input")}}
+                                {{ filter_form.method1.label(class="form-check-label") }}                                    
+                            </div>
+                        </div>     
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="setting">        
+        <div class="jumbotron jumbotron-fluid">
+            <h1 class="display-4 text-center">General Setting</h1>
+            <div class="container">
+                <div class="cl-general">
+                    <div class="btn-general">            
+                        <button class="btn" type="button" data-toggle="collapse" data-target="#color" aria-expanded="false" aria-controls="collapseExample">
+                            Color Setting
+                        </button>
+                    </div>
+                    <div class="collapse" id="color">
+                        <form action="" method="POST">
+                            {{ filter_form.hidden_tag() }}
+                            <div class="data-general">
+                                <div>
+                                    {{ filter_form.color.label }} = <output for="color" id="selected-color">
+                                    {{ filter_form.color.data }}</output>
+                                </div>
+                                <div class="range"> 
+                                    {{ filter_form.color(min=0, max=100, onchange="outputUpdateColor(value)") }}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="cl-general">
+                    <div class="btn-general">            
+                        <button class="btn" type="button" data-toggle="collapse" data-target="#brightness" aria-expanded="false" aria-controls="brightness">
+                            Brightness Setting
+                        </button>
+                    </div>
+                    <div class="collapse" id="brightness">
+                        <form action="" method="POST">
+                            {{ filter_form.hidden_tag() }}
+                            <div class="data-general">
+                                <div>
+                                    {{ filter_form.brightness.label }} = <output for="brightness" id="selected-brightness">
+                                    {{ filter_form.brightness.data }}</output>
+                                </div>
+                                <div class="range"> 
+                                    {{ filter_form.brightness(min=0, max=100, onchange="outputUpdateBrightness(value)") }}
+                                </div>
+                            </div>
+                        </form>
+                    </div>                
+                </div>
+            </div>
+        </div>                
+        </div>
+    </div>
+    <div class="col">
+        <div class="setting">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <h1 class="display-4 text-right">Filter Setting</h1>
+                </div>
+                <form action="" method="POST">
+                    {{ filter_form.hidden_tag() }}
+                    <div class="col-md-3 setting-submit text-center">
+                        {{ filter_form.submit(class="btn btn-outline-info") }}
+                    </div>
+                </form>
+            </div>            
+            <div class="container">
+                <div class="cl-general">
+                    <div class="btn-general">            
+                        <button class="btn" type="button" data-toggle="collapse" data-target="#hpf" aria-expanded="false" aria-controls="collapseExample">
+                            HPF
+                        </button>
+                    </div>
+                    <div class="collapse" id="hpf">
+                        <form action="" method="POST">
+                            {{ filter_form.hidden_tag() }}
+                            <div class="data-general">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ filter_form.kernal.label }}  
+                                        {{ filter_form.kernal }}                                                                            
+                                    </div>
+                                    <div class="col">
+                                        {{ filter_form.kernal.label }}  
+                                        {{ filter_form.kernal }}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>  
+                    </div>
+                </div>
+                <div class="cl-general">
+                    <div class="btn-general">            
+                        <button class="btn" type="button" data-toggle="collapse" data-target="#lpf" aria-expanded="false" aria-controls="collapseExample">
+                            LPF
+                        </button>
+                    </div>
+                    <div class="collapse" id="lpf">
+                        <form action="" method="POST">
+                            {{ filter_form.hidden_tag() }}
+                            <div class="data-general">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ filter_form.kernal.label }}  
+                                        {{ filter_form.kernal }}                                                                            
+                                    </div>
+                                    <div class="col">
+                                        {{ filter_form.kernal.label }}  
+                                        {{ filter_form.kernal }}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock content %}
+
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

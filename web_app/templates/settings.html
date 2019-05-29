@@ -10,250 +10,139 @@
         document.querySelector('#selected-brightness').value = brightness;
     }
 </script>
-<div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-4 text-center">Method Selection Pannel</h1>
-        <form action="" method="POST">
-            {{ method_form.hidden_tag() }}
-            <div class="row">
-                <div class="col">
-                    <div class="card text-center">
-                    <div class="card-header">
-                        HPF
-                    </div>
-                    <div class="card-body">                        
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}                                    
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}                                    
-                            </div>
-                        </div>     
-                    </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center">
-                    <div class="card-header">
-                        HPF
-                    </div>
-                    <div class="card-body">                        
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}                                    
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}                                    
-                            </div>
-                        </div>     
-                    </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card text-center">
-                    <div class="card-header">
-                        HPF
-                    </div>
-                    <div class="card-body">                        
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}                                    
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col cl-left">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}
-                            </div>
-                            <div class="col cl-right">
-                                {{ method_form.method1(class="form-check-input")}}
-                                {{ method_form.method1.label(class="form-check-label") }}                                    
-                            </div>
-                        </div>     
-                    </div>
-                    </div>
-                </div>
+<center>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col">
+                {{ form.method_id.label }}
+                {{ form.method_id }}            
             </div>
-        </form>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col">
-        <div class="setting">        
-        <div class="jumbotron jumbotron-fluid">
-            <h1 class="display-4 text-center">General Setting</h1>
-            <div class="container">
-                <div class="cl-general">
-                    <div class="btn-general">            
-                        <button class="btn" type="button" data-toggle="collapse" data-target="#color" aria-expanded="false" aria-controls="collapseExample">
-                            Color Setting
-                        </button>
-                    </div>
-                    <div class="collapse" id="color">
-                        <form action="" method="POST">
-                            {{ general_form.hidden_tag() }}
-                            <div class="data-general">
-                                <div>
-                                    {{ general_form.color.label }} = <output for="color" id="selected-color">
-                                    {{ general_form.color.data }}</output>
-                                </div>
-                                <div class="range"> 
-                                    {{ general_form.color(min=0, max=100, onchange="outputUpdateColor(value)") }}
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="cl-general">
-                    <div class="btn-general">            
-                        <button class="btn" type="button" data-toggle="collapse" data-target="#brightness" aria-expanded="false" aria-controls="brightness">
-                            Brightness Setting
-                        </button>
-                    </div>
-                    <div class="collapse" id="brightness">
-                        <form action="" method="POST">
-                            {{ general_form.hidden_tag() }}
-                            <div class="data-general">
-                                <div>
-                                    {{ general_form.brightness.label }} = <output for="brightness" id="selected-brightness">
-                                    {{ general_form.brightness.data }}</output>
-                                </div>
-                                <div class="range"> 
-                                    {{ general_form.brightness(min=0, max=100, onchange="outputUpdateBrightness(value)") }}
-                                </div>
-                            </div>
-                        </form>
-                    </div>                
-                </div>
+            <div class="col">
+                {{ form.image_operations.label }}
+                {{ form.image_operations }}
             </div>
-        </div>                
-        </div>
-    </div>
-    <div class="col">
-        <div class="setting">
-        <div class="jumbotron jumbotron-fluid">
-            <div class="row">
-                <div class="col-md-9">
-                        <h1 class="display-4 text-right">Filter Setting</h1>
-                </div>
-                <div class="col-md-3 setting-submit text-center">
-                    {{ filter_form.submit(class="btn btn-outline-info") }}
-                </div>
-            </div>            
-            <div class="container">
-                <div class="cl-general">
-                    <div class="btn-general">            
-                        <button class="btn" type="button" data-toggle="collapse" data-target="#hpf" aria-expanded="false" aria-controls="collapseExample">
-                            HPF
-                        </button>
-                    </div>
-                    <div class="collapse" id="hpf">
-                        <form action="" method="POST">
-                            {{ filter_form.hidden_tag() }}
-                            <div class="data-general">
-                                <div class="row">
-                                    <div class="col">
-                                        {{ filter_form.kernal.label }}  
-                                        {{ filter_form.kernal }}                                                                            
-                                    </div>
-                                    <div class="col">
-                                        {{ filter_form.kernal.label }}  
-                                        {{ filter_form.kernal }}
-                                    </div>
-                                </div>
-                            </div>
-                        </form>  
-                    </div>
-                </div>
-                <div class="cl-general">
-                    <div class="btn-general">            
-                        <button class="btn" type="button" data-toggle="collapse" data-target="#lpf" aria-expanded="false" aria-controls="collapseExample">
-                            LPF
-                        </button>
-                    </div>
-                    <div class="collapse" id="lpf">
-                        <form action="" method="POST">
-                            {{ filter_form.hidden_tag() }}
-                            <div class="data-general">
-                                <div class="row">
-                                    <div class="col">
-                                        {{ filter_form.kernal.label }}  
-                                        {{ filter_form.kernal }}                                                                            
-                                    </div>
-                                    <div class="col">
-                                        {{ filter_form.kernal.label }}  
-                                        {{ filter_form.kernal }}
-                                    </div>
-                                </div>
-                            </div>
-                        </form>  
-                    </div>
-                </div>
+            <div class="col">
+                {{ form.method_title.label }}
+                {{ form.method_title }}
+            </div>
+            <div class="col">
+                {{ form.active_state }}
+                {{ form.active_state.label }}
             </div>
         </div>
-        </div>
-    </div>
-</div>
+        <div class="row">
+            <div class="col">
+                <div>
+                    <img src="{{ url_for('demo', filename='cameraman.png') }}" 
+                    class="img-fluid" alt="Image" height="150" width="150">
+                </div>
+                <div>
+                    {{ form.original_color.label }} = <output 
+                    for="original_color" id="selected-original_color">
+                    {{ form.original_color.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.original_color(min=0, max=100, onchange="outputUpdateoriginal_color(value)") }}
+                </div>
+                <div>
+                    {{ form.original_brightness.label }} = <output 
+                    for="original_brightness" id="selected-original_brightness">
+                    {{ form.original_brightness.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.original_brightness(min=0, max=100, onchange="outputUpdateoriginal_brightness(value)") }}
+                </div>
+                <div>
+                    {{ form.original_intensity.label }} = <output 
+                    for="original_intensity" id="selected-original_intensity">
+                    {{ form.original_intensity.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.original_intensity(min=0, max=100, onchange="outputUpdateoriginal_brightness(value)") }}
+                </div>
+                <div>
+                    {{ form.original_filter.label }}
+                    {{ form.original_filter }}
+                </div>
+                <div>
+                    {{ form.original_kernal.label }}
+                    {{ form.original_kernal }}
+                </div>
+            </div>
+            <div class="col">
+                <div>
+                    <img src="{{ url_for('demo', filename='cameraman.png') }}" 
+                    class="img-fluid" alt="Image" height="150" width="150">
+                </div>
+                <div>
+                    {{ form.copy_color.label }} = <output 
+                    for="copy_color" id="selected-copy_color">
+                    {{ form.copy_color.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.copy_color(min=0, max=100, onchange="outputUpdatecopy_color(value)") }}
+                </div>
+                <div>
+                    {{ form.copy_brightness.label }} = <output 
+                    for="copy_brightness" id="selected-copy_brightness">
+                    {{ form.copy_brightness.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.copy_brightness(min=0, max=100, onchange="outputUpdatecopy_brightness(value)") }}
+                </div>
+                <div>
+                    {{ form.copy_intensity.label }} = <output 
+                    for="copy_intensity" id="selected-copy_intensity">
+                    {{ form.copy_intensity.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.copy_intensity(min=0, max=100, onchange="outputUpdatecopy_brightness(value)") }}
+                </div>
+                <div>
+                    {{ form.copy_filter.label }}
+                    {{ form.copy_filter }}
+                </div>
+                <div>
+                    {{ form.copy_kernal.label }}
+                    {{ form.copy_kernal }}
+                </div>
+            </div>
+            <div class="col">
+                <div>
+                    <img src="{{ url_for('demo', filename='cameraman.png') }}" 
+                    class="img-fluid" alt="Image" height="150" width="150">
+                </div>
+                <div>
+                    {{ form.result_color.label }} = <output 
+                    for="result_color" id="selected-result_color">
+                    {{ form.result_color.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.result_color(min=0, max=100, onchange="outputUpdateresult_color(value)") }}
+                </div>
+                <div>
+                    {{ form.result_brightness.label }} = <output 
+                    for="result_brightness" id="selected-result_brightness">
+                    {{ form.result_brightness.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.result_brightness(min=0, max=100, onchange="outputUpdateresult_brightness(value)") }}
+                </div>
+                <div>
+                    {{ form.result_intensity.label }} = <output 
+                    for="result_intensity" id="selected-result_intensity">
+                    {{ form.result_intensity.data }}</output>
+                </div>
+                <div class="range"> 
+                    {{ form.result_intensity(min=0, max=100, onchange="outputUpdateresult_brightness(value)") }}
+                </div>                
+                <div class="row">
+                    {{ form.submit }}
+                </div>
+            </div>
+        </div>        
+    </form>
+</center>       
     
 {% endblock content %}

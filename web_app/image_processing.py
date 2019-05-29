@@ -1,7 +1,6 @@
 import os, shutil, cv2
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 from web_app import original, second_img, processed_target
 
 class image_operations():
@@ -21,7 +20,7 @@ class image_operations():
         self.image_path = os.path.join(original, self.file_original[0]) #path of uploaded image  
             
 
-    def convolution(self, plotting):           
+    def convolution(self):           
         img = cv2.imread(self.image_path)
         '''if len(img.shape) == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)''' #To convert color iamge to gray scale 
@@ -32,18 +31,11 @@ class image_operations():
         filename = image_operations.convolution.__name__ + self.file_id + self.file_extension
         destination = "/".join([processed_target, filename])        
         im = Image.fromarray(dst)
-        im.save(destination)        
-
-        if plotting == True:
-            plt.subplot(121),plt.imshow(img),plt.title('Original')
-            plt.xticks([]), plt.yticks([])
-            plt.subplot(122),plt.imshow(dst),plt.title('Averaging')
-            plt.xticks([]), plt.yticks([])
-            plt.show()        
+        im.save(destination)
 
         return filename   
 
-    def averaging(self, plotting):   
+    def averaging(self):   
         img = cv2.imread(self.image_path)
         '''if len(img.shape) == 3:  
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)'''
@@ -52,18 +44,11 @@ class image_operations():
         filename = image_operations.averaging.__name__ + self.file_id + self.file_extension
         destination = "/".join([processed_target, filename])        
         im = Image.fromarray(blur)
-        im.save(destination)
-
-        if plotting == True:
-            plt.subplot(121),plt.imshow(img),plt.title('Original')
-            plt.xticks([]), plt.yticks([])
-            plt.subplot(122),plt.imshow(blur),plt.title('Averaging')
-            plt.xticks([]), plt.yticks([])
-            plt.show() 
+        im.save(destination)        
 
         return filename    
 
-    def gaussian_blur(self, plotting):    
+    def gaussian_blur(self):    
         img = cv2.imread(self.image_path)
         '''if len(img.shape) == 3: 
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)'''
@@ -73,17 +58,10 @@ class image_operations():
         destination = "/".join([processed_target, filename])        
         im = Image.fromarray(blur)
         im.save(destination)
-        
-        if plotting == True:
-            plt.subplot(121),plt.imshow(img),plt.title('Original')
-            plt.xticks([]), plt.yticks([])
-            plt.subplot(122),plt.imshow(blur),plt.title('Averaging')
-            plt.xticks([]), plt.yticks([])
-            plt.show()  
 
         return filename   
 
-    def median_blur(self, plotting):    
+    def median_blur(self):    
         img = cv2.imread(self.image_path)
         '''if len(img.shape) == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)'''
@@ -93,17 +71,10 @@ class image_operations():
         destination = "/".join([processed_target, filename])        
         im = Image.fromarray(blur)
         im.save(destination)
-        
-        if plotting == True:
-            plt.subplot(121),plt.imshow(img),plt.title('Original')
-            plt.xticks([]), plt.yticks([])
-            plt.subplot(122),plt.imshow(blur),plt.title('Averaging')
-            plt.xticks([]), plt.yticks([])
-            plt.show()    
-        
+
         return filename 
 
-    def bilateral_blur(self, plotting):   
+    def bilateral_blur(self):   
         img = cv2.imread(self.image_path)
         '''if len(img.shape) == 3:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)'''
@@ -113,13 +84,6 @@ class image_operations():
         destination = "/".join([processed_target, filename])        
         im = Image.fromarray(blur)
         im.save(destination)
-        
-        if plotting == True:
-            plt.subplot(121),plt.imshow(img),plt.title('Original')
-            plt.xticks([]), plt.yticks([])
-            plt.subplot(122),plt.imshow(blur),plt.title('Averaging')
-            plt.xticks([]), plt.yticks([])
-            plt.show()    
 
         return filename
 
