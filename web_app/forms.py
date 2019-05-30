@@ -69,22 +69,22 @@ class GeneralForm(FlaskForm):
 
 class AdminForm(FlaskForm):
     method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,11)])
-    image_operations = SelectField('Operations', choices=[('one', 'Addition'), \
+    image_operation = SelectField('Operations', choices=[('one', 'Addition'), \
                                     ('two', 'Substraction'), ('three', 'Multiplication')])
     method_title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     active_state = BooleanField('Active State',default=True)
-    original_color = IntegerRangeField('Color', default=50)
+    original_contrast = IntegerRangeField('contrast', default=50)
     original_brightness = IntegerRangeField('Brightness', default=50)
     original_intensity = IntegerRangeField('Intensity', default=50)
-    copy_color = IntegerRangeField('Color', default=50)
+    copy_contrast = IntegerRangeField('contrast', default=50)
     copy_brightness = IntegerRangeField('Brightness', default=50)
     copy_intensity = IntegerRangeField('Intensity', default=50)
-    result_color = IntegerRangeField('Color', default=50)
+    result_contrast = IntegerRangeField('contrast', default=50)
     result_brightness = IntegerRangeField('Brightness', default=50)
     result_intensity = IntegerRangeField('Intensity', default=50)
-    original_filter = SelectField('Filter', choices=[('one', 'LPF'), ('two', 'HPF'), ('three', 'BPF')])
+    original_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
     original_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
-    copy_filter = SelectField('Filter', choices=[('one', 'LPF'), ('two', 'HPF'), ('three', 'BPF')])
+    copy_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
     copy_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])    
     submit = SubmitField('Submit')
     
@@ -99,7 +99,7 @@ class AdminForm(FlaskForm):
     method7 = BooleanField('Substraction', default=True)
     method8 = BooleanField('Multiplication', default=True)
     method9 = BooleanField('Not defined', default=True)
-    color = IntegerRangeField('Color', default=50)
+    contrast = IntegerRangeField('Color', default=50)
     brightness = IntegerRangeField('Brightness', default=50)
     intensity = IntegerRangeField('Intensity', default=50)
     other = IntegerRangeField('Other', default=50)

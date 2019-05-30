@@ -38,19 +38,19 @@ class Methods(db.Model):
     method_id = db.Column(db.Integer, nullable=False)
     method_title = db.Column(db.String(50), nullable=False)
     image_operation = db.Column(db.String, default="Addition")
-    result_color = db.Column(db.Integer, default=50)
+    result_contrast = db.Column(db.Integer, default=50)
 
     result_brightness = db.Column(db.Integer, default=50)
     result_intensity = db.Column(db.Integer, default=50)
-    original_color = db.Column(db.Integer, default=50)
+    original_contrast = db.Column(db.Integer, default=50)
     original_brightness = db.Column(db.Integer, default=50)
     oroginal_intensity = db.Column(db.Integer, default=50)
-    copy_color = db.Column(db.Integer, default=50)
+    copy_contrast = db.Column(db.Integer, default=50)
     copy_brightness = db.Column(db.Integer, default=50)
     copy_intensity = db.Column(db.Integer, default=50)
-    original_filter = db.Column(db.String, default="LPF")
+    original_filter = db.Column(db.String, default="averaging")
     original_kernal = db.Column(db.String, default="3*3")
-    copy_filter = db.Column(db.String, default="LPF")
+    copy_filter = db.Column(db.String, default="averaging")
     copy_kernal = db.Column(db.String, default="3*3")
     active_state = db.Column(db.Boolean, default=True)
     #active_state = db.Column(db.Boolean, default=True)    
@@ -58,7 +58,7 @@ class Methods(db.Model):
     #other = db.Column(db.String(20), default="other")
 
     def __repr__(self):
-        return f"Methods('{self.title}', '{self.method_id}')"
+        return f"Methods('{self.method_title}', '{self.method_id}')"
     
 
 class MyModelView(ModelView):

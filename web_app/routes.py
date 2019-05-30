@@ -4,8 +4,8 @@ import random
 import numpy as np
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
-from web_app import app, original, processed_target, second_img, bcrypt, db, mail, current_method
-from web_app.image_processing import image_operations
+from web_app import app, original, second, result, original_two, bcrypt, db, mail, current_method
+from web_app.image_processing import Image_processing
 from web_app.histogram import Histogram 
 from bokeh.plotting import figure, show, output_file, save
 from bokeh.models import ColumnDataSource
@@ -24,62 +24,62 @@ def home():
 
 @app.route('/upload')
 def upload():
+    if os.path.isdir(original):
+        shutil.rmtree(original)
+        shutil.rmtree(original_two)
+        shutil.rmtree(second)
+        shutil.rmtree(result)
+        os.mkdir(original)
+        os.mkdir(second)
+        os.mkdir(result)
+        os.mkdir(original_two)
+    else:    
+        os.mkdir(original)
+        os.mkdir(second)
+        os.mkdir(result)
+        os.mkdir(original_two)  
     return render_template('upload.html', title='Upload')
 
 @app.route('/display', methods = ['GET', 'POST'])
 def display_image():  
     #To render this method to link for decision making
-    method1 = Methods.query.filter_by(method_id=1).first().title
-    method2 = Methods.query.filter_by(method_id=2).first().title
-    method3 = Methods.query.filter_by(method_id=3).first().title
-    method4 = Methods.query.filter_by(method_id=4).first().title
-    method5 = Methods.query.filter_by(method_id=5).first().title
-    method6 = Methods.query.filter_by(method_id=6).first().title
-    method7 = Methods.query.filter_by(method_id=7).first().title 
-    method8 = Methods.query.filter_by(method_id=8).first().title  
+    method1 = Methods.query.filter_by(method_id=1).first().method_id
+    method2 = Methods.query.filter_by(method_id=2).first().method_id
+    method3 = Methods.query.filter_by(method_id=3).first().method_id
+    method4 = Methods.query.filter_by(method_id=4).first().method_id
+    method5 = Methods.query.filter_by(method_id=5).first().method_id
+    method6 = Methods.query.filter_by(method_id=6).first().method_id
+    method7 = Methods.query.filter_by(method_id=7).first().method_id 
+    method8 = Methods.query.filter_by(method_id=8).first().method_id  
 
-    #if image is not uploaded in file field of home template then return to home again else executes the code given
-    '''if not request.files.getlist('image'):
-        return redirect(url_for('upload'))'''
+    
 
     try:
-        if 'image' not in request.files:
-            return redirect(request.url)
+        #if image is not uploaded in file field of home template then return to home again else executes the code given
+        if not request.files.getlist('image'):
+            return redirect(url_for('upload'))
 
         else:
             if not os.path.isdir(original):#Creates direcotry if not, else passes it
                 os.mkdir(original)
-                os.mkdir(second_img)
-            elif not os.path.isdir(second_img):#Creates direcotry if not, else passes it
-                os.mkdir(second_img)
+                os.mkdir(second)
+                os.mkdir(original_two)
+            elif not os.path.isdir(second):#Creates direcotry if not, else passes it
+                os.mkdir(second)
             
             #To get the files uploaded to home page and stores it to target directory
             for file in request.files.getlist('image'):            
                 filename = file.filename            
                 if not os.listdir(original):
                     destination = "/".join([original, filename])                
-                    file.save(destination)           
-                elif not os.listdir(second_img):
-                    destination = "/".join([second_img, filename])
+                    file.save(destination)       
+                
+                    '''destination = "/".join([second, filename])
                     file.save(destination)
-                    file_original = os.listdir(original)
-                    file_second = os.listdir(second_img)
-                    image_path = os.path.join(original, file_original[0]) #path of uploaded image  
-                    image_path_2 = os.path.join(second_img, file_second[0])
-                    img = cv2.imread(image_path)
-                    img_2 = cv2.imread(image_path_2)                
-                    if len(img.shape) != len(img_2.shape):
-                        shutil.rmtree(second_img)                                        
-                        os.mkdir(second_img)
-                        flash('Shape of image you have uploaded does not match with original image. \
-                            So please upload valid image', 'danger')
-                        return redirect(url_for('upload'))
-                    filename = os.listdir(original)[0]
-                    flash('Image is uploaded.Now you can perform arithmatic operations', 'success')                  
-                else:
-                    flash('You have already ulpoaded two images. So select operations \
-                        from navigation bar', 'success')
-                    filename = os.listdir(original)[0]
+
+                    destination = "/".join([original_two, filename])
+                    file.save(destination)'''
+
 
         # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
         return render_template('display.html', filename=filename, method1=method1, method2=method2, \
@@ -91,7 +91,35 @@ def display_image():
    
 @app.route('/display/<filename>', methods=['GET', 'POST'])
 def show(filename):          
-    return send_from_directory('Original', filename)
+    return send_from_directory('original', filename)
+
+@app.route('/desplay_original/<filename>', methods=['GET', 'POST'])
+def show_original_two(filename):
+    filename = os.listdir(original_two)[0]
+    if  filename != None:
+        return send_from_directory('original_two', filename)
+    else:
+        filename = os.listdir(original)[0]
+        return send_from_directory('original', filename)
+
+@app.route('/display_second/<filename>', methods=['GET', 'POST'])
+def show_second(filename):
+    filename = os.listdir(second)[0]
+    print(filename)
+    if filename != None:
+        return send_from_directory('second', filename)
+    else:
+        filename = os.listdir(original)[0]
+        return send_from_directory('original', filename)
+
+@app.route('/display_result/<filename>', methods=['GET', 'POST'])
+def show_result(filename):
+    filename = os.listdir(result)[0]
+    if filename != None:
+        return send_from_directory('result', filename)
+    else:
+        filename = os.listdir(original)[0]
+        return send_from_directory('original', filename)
 
 @app.route('/demo/<filename>', methods=['GET', 'POST'])
 def demo(filename):          
@@ -101,75 +129,72 @@ def demo(filename):
 def new_session():
     if os.path.isdir(original):
         shutil.rmtree(original)
-        shutil.rmtree(second_img)
-        shutil.rmtree(processed_target)
+        shutil.rmtree(second)
+        shutil.rmtree(result)
         os.mkdir(original)
-        os.mkdir(second_img)
-        os.mkdir(processed_target)
+        os.mkdir(second)
+        os.mkdir(result)
     else:    
         os.mkdir(original)
-        os.mkdir(second_img)
-        os.mkdir(processed_target)          
+        os.mkdir(second)
+        os.mkdir(result)          
     return redirect(url_for('upload'))
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
 def processing(filename, method):
-    if Methods.query.filter_by(method_title=method).first().active_state == False:
+    if Methods.query.filter_by(method_id=method).first().active_state == False:
         flash('This method is not allowed for you. Please try different one', 'info')
         return redirect('display_image')
     
     if not os.listdir(original):
         return redirect(url_for('upload'))
     
-    #To delete previous processes image and cirectory and creates new directory every time it runs processing
+    '''#To delete previous processes image and cirectory and creates new directory every time it runs processing
     #target = os.path.join(APP_ROOT, 'processed_images/') #To store processed image
-    if os.path.isdir(processed_target):
-        shutil.rmtree(processed_target)            
-        os.mkdir(processed_target)
+    if os.path.isdir(result):
+        shutil.rmtree(result)            
+        os.mkdir(result)
     else:    
-        os.mkdir(processed_target)
+        os.mkdir(result)'''
 
     #To render this method to link for decision making
-    method1 = Methods.query.filter_by(method_id=1).first().title
-    method2 = Methods.query.filter_by(method_id=2).first().title
-    method3 = Methods.query.filter_by(method_id=3).first().title
-    method4 = Methods.query.filter_by(method_id=4).first().title
-    method5 = Methods.query.filter_by(method_id=5).first().title
-    method6 = Methods.query.filter_by(method_id=6).first().title
-    method7 = Methods.query.filter_by(method_id=7).first().title 
-    method8 = Methods.query.filter_by(method_id=8).first().title        
+    method1 = Methods.query.filter_by(method_id=1).first().method_id
+    method2 = Methods.query.filter_by(method_id=2).first().method_id
+    method3 = Methods.query.filter_by(method_id=3).first().method_id
+    method4 = Methods.query.filter_by(method_id=4).first().method_id
+    method5 = Methods.query.filter_by(method_id=5).first().method_id
+    method6 = Methods.query.filter_by(method_id=6).first().method_id
+    method7 = Methods.query.filter_by(method_id=7).first().method_id 
+    method8 = Methods.query.filter_by(method_id=8).first().method_id        
 
     #processing the image based on reference link and method attached to that link
-    if method ==  method1:
-        convo = image_operations()      
-        filename = convo.convolution()       
-    elif method ==  method2:        
-        avrg = image_operations()   
-        filename = avrg.averaging()           
-    elif method ==  method3:
-        gblur = image_operations()      
-        filename = gblur.gaussian_blur()
-    elif method ==  method4:    
+    if Methods.query.filter_by(method_id=method).first().image_operations ==  "Addition":             
+        filename = Image_processing().addition(method)       
+    elif Methods.query.filter_by(method_id=method).first().image_operations ==  "Substraction":                  
+        filename = Image_processing().substraction(method)           
+    elif Methods.query.filter_by(method_id=method).first().image_operations ==  "Multiplication":            
+        filename = Image_processing().multiplication(method)
+    '''elif method ==  method4:    
         mblur = image_operations()
         filename = mblur.median_blur()
     elif method ==  method5:    
         bblur = image_operations()
         filename = bblur.bilateral_blur()
     elif method ==  method6:
-        if not os.listdir(second_img):
+        if not os.listdir(second):
             flash('You have upload one more image to perform arithmatic operations', 'info')          
             return redirect(url_for('upload'))
         filename = image_operations().addition()
     elif method ==  method7:
-        if not os.listdir(second_img):
+        if not os.listdir(second):
             flash('You have upload one more image to perform arithmatic operations', 'info')          
             return redirect(url_for('upload'))
         filename = image_operations().substraction()
     elif method ==  method8:
-        if not os.listdir(second_img):
+        if not os.listdir(second):
             flash('You have upload one more image to perform arithmatic operations', 'info')          
             return redirect(url_for('upload'))
-        filename = image_operations().multiplication()
+        filename = image_operations().multiplication()'''
         
         
     # we need to store processed file in our static folder then we can render by giving filename qual to our processed file 
@@ -231,15 +256,15 @@ def logout():
     #To delete previous uploaded image and directory and creates new directory every time it runs home route    
     if os.path.isdir(original):
         shutil.rmtree(original)
-        shutil.rmtree(second_img)
-        shutil.rmtree(processed_target)
+        shutil.rmtree(second)
+        shutil.rmtree(result)
         os.mkdir(original)
-        os.mkdir(second_img)
-        os.mkdir(processed_target)
+        os.mkdir(second)
+        os.mkdir(result)
     else:    
         os.mkdir(original)
-        os.mkdir(second_img)
-        os.mkdir(processed_target)
+        os.mkdir(second)
+        os.mkdir(result)
 
     logout_user()
     return redirect(url_for('home'))
@@ -290,50 +315,75 @@ def reset_token(token):
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():    
     form = AdminForm()
+    filename = os.listdir(original)[0]
+    filename_original_two = os.listdir(original)[0]
+    filename_second = os.listdir(original)[0]
+    filename_result = os.listdir(original)[0]
 
     if request.method == 'POST':
         
         if Methods.query.filter_by(method_id=form.method_id.data).first() is None:
-            method = Methods(method_id=form.method_id.data, method_title=form.method_title.data, 
-                            image_operations=form.image_operations.data, result_color=form.result_color.data, 
-                            result_brightness=form.result_brightness.data,result_intensity=form.result_intensity.data, 
-                            original_color=form.original_color.data, origianl_brightness=form.origianl_brightness.data, 
-                            original_intensity=form.original_intensity.data, copy_color=form.copy_color.data, 
-                            copy_brightness=form.copy_brightness.data, copy_intensity=form.copy_intensity.data, 
-                            original_filter=form.original_filter.data, original_kernal=form.original_kernal.data, 
-                            copy_filter=form.copy_filter.data, copy_kernal=form.copy_kernal.data, 
+            method = Methods(method_id=form.method_id.data, 
+                            method_title=form.method_title.data, 
+                            image_operation=dict(form.image_operation.choices).get(form.image_operation.data), 
+                            result_contrast=form.result_contrast.data, 
+                            result_brightness=form.result_brightness.data,
+                            result_intensity=form.result_intensity.data, 
+                            original_contrast=form.original_contrast.data, 
+                            original_brightness=form.original_brightness.data, 
+                            oroginal_intensity=form.original_intensity.data, 
+                            copy_contrast=form.copy_contrast.data, 
+                            copy_brightness=form.copy_brightness.data, 
+                            copy_intensity=form.copy_intensity.data, 
+                            original_filter=dict(form.original_filter.choices).get(form.original_filter.data), 
+                            original_kernal=dict(form.original_kernal.choices).get(form.original_kernal.data), 
+                            copy_filter=dict(form.copy_filter.choices).get(form.copy_filter.data), 
+                            copy_kernal=dict(form.copy_kernal.choices).get(form.copy_kernal.data), 
                             active_state=form.active_state.data)
             db.session.add(method)
             db.session.commit()
 
-            flash('Method is created', 'info')
+            if Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Addition":             
+                filename_original_two, filename_second, filename_result = Image_processing().addition(method_id=form.method_id.data)       
+            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Substraction":                  
+                filename_original_two, filename_second, filename_result = Image_processing().substraction(form.method_id.data)           
+            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
+                filename_original_two, filename_second, filename_result = Image_processing().multiplication(form.method_id.data)
+            flash('Method is created', 'info')            
+
         else:
             method = Methods.query.filter_by(method_id=form.method_id.data).first()
-            #method.image_operations = dict(form.image_operations.choices).get(form.image_operations.data)
-            method.image_operations = form.image_operations.data            
+            method.image_operation = dict(form.image_operation.choices).get(form.image_operation.data)            
             method.method_title = form.method_title.data
             method.active_state = form.active_state.data
-            method.original_color = form.original_color.data
+            method.original_contrast = form.original_contrast.data
             method.original_brightness = form.original_brightness.data
-            method.original_intensity = form.original_intensity.data
-            method.copy_color = form.copy_color.data
+            method.oroginal_intensity = form.original_intensity.data
+            method.copy_contrast = form.copy_contrast.data
             method.copy_brightness = form.copy_brightness.data
             method.copy_intensity = form.copy_intensity.data
-            method.result_color = form.result_color.data
+            method.result_contrast = form.result_contrast.data
             method.result_brightness = form.result_brightness.data
             method.result_intensity = form.result_intensity.data
-            method.original_filter = form.original_filter.data
-            method.original_kernal = form.original_kernal.data
-            method.copy_filter = form.copy_filter.data
-            method.copy_kernal = form.copy_kernal.data
+            method.original_filter = dict(form.original_filter.choices).get(form.original_filter.data)
+            method.original_kernal = dict(form.original_kernal.choices).get(form.original_kernal.data)
+            method.copy_filter = dict(form.copy_filter.choices).get(form.copy_filter.data)
+            method.copy_kernal = dict(form.copy_kernal.choices).get(form.copy_kernal.data)
             db.session.commit()
+
+            if Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Addition":             
+                filename_original_two, filename_second, filename_result = Image_processing().addition(method_id=form.method_id.data)       
+            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Substraction":                  
+                filename_original_two, filename_second, filename_result = Image_processing().substraction(method_id=form.method_id.data)           
+            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
+                filename_original_two, filename_second, filename_result = Image_processing().multiplication(method_id=form.method_id.data)
             flash('Method is updated')
 
 
-        #Methods.query.filter_by(method_id=1).first().state = form.method1.data
-
-
-    return render_template('settings.html', form=form)
+    return render_template('settings.html', form=form, filename=filename,
+                            filename_original_two=filename_original_two, 
+                            filename_second=filename_second, 
+                            filename_result=filename_result)
 
 '''@app.route('/testing', methods=['GET', 'POST'])
 def testing():

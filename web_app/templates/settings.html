@@ -3,8 +3,8 @@
 
 {% block content %}
 <script>
-    function outputUpdateColor(color) {
-        document.querySelector('#selected-color').value = color;
+    function outputUpdatecontrast(contrast) {
+        document.querySelector('#selected-contrast').value = contrast;
     }
     function outputUpdateBrightness(brightness) {
         document.querySelector('#selected-brightness').value = brightness;
@@ -19,8 +19,8 @@
                 {{ form.method_id }}            
             </div>
             <div class="col">
-                {{ form.image_operations.label }}
-                {{ form.image_operations }}
+                {{ form.image_operation.label }}
+                {{ form.image_operation }}
             </div>
             <div class="col">
                 {{ form.method_title.label }}
@@ -34,16 +34,16 @@
         <div class="row">
             <div class="col">
                 <div>
-                    <img src="{{ url_for('demo', filename='cameraman.png') }}" 
+                    <img src="{{ url_for('show_original_two', filename=filename_original_two) }}" 
                     class="img-fluid" alt="Image" height="150" width="150">
                 </div>
                 <div>
-                    {{ form.original_color.label }} = <output 
-                    for="original_color" id="selected-original_color">
-                    {{ form.original_color.data }}</output>
+                    {{ form.original_contrast.label }} = <output 
+                    for="original_contrast" id="selected-original_contrast">
+                    {{ form.original_contrast.data }}</output>
                 </div>
                 <div class="range"> 
-                    {{ form.original_color(min=0, max=100, onchange="outputUpdateoriginal_color(value)") }}
+                    {{ form.original_contrast(min=0, max=100, onchange="outputUpdateoriginal_contrast(value)") }}
                 </div>
                 <div>
                     {{ form.original_brightness.label }} = <output 
@@ -72,16 +72,16 @@
             </div>
             <div class="col">
                 <div>
-                    <img src="{{ url_for('demo', filename='cameraman.png') }}" 
+                    <img src="{{ url_for('show_second', filename=filename_second) }}" 
                     class="img-fluid" alt="Image" height="150" width="150">
                 </div>
                 <div>
-                    {{ form.copy_color.label }} = <output 
-                    for="copy_color" id="selected-copy_color">
-                    {{ form.copy_color.data }}</output>
+                    {{ form.copy_contrast.label }} = <output 
+                    for="copy_contrast" id="selected-copy_contrast">
+                    {{ form.copy_contrast.data }}</output>
                 </div>
                 <div class="range"> 
-                    {{ form.copy_color(min=0, max=100, onchange="outputUpdatecopy_color(value)") }}
+                    {{ form.copy_contrast(min=0, max=100, onchange="outputUpdatecopy_contrast(value)") }}
                 </div>
                 <div>
                     {{ form.copy_brightness.label }} = <output 
@@ -110,16 +110,16 @@
             </div>
             <div class="col">
                 <div>
-                    <img src="{{ url_for('demo', filename='cameraman.png') }}" 
+                    <img src="{{ url_for('show_result', filename=filename_result) }}" 
                     class="img-fluid" alt="Image" height="150" width="150">
                 </div>
                 <div>
-                    {{ form.result_color.label }} = <output 
-                    for="result_color" id="selected-result_color">
-                    {{ form.result_color.data }}</output>
+                    {{ form.result_contrast.label }} = <output 
+                    for="result_contrast" id="selected-result_contrast">
+                    {{ form.result_contrast.data }}</output>
                 </div>
                 <div class="range"> 
-                    {{ form.result_color(min=0, max=100, onchange="outputUpdateresult_color(value)") }}
+                    {{ form.result_contrast(min=0, max=100, onchange="outputUpdateresult_contrast(value)") }}
                 </div>
                 <div>
                     {{ form.result_brightness.label }} = <output 

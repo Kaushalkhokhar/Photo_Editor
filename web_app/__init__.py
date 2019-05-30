@@ -23,8 +23,9 @@ admin_user = "kaushal2413@gmail.com"
 current_method = {'name': 'None'}
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-original = os.path.join(APP_ROOT, 'Original/') #To create path for storing image in local directory
-processed_target = os.path.join(APP_ROOT, 'processed_images/') #To store processed image
-second_img = os.path.join(APP_ROOT, 'Second/')
+original = os.path.join(APP_ROOT, 'original/') #To create path for storing image in local directory
+result = os.path.join(APP_ROOT, 'result/') #To store processed image
+second = os.path.join(APP_ROOT, 'second/')
+original_two = os.path.join(APP_ROOT, 'original_two/')
 
 from web_app import routes
