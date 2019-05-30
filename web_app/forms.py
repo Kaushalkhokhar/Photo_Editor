@@ -82,9 +82,9 @@ class AdminForm(FlaskForm):
     result_contrast = IntegerRangeField('contrast', default=50)
     result_brightness = IntegerRangeField('Brightness', default=50)
     result_intensity = IntegerRangeField('Intensity', default=50)
-    original_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
+    original_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur'), ('five', 'without_filter')])
     original_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
-    copy_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
+    copy_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur'),('five', 'without_filter')])
     copy_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])    
     submit = SubmitField('Submit')
     

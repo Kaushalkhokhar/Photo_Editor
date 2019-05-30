@@ -87,6 +87,37 @@ class Image_processing():
         im.save(destination)
 
         return filename
+    
+    @staticmethod
+    def filter(img, filter_type, kernal):
+        if filter_type == "averaging":
+            if kernal == "5*5":
+                output = cv2.blur(img,(5,5))
+            else:
+                output = cv2.blur(img,(3,3))
+            
+        elif filter_type == "gaussian_blur":
+            if kernal == "5*5":
+                output = cv2.GaussianBlur(img,(5,5),0)
+            else:
+                output = cv2.GaussianBlur(img,(3,3),0)
+
+        elif filter_type == "median_blur":
+            if kernal == "5*5":
+                output = cv2.medianBlur(img,5)
+            else:
+                output = cv2.medianBlur(img,5)
+
+        elif filter_type == "bilateral_blur":
+            if kernal == "5*5":
+                output = cv2.bilateralFilter(img,9,75,75)
+            else:
+                output = cv2.bilateralFilter(img,9,75,75)
+        else:
+            output = img
+        
+        return output
+
 
     def addition(self, method_id):
         if os.path.isdir(result):
@@ -126,7 +157,11 @@ class Image_processing():
         copy_alpha = method.copy_contrast/50
         copy_beta = method.copy_brightness - 50
         result_alpha = method.result_contrast/50
-        result_beta = method.result_brightness - 50  
+        result_beta = method.result_brightness - 50
+        original_filter = method.original_filter
+        original_kernal = method.original_kernal
+        copy_filter = method.copy_filter
+        copy_kernal = method.copy_kernal  
         '''for y in range(img.shape[0]):
             for x in range(img.shape[1]):
                 for c in range(img.shape[2]):
@@ -134,6 +169,7 @@ class Image_processing():
                     #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
 
         new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
+        new_img = Image_processing().filter(new_img, original_filter, original_kernal)
 
         '''for y in range(img.shape[0]):
             for x in range(img.shape[1]):
@@ -141,6 +177,7 @@ class Image_processing():
                     new_img_2[y,x,c] = np.clip(copy_alpha*img_2[y,x,c] + copy_beta, 0, 255)'''
 
         new_img_2 = cv2.convertScaleAbs(img, alpha=copy_alpha, beta=copy_beta)
+        new_img_2 = Image_processing().filter(new_img_2, copy_filter, copy_kernal)
 
         add = cv2.add(new_img,new_img_2)
         '''for y in range(add.shape[0]):
@@ -171,46 +208,183 @@ class Image_processing():
         
         return filename_original_two, filename_second, filename_result
 
-    def substraction(self, method):
+    def substraction(self, method_id):
         if os.path.isdir(result):
-            shutil.rmtree(result)            
+            shutil.rmtree(result)
+            shutil.rmtree(original_two)
+            shutil.rmtree(second)                       
             os.mkdir(result)
+            os.mkdir(original_two)
+            os.mkdir(second)            
         else:    
             os.mkdir(result)
+            os.mkdir(original_two)
+            os.mkdir(second)            
 
         file_second = os.listdir(second)
-        image_path_2 = os.path.join(second, file_second[0])  
+        #image_path_2 = os.path.join(second, file_second[0])  
         img = cv2.imread(self.image_path)
-        img_2 = cv2.imread(image_path_2)
-        
+        img_2 = img
 
-        sub = img - img_2        
-        filename = image_operations.substraction.__name__ + self.file_id + self.file_extension
-        destination = "/".join([result, filename])        
-        im = Image.fromarray(sub)
-        im.save(destination)        
+        method = Methods.query.filter_by(method_id=method_id).first()     
         
-        return filename
+        
+        new_img = np.zeros(img.shape, img.dtype)
+        new_img_2 = new_img
+        new_add = new_img
+       
+        alpha = 1.0 # Simple contrast control
+        beta = 0    # Simple brightness control
+        '''original_alpha = (1 + (method.original_contrast * 0.02 ))
+        original_beta = method.original_brightness
+        copy_alpha = (1 + (method.copy_contrast * 0.02))
+        copy_beta = method.copy_brightness
+        result_alpha = (1 + (method.result_contrast * 0.02))
+        result_beta = method.result_brightness'''
+        original_alpha = method.original_contrast/50
+        original_beta = method.original_brightness - 50
+        copy_alpha = method.copy_contrast/50
+        copy_beta = method.copy_brightness - 50
+        result_alpha = method.result_contrast/50
+        result_beta = method.result_brightness - 50
+        original_filter = method.original_filter
+        original_kernal = method.original_kernal
+        copy_filter = method.copy_filter
+        copy_kernal = method.copy_kernal  
+        '''for y in range(img.shape[0]):
+            for x in range(img.shape[1]):
+                for c in range(img.shape[2]):
+                    new_img[y,x,c] = np.clip(original_alpha*img[y,x,c] + original_beta, 0, 255)
+                    #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
 
-    def multiplication(self, method):
+        new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
+        new_img = Image_processing().filter(new_img, original_filter, original_kernal)
+
+        '''for y in range(img.shape[0]):
+            for x in range(img.shape[1]):
+                for c in range(img.shape[2]):
+                    new_img_2[y,x,c] = np.clip(copy_alpha*img_2[y,x,c] + copy_beta, 0, 255)'''
+
+        new_img_2 = cv2.convertScaleAbs(img, alpha=copy_alpha, beta=copy_beta)
+        new_img_2 = Image_processing().filter(new_img_2, copy_filter, copy_kernal)
+
+        sub = new_img - new_img_2
+        '''for y in range(sub.shape[0]):
+            for x in range(sub.shape[1]):
+                for c in range(sub.shape[2]):
+                    new_sub[y,x,c] = np.clip(result_alpha*sub[y,x,c] + result_beta, 0, 255)'''
+
+        new_sub = cv2.convertScaleAbs(sub, alpha=result_alpha, beta=result_beta)
+
+
+        filename_result = Image_processing.substraction.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([result, filename_result])        
+        im = Image.fromarray(new_sub)
+        im.save(destination)
+
+        filename_original_two = Image_processing.substraction.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([original_two, filename_original_two])        
+        im = Image.fromarray(new_img)
+        im.save(destination) 
+
+        filename_second = Image_processing.substraction.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([second, filename_second])        
+        im = Image.fromarray(new_img_2)
+        im.save(destination)         
+        
+        return filename_original_two, filename_second, filename_result
+
+    def multiplication(self, method_id):
         if os.path.isdir(result):
-            shutil.rmtree(result)            
+            shutil.rmtree(result)
+            shutil.rmtree(original_two)
+            shutil.rmtree(second)                       
             os.mkdir(result)
+            os.mkdir(original_two)
+            os.mkdir(second)            
         else:    
             os.mkdir(result)
-            
-        file_second = os.listdir(second)
-        image_path_2 = os.path.join(second, file_second[0])  
-        img = cv2.imread(self.image_path)
-        img_2 = cv2.imread(image_path_2)        
+            os.mkdir(original_two)
+            os.mkdir(second)            
 
-        mul = cv2.multiply(img, img_2)       
-        filename = image_operations.multiplication.__name__ + self.file_id + self.file_extension
-        destination = "/".join([result, filename])        
-        im = Image.fromarray(mul)
-        im.save(destination)        
+        file_second = os.listdir(second)
+        #image_path_2 = os.path.join(second, file_second[0])  
+        img = cv2.imread(self.image_path)
+        img_2 = img
+
+        method = Methods.query.filter_by(method_id=method_id).first()     
         
-        return filename
+        
+        new_img = np.zeros(img.shape, img.dtype)
+        new_img_2 = new_img
+        new_add = new_img
+       
+        alpha = 1.0 # Simple contrast control
+        beta = 0    # Simple brightness control
+        '''original_alpha = (1 + (method.original_contrast * 0.02 ))
+        original_beta = method.original_brightness
+        copy_alpha = (1 + (method.copy_contrast * 0.02))
+        copy_beta = method.copy_brightness
+        result_alpha = (1 + (method.result_contrast * 0.02))
+        result_beta = method.result_brightness'''
+        original_alpha = method.original_contrast/50
+        original_beta = method.original_brightness - 50
+        copy_alpha = method.copy_contrast/50
+        copy_beta = method.copy_brightness - 50
+        result_alpha = method.result_contrast/50
+        result_beta = method.result_brightness - 50
+        original_filter = method.original_filter
+        original_kernal = method.original_kernal
+        copy_filter = method.copy_filter
+        copy_kernal = method.copy_kernal  
+        '''for y in range(img.shape[0]):
+            for x in range(img.shape[1]):
+                for c in range(img.shape[2]):
+                    new_img[y,x,c] = np.clip(original_alpha*img[y,x,c] + original_beta, 0, 255)
+                    #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
+
+        new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
+        new_img = Image_processing().filter(new_img, original_filter, original_kernal)
+
+        '''for y in range(img.shape[0]):
+            for x in range(img.shape[1]):
+                for c in range(img.shape[2]):
+                    new_img_2[y,x,c] = np.clip(copy_alpha*img_2[y,x,c] + copy_beta, 0, 255)'''
+
+        new_img_2 = cv2.convertScaleAbs(img, alpha=copy_alpha, beta=copy_beta)
+        new_img_2 = Image_processing().filter(new_img_2, copy_filter, copy_kernal)
+
+        mul = np.multiply(new_img, new_img_2)
+        '''for y in range(mul.shape[0]):
+            for x in range(mul.shape[1]):
+                for c in range(mul.shape[2]):
+                    new_mul[y,x,c] = np.clip(result_alpha*mul[y,x,c] + result_beta, 0, 255)'''
+
+        new_mul = cv2.convertScaleAbs(mul, alpha=result_alpha, beta=result_beta)
+
+
+        filename_result = Image_processing.multiplication.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([result, filename_result])        
+        im = Image.fromarray(new_mul)
+        im.save(destination)
+
+        filename_original_two = Image_processing.multiplication.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([original_two, filename_original_two])        
+        im = Image.fromarray(new_img)
+        im.save(destination) 
+
+        filename_second = Image_processing.multiplication.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([second, filename_second])        
+        im = Image.fromarray(new_img_2)
+        im.save(destination)         
+        
+        return filename_original_two, filename_second, filename_result
         
         
         
