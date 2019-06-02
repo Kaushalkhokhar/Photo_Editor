@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, IntegerField, FloatField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from wtforms.fields.html5 import IntegerRangeField
 #from flask_wtf.html5 import IntegerRangeField
 from web_app.model import User
@@ -68,7 +68,7 @@ class GeneralForm(FlaskForm):
     other = IntegerRangeField('Other', default=50)
 
 class AdminForm(FlaskForm):
-    method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,11)])
+    method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,12)])
     image_operation = SelectField('Operations', choices=[('one', 'Addition'), \
                                     ('two', 'Substraction'), ('three', 'Multiplication')])
     method_title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
@@ -82,11 +82,18 @@ class AdminForm(FlaskForm):
     result_contrast = IntegerRangeField('contrast', default=50)
     result_brightness = IntegerRangeField('Brightness', default=50)
     result_intensity = IntegerRangeField('Intensity', default=50)
-    original_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur'), ('five', 'without_filter')])
+    original_filter = SelectField('Filter', choices=[('five', 'without_filter'), ('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
     original_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
-    copy_filter = SelectField('Filter', choices=[('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur'),('five', 'without_filter')])
+    copy_filter = SelectField('Filter', choices=[('five', 'without_filter'), ('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
     copy_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])    
     submit = SubmitField('Submit')
+
+class HistogramForm(FlaskForm):
+    black_point = IntegerField('Black Point', validators=[DataRequired(), NumberRange(min=0, max=127)])
+    white_point = IntegerField('White Point', validators=[DataRequired(), NumberRange(min=128, max=255)])
+    midetone_slider = FloatField('Midetone Slider', validators=[DataRequired(), NumberRange(min=0, max=2)])
+    submit = SubmitField('Submit')
+
     
     
     # Privious Admin Panel Settings

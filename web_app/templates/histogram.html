@@ -5,15 +5,68 @@
     <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
     <!-- COPY/PASTE SCRIPT HERE -->
     {{ scripts|safe }}
+    <style>
+        .bk-root{
+            margin: 0%;
+            padding: 0%;
+            width: 50%;
+        }
+    </style>
 {% endblock histogram %}
 
 {% block navbar %}
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('processing', filename=filename, method=method) }}">Back</a>
+        <a class="nav-link" href="{{ return_url }}">Back</a>
     </li>    
 {% endblock navbar %}
 
 {% block histo_body %}
-    <!-- INSERT DIVS HERE -->
-    {{ div|safe }}
+    <div class="row">
+        <div class="col">
+            <!-- INSERT DIVS HERE -->
+            {{ div|safe }}
+        </div>
+        <div class="col">
+                <p>Level Adjusted Image</p>
+                <img src="{{ url_for('show_result_histo', filename=filename1) }}" 
+                    class="img-fluid" alt="Image" height="450" width="450">
+            </div>
+        <div class="col">   
+            <p>Without level</p>
+            <img src="{{ url_for('show_result', filename=filename2) }}" 
+                class="img-fluid" alt="Image" height="450" width="450">
+        </div>
+    </div>
+
+    
+    <div class="col">
+    {% if form %}
+    <form action="", method='POST'>
+        <div class="container">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                
+                
+                <div class="col">
+                    <div>
+                        {{ form.black_point.label }}
+                        {{ form.black_point }}
+                    </div>
+                    <div>
+                        {{ form.midetone_slider.label }}
+                        {{ form.midetone_slider }}
+                    </div>
+                    <div>
+                        {{ form.white_point.label }}
+                        {{ form.white_point }}
+                    </div>            
+                    <div>
+                        {{ form.submit }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+    </div>
 {% endblock histo_body %}

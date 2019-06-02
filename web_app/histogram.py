@@ -4,32 +4,32 @@ from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
+from web_app import original, result
 
 class Histogram():    
-    def __init__(self):
-        APP_ROOT = os.path.dirname(os.path.abspath(__file__))    
+    def __init__(self):            
         '''file_processed = []
         for (dirpath, dirnames, filenames) in os.walk(os.path.join(APP_ROOT, 'processed_images/')):
             file_processed.extend(filenames)'''
         
-        file_processed = os.listdir(os.path.join(APP_ROOT, 'processed_images/'))
+        #file_processed = os.listdir(result)
         
         '''file_source = []
         for (dirpath, dirnames, filenames) in os.walk(os.path.join(APP_ROOT, 'Original/')):
             file_source.extend(filenames)'''
 
-        file_source = os.listdir(os.path.join(APP_ROOT, 'Original/'))
+        #file_source = os.listdir(original)
 
-        self.processed_image_path = os.path.join(APP_ROOT, 'processed_images/', file_processed[0])
+        #self.processed_image_path = os.path.join(result, file_processed[0])
 
-        self.method = file_processed[0][:(len(file_processed[0]) - len(file_source[0]))] #To return the current method to html doc
-    
-    
+            
     def histogram_plot(self):
-        method = self.method
-        image  = cv2.imread(self.processed_image_path, cv2.IMREAD_COLOR)      
-        
-        image_small = cv2.resize(image, (500, 540))
+
+        if os.listdir(result):
+            image  = cv2.imread(os.path.join(result, os.listdir(result)[0]), cv2.IMREAD_COLOR)
+        else:
+            image = cv2.imread(os.path.join(original, os.listdir(original)[0]), cv2.IMREAD_COLOR)
+              
 
         histSize = 256 #no of bins
         
@@ -58,9 +58,9 @@ class Histogram():
                                     x2=x_2, g_hist=g_hist,
                                     x3=x_3, r_hist=r_hist,))
 
-        #To design layout of figure
+        #To design layout of figure '''plot_width=1000, plot_height=500,'''
         plot = figure(
-            title='Histogram of Image', plot_width=1000, plot_height=500,
+            title='Histogram of Image', plot_width=700, plot_height=400,
             min_border=0, toolbar_location='right') # toolbar_location can be edited to change logo 
 
         #Creating and adding glyph to plot
@@ -73,5 +73,5 @@ class Histogram():
 
         script, div = components(plot)   
 
-        return script, div, method
+        return script, div
    

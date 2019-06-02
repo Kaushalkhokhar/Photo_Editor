@@ -1,16 +1,19 @@
 {% extends "layout.html" %}
 
 
+{% block script %}
+    <script>
+            function outputUpdatecontrast(contrast) {
+                document.querySelector('#selected-contrast').value = contrast;
+            }
+            function outputUpdateBrightness(brightness) {
+                document.querySelector('#selected-brightness').value = brightness;
+            }
+    </script>
+{% endblock %} 
+
 {% block content %}
-<script>
-    function outputUpdatecontrast(contrast) {
-        document.querySelector('#selected-contrast').value = contrast;
-    }
-    function outputUpdateBrightness(brightness) {
-        document.querySelector('#selected-brightness').value = brightness;
-    }
-</script>
-<center>
+<div class="container">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <div class="row">
@@ -140,9 +143,15 @@
                 <div class="row">
                     {{ form.submit }}
                 </div>
+                <div class="row">
+                    <p>You are seeing the processed Image. To load histogram of processed 
+                    image click on the given link.
+                    <a href="{{ url_for('load_chart', filename=filename, method=method, end_point='settings') }}">Load Histogram</a></p>
+                </div>
             </div>
-        </div>        
+        </div>
     </form>
-</center>       
-    
+</div>
 {% endblock content %}
+    
+

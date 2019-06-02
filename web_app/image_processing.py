@@ -1,7 +1,7 @@
 import os, shutil, cv2, random
 from PIL import Image
 import numpy as np
-from web_app import original, second, result, original_two
+from web_app import original, second, result, original_two, result_histo
 from web_app.model import Methods
 
 class Image_processing():
@@ -154,14 +154,17 @@ class Image_processing():
         result_beta = method.result_brightness'''
         original_alpha = method.original_contrast/50
         original_beta = method.original_brightness - 50
+        original_saturation = method.original_intensity/50
         copy_alpha = method.copy_contrast/50
         copy_beta = method.copy_brightness - 50
+        copy_saturation = method.copy_intensity/50
         result_alpha = method.result_contrast/50
         result_beta = method.result_brightness - 50
+        result_saturation = method.result_intensity/50
         original_filter = method.original_filter
         original_kernal = method.original_kernal
         copy_filter = method.copy_filter
-        copy_kernal = method.copy_kernal  
+        copy_kernal = method.copy_kernal   
         '''for y in range(img.shape[0]):
             for x in range(img.shape[1]):
                 for c in range(img.shape[2]):
@@ -169,6 +172,10 @@ class Image_processing():
                     #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
 
         new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
+        hsvImg = cv2.cvtColor(new_img,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_img = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
         new_img = Image_processing().filter(new_img, original_filter, original_kernal)
 
         '''for y in range(img.shape[0]):
@@ -177,6 +184,10 @@ class Image_processing():
                     new_img_2[y,x,c] = np.clip(copy_alpha*img_2[y,x,c] + copy_beta, 0, 255)'''
 
         new_img_2 = cv2.convertScaleAbs(img, alpha=copy_alpha, beta=copy_beta)
+        hsvImg = cv2.cvtColor(new_img_2,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*copy_saturation
+        new_img_2 = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
         new_img_2 = Image_processing().filter(new_img_2, copy_filter, copy_kernal)
 
         add = cv2.add(new_img,new_img_2)
@@ -186,23 +197,33 @@ class Image_processing():
                     new_add[y,x,c] = np.clip(result_alpha*add[y,x,c] + result_beta, 0, 255)'''
 
         new_add = cv2.convertScaleAbs(add, alpha=result_alpha, beta=result_beta)
+        hsvImg = cv2.cvtColor(new_add,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*result_saturation
+        new_add = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
 
         filename_result = Image_processing.addition.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([result, filename_result])        
+        destination = "/".join([result, filename_result])
+        b, g, r = cv2.split(new_add)
+        new_add = cv2.merge((r,g,b))        
         im = Image.fromarray(new_add)
         im.save(destination)
 
         filename_original_two = Image_processing.addition.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([original_two, filename_original_two])        
+        destination = "/".join([original_two, filename_original_two])
+        b, g, r = cv2.split(new_img)
+        new_img = cv2.merge((r,g,b))        
         im = Image.fromarray(new_img)
         im.save(destination) 
 
         filename_second = Image_processing.addition.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([second, filename_second])        
+        destination = "/".join([second, filename_second])
+        b, g, r = cv2.split(new_img_2)
+        new_img_2 = cv2.merge((r,g,b))        
         im = Image.fromarray(new_img_2)
         im.save(destination)         
         
@@ -228,7 +249,7 @@ class Image_processing():
 
         method = Methods.query.filter_by(method_id=method_id).first()     
         
-        
+        print(img.shape)
         new_img = np.zeros(img.shape, img.dtype)
         new_img_2 = new_img
         new_add = new_img
@@ -243,10 +264,13 @@ class Image_processing():
         result_beta = method.result_brightness'''
         original_alpha = method.original_contrast/50
         original_beta = method.original_brightness - 50
+        original_saturation = method.original_intensity/50
         copy_alpha = method.copy_contrast/50
         copy_beta = method.copy_brightness - 50
+        copy_saturation = method.copy_intensity/50
         result_alpha = method.result_contrast/50
         result_beta = method.result_brightness - 50
+        result_saturation = method.result_intensity/50
         original_filter = method.original_filter
         original_kernal = method.original_kernal
         copy_filter = method.copy_filter
@@ -258,6 +282,10 @@ class Image_processing():
                     #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
 
         new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
+        hsvImg = cv2.cvtColor(new_img,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_img = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
         new_img = Image_processing().filter(new_img, original_filter, original_kernal)
 
         '''for y in range(img.shape[0]):
@@ -266,6 +294,10 @@ class Image_processing():
                     new_img_2[y,x,c] = np.clip(copy_alpha*img_2[y,x,c] + copy_beta, 0, 255)'''
 
         new_img_2 = cv2.convertScaleAbs(img, alpha=copy_alpha, beta=copy_beta)
+        hsvImg = cv2.cvtColor(new_img_2,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_img_2 = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
         new_img_2 = Image_processing().filter(new_img_2, copy_filter, copy_kernal)
 
         sub = new_img - new_img_2
@@ -275,23 +307,33 @@ class Image_processing():
                     new_sub[y,x,c] = np.clip(result_alpha*sub[y,x,c] + result_beta, 0, 255)'''
 
         new_sub = cv2.convertScaleAbs(sub, alpha=result_alpha, beta=result_beta)
+        hsvImg = cv2.cvtColor(new_sub,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_sub = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
 
         filename_result = Image_processing.substraction.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([result, filename_result])        
+        destination = "/".join([result, filename_result])
+        b, g, r = cv2.split(new_sub)
+        new_sub = cv2.merge((r,g,b))       
         im = Image.fromarray(new_sub)
         im.save(destination)
 
         filename_original_two = Image_processing.substraction.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([original_two, filename_original_two])        
+        destination = "/".join([original_two, filename_original_two])
+        b, g, r = cv2.split(new_img)
+        new_img = cv2.merge((r,g,b))        
         im = Image.fromarray(new_img)
         im.save(destination) 
 
         filename_second = Image_processing.substraction.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([second, filename_second])        
+        destination = "/".join([second, filename_second])
+        b, g, r = cv2.split(new_img_2)
+        new_img_2 = cv2.merge((r,g,b))        
         im = Image.fromarray(new_img_2)
         im.save(destination)         
         
@@ -324,22 +366,20 @@ class Image_processing():
        
         alpha = 1.0 # Simple contrast control
         beta = 0    # Simple brightness control
-        '''original_alpha = (1 + (method.original_contrast * 0.02 ))
-        original_beta = method.original_brightness
-        copy_alpha = (1 + (method.copy_contrast * 0.02))
-        copy_beta = method.copy_brightness
-        result_alpha = (1 + (method.result_contrast * 0.02))
-        result_beta = method.result_brightness'''
+        
         original_alpha = method.original_contrast/50
         original_beta = method.original_brightness - 50
+        original_saturation = method.original_intensity/50
         copy_alpha = method.copy_contrast/50
         copy_beta = method.copy_brightness - 50
+        copy_saturation = method.copy_intensity/50
         result_alpha = method.result_contrast/50
         result_beta = method.result_brightness - 50
+        result_saturation = method.result_intensity/50
         original_filter = method.original_filter
         original_kernal = method.original_kernal
         copy_filter = method.copy_filter
-        copy_kernal = method.copy_kernal  
+        copy_kernal = method.copy_kernal 
         '''for y in range(img.shape[0]):
             for x in range(img.shape[1]):
                 for c in range(img.shape[2]):
@@ -347,6 +387,10 @@ class Image_processing():
                     #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
 
         new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
+        hsvImg = cv2.cvtColor(new_img,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_img = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
         new_img = Image_processing().filter(new_img, original_filter, original_kernal)
 
         '''for y in range(img.shape[0]):
@@ -355,6 +399,10 @@ class Image_processing():
                     new_img_2[y,x,c] = np.clip(copy_alpha*img_2[y,x,c] + copy_beta, 0, 255)'''
 
         new_img_2 = cv2.convertScaleAbs(img, alpha=copy_alpha, beta=copy_beta)
+        hsvImg = cv2.cvtColor(new_img_2,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_img_2 = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
         new_img_2 = Image_processing().filter(new_img_2, copy_filter, copy_kernal)
 
         mul = np.multiply(new_img, new_img_2)
@@ -364,27 +412,95 @@ class Image_processing():
                     new_mul[y,x,c] = np.clip(result_alpha*mul[y,x,c] + result_beta, 0, 255)'''
 
         new_mul = cv2.convertScaleAbs(mul, alpha=result_alpha, beta=result_beta)
+        hsvImg = cv2.cvtColor(new_mul,cv2.COLOR_BGR2HSV)
+        #multiple by a factor to change the saturation
+        hsvImg[...,1] = hsvImg[...,1]*original_saturation
+        new_mul = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
 
         filename_result = Image_processing.multiplication.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([result, filename_result])        
+        destination = "/".join([result, filename_result])
+        b, g, r = cv2.split(new_mul)
+        new_mul = cv2.merge((r,g,b))        
         im = Image.fromarray(new_mul)
         im.save(destination)
 
         filename_original_two = Image_processing.multiplication.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([original_two, filename_original_two])        
+        destination = "/".join([original_two, filename_original_two])
+        b, g, r = cv2.split(new_img)
+        new_img = cv2.merge((r,g,b))        
         im = Image.fromarray(new_img)
         im.save(destination) 
 
         filename_second = Image_processing.multiplication.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                     self.file_id + self.file_extension
-        destination = "/".join([second, filename_second])        
+        destination = "/".join([second, filename_second])
+        b, g, r = cv2.split(new_img_2)
+        new_img_2 = cv2.merge((r,g,b))        
         im = Image.fromarray(new_img_2)
         im.save(destination)         
         
         return filename_original_two, filename_second, filename_result
+
+   
+    def LevelAdjustment(self, black_point, midetone_slider, white_point):      
+        image_path = os.path.join(result, os.listdir(result)[0]) #path of uploaded image 
+
+        image = cv2.imread(image_path)
+        
+        print( black_point, midetone_slider, white_point )
+	
+        counter = 0
+        
+        for i in range(10):
+            pixel = image[random.randint(0,image.shape[0]), random.randint(0, image.shape[1])]
+            if pixel[0] == pixel[1] and pixel[0] == pixel[2]:
+                counter += 1
+            else:
+                break
+        
+        for i in range(image.shape[0]):
+            for j in range(image.shape[1]):
+                pixels = image[i, j]
+            
+                if counter != 10:
+                    for color, pixel in enumerate(pixels) :
+                        if pixel > white_point:
+                            pixels[color] = 255
+                        elif pixel < black_point:
+                            pixels[color] = 0
+
+                else:
+                    if pixels[0] > white_point:
+                        pixels[0] = 255
+                        pixels[1] = 255
+                        pixels[2] = 255
+                    elif pixels[0] < black_point:
+                        pixels[0] = 0
+                        pixels[1] = 0
+                        pixels[2] = 0
+
+
+        
+        gamma = midetone_slider if midetone_slider > 0 else 0.1
+        # build a lookup table mapping the pixel values [0, 255] to
+        # their adjusted gamma values
+        invGamma = 1.0 / gamma
+        table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+
+        # apply gamma correction using the lookup table
+        image = cv2.LUT(image, table)
+
+
+        filename = Image_processing.LevelAdjustment.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+                    self.file_id + self.file_extension
+        destination = "/".join([result_histo, filename])
+        b, g, r = cv2.split(image)
+        image = cv2.merge((r,g,b))        
+        im = Image.fromarray(image)
+        im.save(destination)
         
         
         

@@ -27,5 +27,6 @@ original = os.path.join(APP_ROOT, 'original/') #To create path for storing image
 result = os.path.join(APP_ROOT, 'result/') #To store processed image
 second = os.path.join(APP_ROOT, 'second/')
 original_two = os.path.join(APP_ROOT, 'original_two/')
+result_histo = os.path.join(APP_ROOT, 'result_histo/')
 
 from web_app import routes

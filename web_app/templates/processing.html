@@ -19,9 +19,9 @@
 {% block content %} 
     <div class="container">
         <div class="row justify-content-md-center">
-            <img src="{{ url_for('processed_image', filename=filename) }}" class="img-fluid" alt="Image">
+            <img src="{{ url_for('show_result', filename=filename) }}" class="img-fluid" alt="Image">
             <p>You are seeing the processed Image. To load histogram of processed 
-                image click on the given link.<a href="{{ url_for('load_chart', filename=filename) }}">Load Histogram</a></p>
+                image click on the given link.<a href="{{ url_for('load_chart', filename=filename, method=method, end_point='processing') }}">Load Histogram</a></p>
         </div>        
     </div>   
 {% endblock content %}
