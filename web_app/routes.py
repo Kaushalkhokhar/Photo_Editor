@@ -149,7 +149,7 @@ def processing(filename, method):
     
     image = cv2.imread(os.path.join(original, filename))
     height, width, cha = image.shape
-    scale = 680 / height
+    scale = 590/ height
     height = scale * height
     width = scale * width
     if width > 1380:

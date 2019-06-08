@@ -12,7 +12,7 @@
     
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-        Image Processing
+       METHOD
         </a>  
         <div class="dropdown-menu">
             {% for method in methods %}
@@ -22,20 +22,15 @@
     </li> 
 {% endblock navbar %}
 
-{% block nav %}
-    <li class="nav-item ">
-        <a class="nav-link"
-         href="{{ url_for('load_chart', filename=filename, method=method, end_point='processing') }}">Load Histogram</a>
-    </li>   
-{% endblock nav %}
+
 
 {% block content %}
-<div class="row">
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <img id="image" src="{{ url_for('show_result', filename=filename) }}" height="{{ height }}" alt="Image">
-        </div>        
-    </div>
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <img id="image" src="{{ url_for('show_result', filename=filename) }}" height="{{ height }}" alt="Image">
+    </div>        
 </div>
+
 {% endblock content %}
 

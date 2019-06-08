@@ -8,49 +8,93 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet/main.css') }}">
-    {% block script %}{% endblock %}
+    
+    
     {% block histogram %}{% endblock %}
     {% if title %}
         <title>Photo Editor - {{ title }}</title>
     {% else %}
         <title>Photo Editor</title>
     {% endif %}
+    {% block script %}{% endblock %}
+    <style>
+    .navbar {
+        background-color: #fff !important;
+        -webkit-appearance: push-button;
+        box-shadow: 15px lightblue;
+    }
+
+    .navbar-brand {
+        padding-top: 0.4rem;
+        padding-left: 1rem;
+        margin-right: 1rem;
+        
+    }
+
+    #navbarToggle{
+        padding-right: 1rem; 
+    }
+    .nav-link{
+        color: rgb(33, 34, 32) !important;
+    }
+
+    .nav-link:hover {
+        display: block;
+        zoom: initial; 
+        color: rgb(100, 153, 65) !important;
+        
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; // remove the gap so it doesn't close 
+    }
+    
+    body {
+        background-color: #F2F2F2;
+    }
+    </style>
+
 </head>
     <body>
-        <nav class="navbar navbar-expand-md bg-info navbar-light">
+        <nav class="navbar navbar-expand-md bg-info navbar-light shadow p-3 mb-5 bg-white rounded">
             <!-- Brand -->
             <a class="navbar-brand" href="{{ url_for('home') }}">
                 <img src="{{ url_for('static', filename='display_image/Icon.png') }}" width="30" height="30" class="d-inline-block align-top" alt="">
-                Home
+                HOME
             </a>        
             
             <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
             <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">                    
-                    <li class="nav-item "><a class="nav-link" href="#">About</a></li>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+                
+                <ul class="navbar-nav mr-auto">                    
+                    <li class="nav-item "><a class="nav-link" href="#">ABOUT</a></li>
                     {% if current_user.email == "admin@demo.com" %}
-                        <li class="nav-item "><a class="nav-link" href="{{ url_for('settings') }}">Settings</a></li>
-                        <li class="nav-item "><a class="nav-link" href="{{ url_for('database') }}">Display Setting</a></li>
+                        <li class="nav-item "><a class="nav-link" href="{{ url_for('settings') }}">SETTINGS</a></li>
+                        <li class="nav-item "><a class="nav-link" href="{{ url_for('database') }}">DISPLAY</a></li>
                     {% endif %}
                     {% block navbar %}{% endblock %}
                 </ul>
+                
+                
+                <ul class="navbar-nav">
+                    {% block nav %}{% endblock %}
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item "><a class="nav-link" href="{{ url_for('upload') }}">UPLOAD</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">LOGOUT</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">LOGIN</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">REGISTER</a></li>
+                    {% endif %}
+                </ul>
+                
+                  
             </div>      
-            <div class="nav justify-content-end">
-                {% block nav %}{% endblock %}
-                {% if current_user.is_authenticated %}
-                    <li class="nav-item "><a class="nav-link" href="{{ url_for('upload') }}">Upload</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
-                {% endif %}
-            </div>            
+                      
         </nav>    
         <div>
             {% with messages = get_flashed_messages(with_categories=true) %}
