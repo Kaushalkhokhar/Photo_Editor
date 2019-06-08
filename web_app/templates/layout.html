@@ -16,14 +16,6 @@
     {% else %}
         <title>Photo Editor</title>
     {% endif %}
-    <style>    
-    
-    </style>
-
-
-
-
-
 </head>
     <body>
         <nav class="navbar navbar-expand-md bg-info navbar-light">
@@ -42,13 +34,17 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">                    
                     <li class="nav-item "><a class="nav-link" href="#">About</a></li>
+                    {% if current_user.email == "admin@demo.com" %}
+                        <li class="nav-item "><a class="nav-link" href="{{ url_for('settings') }}">Settings</a></li>
+                        <li class="nav-item "><a class="nav-link" href="{{ url_for('database') }}">Display Setting</a></li>
+                    {% endif %}
                     {% block navbar %}{% endblock %}
                 </ul>
             </div>      
             <div class="nav justify-content-end">
+                {% block nav %}{% endblock %}
                 {% if current_user.is_authenticated %}
                     <li class="nav-item "><a class="nav-link" href="{{ url_for('upload') }}">Upload</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('new_session') }}">New Session</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>

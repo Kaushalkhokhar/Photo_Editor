@@ -1,28 +1,41 @@
 {% extends "layout.html" %}
+
+{% block script %}
+<style>
+       
+     
+</style>
+    
+{% endblock script %}
+
 {% block navbar %}
+    
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
         Image Processing
-        </a>
-    <div class="dropdown-menu">
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method1) }}">Convolution</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method2) }}">Averaging</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method3) }}">Gaussian Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method4) }}">Median Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method5) }}">Bilateral Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method6) }}">Addition</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method7) }}">Substaction</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method8) }}">Multiplication</a>
-    </div>            
-    </li>    
+        </a>  
+        <div class="dropdown-menu">
+            {% for method in methods %}
+                <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ method.method_id }}</a>
+            {% endfor %}
+        </div>
+    </li> 
 {% endblock navbar %}
-{% block content %} 
+
+{% block nav %}
+    <li class="nav-item ">
+        <a class="nav-link"
+         href="{{ url_for('load_chart', filename=filename, method=method, end_point='processing') }}">Load Histogram</a>
+    </li>   
+{% endblock nav %}
+
+{% block content %}
+<div class="row">
     <div class="container">
         <div class="row justify-content-md-center">
-            <img src="{{ url_for('show_result', filename=filename) }}" class="img-fluid" alt="Image">
-            <p>You are seeing the processed Image. To load histogram of processed 
-                image click on the given link.<a href="{{ url_for('load_chart', filename=filename, method=method, end_point='processing') }}">Load Histogram</a></p>
+            <img id="image" src="{{ url_for('show_result', filename=filename) }}" height="{{ height }}" alt="Image">
         </div>        
-    </div>   
+    </div>
+</div>
 {% endblock content %}
 

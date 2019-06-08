@@ -58,7 +58,7 @@ class MethodForm(FlaskForm):
     method4 = BooleanField('Median Blur', default=True)
     method5 = BooleanField('Bilateral Blur', default=True)
     method6 = BooleanField('Addition', default=True)
-    method7 = BooleanField('Substraction', default=True)
+    method7 = BooleanField('Subtraction', default=True)
     method8 = BooleanField('Multiplication', default=True)
     method9 = BooleanField('Not defined', default=True)
 
@@ -70,7 +70,7 @@ class GeneralForm(FlaskForm):
 class AdminForm(FlaskForm):
     method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,12)])
     image_operation = SelectField('Operations', choices=[('one', 'Addition'), \
-                                    ('two', 'Substraction'), ('three', 'Multiplication')])
+                                    ('two', 'Subtraction'), ('three', 'Multiplication')])
     method_title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     active_state = BooleanField('Active State',default=True)
     original_contrast = IntegerRangeField('contrast', default=50)

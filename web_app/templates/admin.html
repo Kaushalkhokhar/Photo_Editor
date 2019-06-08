@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block script %}
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #eee8e8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>Method ID</th>
+            <th>Title</th>
+            <th>Operation</th>
+            <th>Result Contrast</th>
+            <th>Result Brightness</th>
+            <th>Result Intesity</th>
+            <th>Original Contrast</th>
+            <th>Original Brightness</th>
+            <th>Original Intesity</th>
+            <th>Copy Contrast</th>
+            <th>Copy Brightness</th>
+            <th>Copy Intesity</th>
+            <th>Original Filter</th>
+            <th>Original Kernal</th>
+            <th>Copy Filter</th>
+            <th>Copy Kernal</th>
+            <th>Black Point</th>
+            <th>Midetone Slider</th>
+            <th>White Point</th>
+            <th>Active State</th>
+        </tr>
+    {% for method in methods %}        
+        <tr>
+            <td>{{ method.method_id }}</td>
+            <td>{{ method.method_title }}</td>        
+            <td>{{ method.image_operation }}</td>        
+            <td>{{ method.result_contrast }}</td>        
+            <td>{{ method.result_brightness }}</td>        
+            <td>{{ method.result_intensity }}</td>        
+            <td>{{ method.original_contrast }}</td>        
+            <td>{{ method.original_brightness }}</td>        
+            <td>{{ method.original_intensity }}</td>        
+            <td>{{ method.copy_contrast }}</td>        
+            <td>{{ method.copy_brightness }}</td>        
+            <td>{{ method.copy_intensity }}</td>        
+            <td>{{ method.original_filter }}</td>        
+            <td>{{ method.original_kernal }}</td>        
+            <td>{{ method.copy_filter }}</td>        
+            <td>{{ method.copy_kernal }}</td>        
+            <td>{{ method.black_point }}</td>        
+            <td>{{ method.midetone_slider }}</td>        
+            <td>{{ method.white_point }}</td>        
+            <td>{{ method.active_state }}</td>        
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock content %}

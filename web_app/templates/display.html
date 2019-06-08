@@ -1,28 +1,31 @@
 {% extends "layout.html" %}
+{% block script %}
+<style>    
+    
+
+    
+</style>
+    
+{% endblock script %}
+
 {% block navbar %}
+    
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
         Image Processing
-        </a>
+        </a>  
     <div class="dropdown-menu">
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method1) }}">Convolution</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method2) }}">Averaging</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method3) }}">Gaussian Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method4) }}">Median Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method5) }}">Bilateral Blur</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method6) }}">Addition</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method7) }}">Substaction</a>
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method8) }}">Multiplication</a>
-    </div>            
-    </li>     
+        {% for method in methods %}
+            <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ method.method_id }}</a>
+        {% endfor %}
+    </div>
+    </li>    
 {% endblock navbar %}
 
 {% block content %} 
     <div class="container">
         <div class="row justify-content-md-center">
-            <img src="{{ url_for('show_result', filename=filename) }}" class="img-fluid" alt="Image">
-            <p class="card-text">You can apply a different filters using image processing icon on navigation bar.
-                    Click on a given link and check the result</p>
+            <img id="image" src="{{ url_for('show_result', filename=filename) }}" height="{{ height }}" alt="Image">
         </div>        
     </div>
 {% endblock content %}

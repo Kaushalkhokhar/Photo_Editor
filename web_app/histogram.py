@@ -4,7 +4,7 @@ from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
-from web_app import original, result
+from web_app import APP_ROOT
 
 class Histogram():    
     def __init__(self):            
@@ -23,7 +23,9 @@ class Histogram():
         #self.processed_image_path = os.path.join(result, file_processed[0])
 
             
-    def histogram_plot(self):
+    def histogram_plot(self, current_user):
+        original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')        
+        result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
 
         if os.listdir(result):
             image  = cv2.imread(os.path.join(result, os.listdir(result)[0]), cv2.IMREAD_COLOR)

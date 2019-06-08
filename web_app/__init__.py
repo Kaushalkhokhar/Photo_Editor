@@ -19,14 +19,13 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'admin@demo.com' #Any email id from that we want to send message
 app.config['MAIL_PASSWORD'] = 'pasword' #Login password for that email account
 mail = Mail(app)
-admin_user = "kaushal2413@gmail.com"
-current_method = {'name': 'None'}
+admin_user = "admin@demo.com"
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-original = os.path.join(APP_ROOT, 'original/') #To create path for storing image in local directory
+'''original = os.path.join(APP_ROOT, 'original/') #To create path for storing image in local directory
 result = os.path.join(APP_ROOT, 'result/') #To store processed image
 second = os.path.join(APP_ROOT, 'second/')
 original_two = os.path.join(APP_ROOT, 'original_two/')
-result_histo = os.path.join(APP_ROOT, 'result_histo/')
+result_histo = os.path.join(APP_ROOT, 'result_histo/')'''
 
 from web_app import routes

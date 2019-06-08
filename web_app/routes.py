@@ -4,7 +4,7 @@ import random
 import numpy as np
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
-from web_app import app, original, second, result, original_two, result_histo, bcrypt, db, mail, current_method
+from web_app import app, APP_ROOT, bcrypt, db, mail, admin_user
 from web_app.image_processing import Image_processing
 from web_app.histogram import Histogram 
 from bokeh.plotting import figure, show, output_file, save
@@ -17,6 +17,14 @@ from web_app.model import User, Methods
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+
+
+@app.route('/database')
+def database():
+    methods = Methods.query.all()
+    return render_template('admin.html', methods=methods)
+
+
 @app.route('/')
 @app.route('/home')
 def home():           
@@ -24,7 +32,7 @@ def home():
 
 @app.route('/upload')
 def upload():
-    if os.path.isdir(original):
+    '''if os.path.isdir(original):
         shutil.rmtree(original)
         shutil.rmtree(original_two)
         shutil.rmtree(second)
@@ -40,102 +48,177 @@ def upload():
         os.mkdir(second)
         os.mkdir(result)
         os.mkdir(original_two)
-        os.mkdir(result_histo) 
+        os.mkdir(result_histo)'''
+    
+    if current_user.is_authenticated:
+        if current_user.email == admin_user:
+            original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+            original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
+            second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
+            result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+            result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+            if os.path.isdir(original):
+                shutil.rmtree(original)
+                shutil.rmtree(original_two)
+                shutil.rmtree(second)
+                shutil.rmtree(result)
+                shutil.rmtree(result_histo)
+                os.mkdir(original)
+                os.mkdir(second)
+                os.mkdir(result)
+                os.mkdir(original_two)
+                os.mkdir(result_histo)
+            else:    
+                os.mkdir(original)
+                os.mkdir(second)
+                os.mkdir(result)
+                os.mkdir(original_two)
+                os.mkdir(result_histo)
+        else:
+            original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+            result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+            if os.path.isdir(original):
+                shutil.rmtree(original)
+                shutil.rmtree(result)
+                os.mkdir(original)
+                os.mkdir(result)
+            else:    
+                os.mkdir(original)
+                os.mkdir(result)
+
+        
+    else:
+        return redirect(url_for('login'))       
+        
     return render_template('upload.html', title='Upload')
 
 @app.route('/display', methods = ['GET', 'POST'])
 def display_image():  
-    #To render this method to link for decision making
-    '''method1 = Methods.query.filter_by(method_id=1).first().method_id
-    method2 = Methods.query.filter_by(method_id=2).first().method_id
-    method3 = Methods.query.filter_by(method_id=3).first().method_id
-    method4 = Methods.query.filter_by(method_id=4).first().method_id
-    method5 = Methods.query.filter_by(method_id=5).first().method_id
-    method6 = Methods.query.filter_by(method_id=6).first().method_id
-    method7 = Methods.query.filter_by(method_id=7).first().method_id 
-    method8 = Methods.query.filter_by(method_id=8).first().method_id        
-'''
-    method1 = 1
-    method2 = 2
-    method3 = 3
-    method4 = 4
-    method5 = 4
-    method6 = 6
-    method7 = 7 
-    method8 = 8  
+    
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
 
+    methods = Methods.query.all() 
+    
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+
+    if not os.listdir(original):    
+        #To get the files uploaded to home page and stores it to target directory
+        for file in request.files.getlist('image'):
+            filename = file.filename            
+            if not os.listdir(original):
+                destination = "/".join([original, filename])                
+                file.save(destination)  
+
+    else:
+        #0return redirect(url_for('upload'))
+        filename = os.listdir(original)[0]   
+
+    image = cv2.imread(os.path.join(original, filename))
+    height, width, cha = image.shape
+    
+    scale = 680 / height
+    height = scale * height
+    width = scale * width
+    if width > 1380:
+        scale = 1380 / width
+        height = scale * height
+        width = scale * width
+      
+
+    # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
+    return render_template('display.html', filename=filename, height=height, methods=methods) # In this filename will be the name of image file which is uploaded last in all files
+                    
     
 
-    try:
-        #if image is not uploaded in file field of home template then return to home again else executes the code given
-        if not request.files.getlist('image'):
-            return redirect(url_for('upload'))
+@app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
+def processing(filename, method):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
 
-        else:
-            if not os.path.isdir(original):#Creates direcotry if not, else passes it
-                os.mkdir(original)
-                os.mkdir(second)
-                os.mkdir(original_two)
-            elif not os.path.isdir(second):#Creates direcotry if not, else passes it
-                os.mkdir(second)
-            
-            #To get the files uploaded to home page and stores it to target directory
-            for file in request.files.getlist('image'):            
-                filename = file.filename            
-                if not os.listdir(original):
-                    destination = "/".join([original, filename])                
-                    file.save(destination)       
+    elif Methods.query.filter_by(method_id=method).first().active_state == False:
+        flash('This method is not allowed for you. Please try different one', 'info')
+        return redirect(url_for('display_image'))
 
-        # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
-        return render_template('display.html', filename=filename, method1=method1, method2=method2, \
-                                method3=method3, method4=method4, method5=method5, method6=method6, \
-                                method7=method7, method8=method8) # In this filename will be the name of image file which is uploaded last in all files
-                       
-    except:
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+
+    if not os.listdir(original):
         return redirect(url_for('upload'))
-   
-@app.route('/display/<filename>', methods=['GET', 'POST'])
-def show(filename):          
-    return send_from_directory('original', filename)
+    
+    filename = os.listdir(original)[0]    
+    
+    image = cv2.imread(os.path.join(original, filename))
+    height, width, cha = image.shape
+    scale = 680 / height
+    height = scale * height
+    width = scale * width
+    if width > 1380:
+        scale = 1380 / width
+        height = scale * height
+        width = scale * width
+        
+    
+    methods = Methods.query.all() 
+
+    #processing the image based on reference link and method attached to that link
+    if Methods.query.filter_by(method_id=method).first().image_operation ==  "Addition":             
+        filename= Image_processing().addition(method, current_user)       
+    elif Methods.query.filter_by(method_id=method).first().image_operation ==  "Subtraction":                  
+        filename = Image_processing().subtraction(method, current_user)           
+    elif Methods.query.filter_by(method_id=method).first().image_operation ==  "Multiplication":            
+        filename = Image_processing().multiplication(method, current_user)    
+        
+    # we need to store processed file in our static folder then we can render by giving filename qual to our processed file 
+    return render_template('processing.html', filename=filename, method=method, height=height, methods=methods)
 
 @app.route('/desplay_original/<filename>', methods=['GET', 'POST'])
 def show_original_two(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
     filename = os.listdir(original_two)    
     if not filename:
         filename = os.listdir(original)[0]
-        return send_from_directory('original', filename)
+        return send_from_directory(str(current_user.username) + '_original', filename)
     else:
         filename = filename[0]
-        return send_from_directory('original_two', filename)
+        return send_from_directory(str(current_user.username) + '_original_two', filename)
 
 @app.route('/display_second/<filename>', methods=['GET', 'POST'])
 def show_second(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
     filename = os.listdir(second)    
     if not filename:
         filename = os.listdir(original)[0]
-        return send_from_directory('original', filename)
+        return send_from_directory(str(current_user.username) + '_original', filename)
     else:
         filename = filename[0]
-        return send_from_directory('second', filename)
+        return send_from_directory(str(current_user.username) + '_second', filename)
         
 
 @app.route('/display_result/<filename>', methods=['GET', 'POST'])
-def show_result(filename):           
+def show_result(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
     if os.listdir(result):
-        filename = os.listdir(result)[0]
-        return send_from_directory('result', filename)        
+        filename = os.listdir(result)[0]        
+        return send_from_directory(str(current_user.username) + '_result', filename)        
     else:
         filename = os.listdir(original)[0]
-        return send_from_directory('original', filename)
+        return send_from_directory(str(current_user.username) + '_original', filename)
 
 @app.route('/display_result_histo/<filename>', methods=['GET', 'POST'])
-def show_result_histo(filename):           
-    if os.listdir(result_histo):
-        filename = os.listdir(result_histo)[0]
-        return send_from_directory('result_histo', filename)        
+def show_result_histo(filename):
+    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+    result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+    if os.listdir(result_histo): 
+        if current_user.email == admin_user:
+            filename = os.listdir(result_histo)[0]
+            return send_from_directory(str(current_user.username) + '_result_histo', filename)        
+        
     else:
         filename = os.listdir(result)[0]
-        return send_from_directory('result', filename)
+        return send_from_directory(str(current_user.username) + '_result', filename)
 
 @app.route('/demo/<filename>', methods=['GET', 'POST'])
 def demo(filename):          
@@ -162,94 +245,16 @@ def new_session():
         os.mkdir(result_histo)           
     return redirect(url_for('upload'))
 
-@app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
-def processing(filename, method):
-    if Methods.query.filter_by(method_id=method).first().active_state == False:
-        flash('This method is not allowed for you. Please try different one', 'info')
-        return redirect(url_for('display_image'))
-    
-    if not os.listdir(original):
-        return redirect(url_for('upload'))
-    
-    '''#To delete previous processes image and cirectory and creates new directory every time it runs processing
-    #target = os.path.join(APP_ROOT, 'processed_images/') #To store processed image
-    if os.path.isdir(result):
-        shutil.rmtree(result)            
-        os.mkdir(result)
-    else:    
-        os.mkdir(result)'''
-
-    #To render this method to link for decision making
-    '''method1 = Methods.query.filter_by(method_id=1).first().method_id
-    method2 = Methods.query.filter_by(method_id=2).first().method_id
-    method3 = Methods.query.filter_by(method_id=3).first().method_id
-    method4 = Methods.query.filter_by(method_id=4).first().method_id
-    method5 = Methods.query.filter_by(method_id=5).first().method_id
-    method6 = Methods.query.filter_by(method_id=6).first().method_id
-    method7 = Methods.query.filter_by(method_id=7).first().method_id 
-    method8 = Methods.query.filter_by(method_id=8).first().method_id        
-'''
-    method1 = 1
-    method2 = 2
-    method3 = 3
-    method4 = 4
-    method5 = 4
-    method6 = 6
-    method7 = 7 
-    method8 = 8   
-
-    #processing the image based on reference link and method attached to that link
-    '''if Methods.query.filter_by(method_id=method).first().image_operations ==  "Addition":             
-        filename = Image_processing().addition(method)       
-    elif Methods.query.filter_by(method_id=method).first().image_operations ==  "Substraction":                  
-        filename = Image_processing().substraction(method)           
-    elif Methods.query.filter_by(method_id=method).first().image_operations ==  "Multiplication":            
-        filename = Image_processing().multiplication(method)'''
-    if Methods.query.filter_by(method_id=method).first().image_operation ==  "Addition":             
-        filename_original_two, filename_second, filename_result = Image_processing().addition(method_id=method)       
-    elif Methods.query.filter_by(method_id=method).first().image_operation ==  "Substraction":                  
-        filename_original_two, filename_second, filename_result = Image_processing().substraction(method)           
-    elif Methods.query.filter_by(method_id=method).first().image_operation ==  "Multiplication":            
-        filename_original_two, filename_second, filename_result = Image_processing().multiplication(method)    
-    '''elif method ==  method4:    
-        mblur = image_operations()
-        filename = mblur.median_blur()
-    elif method ==  method5:    
-        bblur = image_operations()
-        filename = bblur.bilateral_blur()
-    elif method ==  method6:
-        if not os.listdir(second):
-            flash('You have upload one more image to perform arithmatic operations', 'info')          
-            return redirect(url_for('upload'))
-        filename = image_operations().addition()
-    elif method ==  method7:
-        if not os.listdir(second):
-            flash('You have upload one more image to perform arithmatic operations', 'info')          
-            return redirect(url_for('upload'))
-        filename = image_operations().substraction()
-    elif method ==  method8:
-        if not os.listdir(second):
-            flash('You have upload one more image to perform arithmatic operations', 'info')          
-            return redirect(url_for('upload'))
-        filename = image_operations().multiplication()'''
-        
-        
-    # we need to store processed file in our static folder then we can render by giving filename qual to our processed file 
-    return render_template('processing.html', filename=filename_result, method=method, method1=method1, method2=method2, \
-                                method3=method3, method4=method4, method5=method5, method6=method6, \
-                                method7=method7, method8=method8)
-
-@app.route('/processed/<filename>', methods=['GET', 'POST'])
-def processed_image(filename):                   
-    return send_from_directory('processed_images', filename=filename)
-
 @app.route('/load_chart/<method>/<end_point>', methods=['GET', 'POST'])
 def load_chart(method, end_point):
-    if os.path.isdir(result_histo):
-        shutil.rmtree(result_histo)
-        os.mkdir(result_histo)
-    else:
-        os.mkdir(result_histo) 
+    if current_user.email == admin_user:
+        result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+        if os.path.isdir(result_histo):
+            shutil.rmtree(result_histo)
+            os.mkdir(result_histo)
+        else:
+            os.mkdir(result_histo) 
+            
     filename1 = str(random.randint(0,1000)*random.randint(1000,2000))
     filename2 = str(random.randint(2000,3000)*random.randint(3000,4000))
 
@@ -257,18 +262,18 @@ def load_chart(method, end_point):
     if end_point == 'processing':
         return_url = request.referrer # get the url from which request has initiated.
         hist = Histogram()
-        script, div = hist.histogram_plot() 
-        return render_template('histogram.html', scripts=script, div=div, return_url=return_url, filename1=filename1, filename2=filename2)              
+        script, div = hist.histogram_plot(current_user) 
+        return render_template('histogram.html', scripts=script, div=div, return_url=return_url, filename2=filename2)              
+    
     else:
-        return_url = request.referrer # get the url from which request has initiated.
+        return_url = request.referrer
         hist = Histogram()
-        script, div = hist.histogram_plot()
+        script, div = hist.histogram_plot(current_user)
         form = HistogramForm()
 
         if request.method == 'POST' :
-            print(method)
             method = Methods.query.filter_by(method_id=method).first()
-            print(method)
+            
             method.black_point = form.black_point.data
             method.midetone_slider = form.midetone_slider.data
             method.white_point = form.white_point.data
@@ -276,16 +281,16 @@ def load_chart(method, end_point):
             black_point = form.black_point.data
             midetone_slider = form.midetone_slider.data
             white_point = form.white_point.data
-            Image_processing().LevelAdjustment(black_point, midetone_slider, white_point)
+            Image_processing().LevelAdjustment(black_point, midetone_slider, white_point, current_user)
         
-        return render_template('histogram.html', scripts=script, div=div, return_url=return_url, 
+        return render_template('histogram_admin.html', scripts=script, div=div, return_url=return_url,
                                 form=form, filename1=filename1, filename2=filename2)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated:        
         return redirect(url_for('upload'))
-    
+
     form = RegistrationForm()
     
     if form.validate_on_submit():
@@ -301,8 +306,6 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('upload'))
         
     form = LoginForm()
     if form.validate_on_submit():
@@ -320,24 +323,26 @@ def login():
 
 @app.route('/logout')
 def logout():
-    #To delete previous uploaded image and directory and creates new directory every time it runs home route    
-    if os.path.isdir(original):
-        shutil.rmtree(original)
-        shutil.rmtree(original_two)
-        shutil.rmtree(second)
-        shutil.rmtree(result)
-        shutil.rmtree(result_histo)
-        os.mkdir(original)
-        os.mkdir(second)
-        os.mkdir(result)
-        os.mkdir(original_two)
-        os.mkdir(result_histo)
-    else:    
-        os.mkdir(original)
-        os.mkdir(second)
-        os.mkdir(result)
-        os.mkdir(original_two)
-        os.mkdir(result_histo) 
+    if current_user.email == admin_user:
+        original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+        original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
+        second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
+        result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+        result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+        #To delete previous uploaded image and directory and creates new directory every time it runs home route    
+        if os.path.isdir(original):
+            shutil.rmtree(original)
+            shutil.rmtree(original_two)
+            shutil.rmtree(second)
+            shutil.rmtree(result)
+            shutil.rmtree(result_histo)
+    else:
+        original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+        result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+        if os.path.isdir(original):
+            shutil.rmtree(original)
+            shutil.rmtree(result)
+        
 
     logout_user()
     return redirect(url_for('home'))
@@ -386,15 +391,26 @@ def reset_token(token):
 
 
 @app.route('/settings', methods=['GET', 'POST'])
-def settings():    
-    form = AdminForm()
+def settings():
+    if not (current_user.is_authenticated and current_user.email == admin_user):
+        flash('Please login as admin user', 'info')
+        return redirect(url_for('login'))
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    
+    if not os.listdir(original):
+        flash('Upload file first', 'info')
+        return redirect(url_for('upload')) 
+    
     filename = os.listdir(original)[0]
     filename_original_two = os.listdir(original)[0]
     filename_second = os.listdir(original)[0]
     filename_result = os.listdir(original)[0]
+
+    file_name = [filename_original_two, filename_second, filename_result]
+    form = AdminForm()
     method = 1
     hist = Histogram()
-    script, div = hist.histogram_plot()
+    script, div = hist.histogram_plot(current_user)
 
     if request.method == 'POST':
         
@@ -420,14 +436,14 @@ def settings():
             db.session.commit()
 
             if Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Addition":             
-                filename_original_two, filename_second, filename_result = Image_processing().addition(method_id=form.method_id.data)       
-            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Substraction":                  
-                filename_original_two, filename_second, filename_result = Image_processing().substraction(form.method_id.data)           
+                file_name = Image_processing().addition(form.method_id.data, current_user)       
+            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Subtraction":                  
+                file_name = Image_processing().subtraction(form.method_id.data, current_user)           
             elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
-                filename_original_two, filename_second, filename_result = Image_processing().multiplication(form.method_id.data)
+                file_name = Image_processing().multiplication(form.method_id.data, current_user)
 
             hist = Histogram()
-            script, div = hist.histogram_plot()
+            script, div = hist.histogram_plot(current_user)
             method = form.method_id.data
             flash('Method is created', 'info')            
 
@@ -452,22 +468,20 @@ def settings():
             db.session.commit()
 
             if Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Addition":             
-                filename_original_two, filename_second, filename_result = Image_processing().addition(method_id=form.method_id.data)       
-            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Substraction":                  
-                filename_original_two, filename_second, filename_result = Image_processing().substraction(method_id=form.method_id.data)           
+                file_name = Image_processing().addition(form.method_id.data, current_user)       
+            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Subtraction":                  
+                file_name = Image_processing().subtraction(form.method_id.data, current_user)           
             elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
-                filename_original_two, filename_second, filename_result = Image_processing().multiplication(method_id=form.method_id.data)
+                file_name = Image_processing().multiplication(form.method_id.data, current_user)
             
             hist = Histogram()
-            script, div = hist.histogram_plot()
+            script, div = hist.histogram_plot(current_user)
             method = form.method_id.data
             flash('Method is updated')
 
 
     return render_template('settings.html', form=form, filename=filename,
-                            filename_original_two=filename_original_two, 
-                            filename_second=filename_second, 
-                            filename_result=filename_result,
+                            file_name=file_name,
                             scripts=script, div=div,
                             method=method)
 
