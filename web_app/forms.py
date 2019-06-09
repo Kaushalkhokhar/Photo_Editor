@@ -82,10 +82,22 @@ class AdminForm(FlaskForm):
     result_contrast = IntegerRangeField('contrast', default=50)
     result_brightness = IntegerRangeField('Brightness', default=50)
     result_intensity = IntegerRangeField('Intensity', default=50)
-    original_filter = SelectField('Filter', choices=[('five', 'without_filter'), ('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
-    original_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
-    copy_filter = SelectField('Filter', choices=[('five', 'without_filter'), ('one', 'averaging'), ('two', 'gaussian_blur'), ('three', 'median_blur'), ('four', 'bilateral_blur')])
-    copy_kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])    
+    original_filter = SelectField('Filter', choices=[('five', 'Without_Filter'), ('one', 'Averaging'), 
+                                                    ('two', 'Gaussian_Blur'), ('three', 'Median_Blur'), 
+                                                    ('four', 'Bilateral_blur'), ('five', 'HPF'),
+                                                    ('six', 'LPF'), ('seven', 'BPF')])
+    original_kernal = SelectField('Kernal', choices=[('one', '3*3_First'), ('two', '3*3_Second'), 
+                                                     ('three', '5*5_First'), ('four', '5*5_Second'),
+                                                     ('five', '7*7_First'), ('six', '7*7_Second'),
+                                                     ('seven', '9*9_First'), ('eight', '9*9_Second')])
+    copy_filter = SelectField('Filter', choices=[('five', 'Without_Filter'), ('one', 'Averaging'), 
+                                                 ('two', 'Gaussian_Blur'), ('three', 'Median_Blur'), 
+                                                 ('four', 'Bilateral_blur'), ('five', 'HPF'),
+                                                 ('six', 'LPF'), ('seven', 'BPF')])
+    copy_kernal = SelectField('Kernal', choices=[('one', '3*3_First'), ('two', '3*3_Second'), 
+                                                 ('three', '5*5_First'), ('four', '5*5_Second'),
+                                                 ('five', '7*7_First'), ('six', '7*7_Second'),
+                                                 ('seven', '9*9_First'), ('eight', '9*9_Second')])    
     submit = SubmitField('Submit')
 
 class HistogramForm(FlaskForm):
@@ -93,23 +105,6 @@ class HistogramForm(FlaskForm):
     white_point = IntegerField('White Point', validators=[DataRequired(), NumberRange(min=128, max=255)])
     midetone_slider = FloatField('Midetone Slider', validators=[DataRequired(), NumberRange(min=0, max=2)])
     submit = SubmitField('Submit')
-
     
     
-    # Privious Admin Panel Settings
-    '''method1 = BooleanField('Convolution', default=True)
-    method2 = BooleanField('Averaging', default=True)
-    method3 = BooleanField('Gaussian Blur', default=True)
-    method4 = BooleanField('Median Blur', default=True)
-    method5 = BooleanField('Bilateral Blur', default=True)
-    method6 = BooleanField('Addition', default=True)
-    method7 = BooleanField('Substraction', default=True)
-    method8 = BooleanField('Multiplication', default=True)
-    method9 = BooleanField('Not defined', default=True)
-    contrast = IntegerRangeField('Color', default=50)
-    brightness = IntegerRangeField('Brightness', default=50)
-    intensity = IntegerRangeField('Intensity', default=50)
-    other = IntegerRangeField('Other', default=50)
-    other = SelectField('Other', choices=[('one', 'one'), ('two', 'two'), ('three', 'three')])
-    kernal = SelectField('Kernal', choices=[('one', '3 * 3'), ('two', '5 * 5')])
-    submit = SubmitField('Submit')'''
+   

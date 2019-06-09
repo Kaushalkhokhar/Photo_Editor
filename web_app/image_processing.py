@@ -23,7 +23,7 @@ class Image_processing():
 
     def convolution(self):           
         img = cv2.imread(image_path)
-        '''if len(img.shape) == 3:
+        '''if len(img.shape) == 2:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)''' #To convert color iamge to gray scale 
         
         kernel = np.ones((5,5),np.float32)/25
@@ -90,32 +90,266 @@ class Image_processing():
     
     @staticmethod
     def filter(img, filter_type, kernal):
-        if filter_type == "averaging":
-            if kernal == "5*5":
+        if filter_type == "Averaging":
+            if kernal == "5*5_First" or kernal == "5*5_Second":
                 output = cv2.blur(img,(5,5))
+            elif kernal == "7*7_First" or kernal == "7*7_Second":
+                output = cv2.blur(img,(7,7))
+            elif kernal == "9*9_First" or kernal == "9*9_Second":
+                output = cv2.blur(img,(9,9))
             else:
                 output = cv2.blur(img,(3,3))
+
             
-        elif filter_type == "gaussian_blur":
-            if kernal == "5*5":
+        elif filter_type == "Gaussian_Blur":
+            if kernal == "5*5_First":
                 output = cv2.GaussianBlur(img,(5,5),0)
-            else:
+            elif kernal == "5*5_Second":
+                output = cv2.GaussianBlur(img,(5,5),0.5)
+            elif kernal == "7*7_First":
+                output = cv2.GaussianBlur(img,(7,7),0)
+            elif kernal == "7*7_Second":
+                output = cv2.GaussianBlur(img,(7,7),0.5)
+            elif kernal == "9*9_First":
+                output = cv2.GaussianBlur(img,(9,9),0)
+            elif kernal == "9*9_Second":
+                output = cv2.GaussianBlur(img,(9,9),0.5)
+            elif kernal == "3*3_First":
                 output = cv2.GaussianBlur(img,(3,3),0)
-
-        elif filter_type == "median_blur":
-            if kernal == "5*5":
-                output = cv2.medianBlur(img,5)
             else:
-                output = cv2.medianBlur(img,5)
+                output = cv2.GaussianBlur(img,(3,3),0.5)
 
-        elif filter_type == "bilateral_blur":
-            if kernal == "5*5":
-                output = cv2.bilateralFilter(img,9,75,75)
+        elif filter_type == "Median_Blur":
+            if kernal == "5*5_First" or kernal == "5*5_Second":
+                output = cv2.medianBlur(img,5)
+            elif kernal == "7*7_First" or kernal == "7*7_Second":
+                output = cv2.medianBlur(img,7)
+            elif kernal == "9*9_First" or kernal == "9*9_Second":
+                output = cv2.medianBlur(img,9)             
             else:
-                output = cv2.bilateralFilter(img,9,75,75)
+                output = cv2.medianBlur(img,3)
+
+        elif filter_type == "Bilateral_Blur":
+            if kernal == "5*5_First":
+                output = cv2.bilateralFilter(img,5,60,60)
+            elif kernal == "5*5_Second":
+                output = cv2.bilateralFilter(img,5,110,110)
+            elif kernal == "7*7_First":
+                output = cv2.bilateralFilter(img,9,60,60)
+            elif kernal == "7*7_Second":
+                output = cv2.bilateralFilter(img,9,110,110)
+            elif kernal == "9*9_First":
+                output = cv2.bilateralFilter(img,9,60,60)
+            elif kernal == "9*9_Second":
+                output = cv2.bilateralFilter(img,9,110,110)
+            elif kernal == "3*3_First":
+                output = cv2.bilateralFilter(img,9,60,60)
+            else:
+                output = cv2.bilateralFilter(img,9,110,110)
+
+        elif filter_type == "HPF":
+            if kernal == "3*3_First":
+                kernal = 0 - (np.ones((3,3), np.float32))
+                kernal[1,1] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "3*3_Second":
+                kernal = 0 - (np.ones((3,3), np.float32))
+                kernal[1,1] = 12
+                kernal[1,0], kernal[1,2], kernal[0,1], kernal[2,1] = [-2,-2,-2,-2]
+                kernal = kernal/16
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "5*5_First":
+                kernal = 0 - (np.ones((5,5), np.float32))
+                kernal[2,2] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "5*5_Second":
+                kernal = 0 - (np.ones((5,5), np.float32))
+                kernal[2,2] = 4
+                kernal[1,2], kernal[3,2], kernal[2,1], kernal[2,3] = [2,2,2,2]
+                kernal[1,1], kernal[1,3], kernal[3,1], kernal[3,3] = [1,1,1,1]
+                kernal = kernal/16
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "7*7_First":
+                kernal = 0 - (np.ones((7,7), np.float32))
+                kernal[3,3] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "7*7_Second":
+                kernal = 0 - (np.ones((7,7), np.float32))
+                kernal[3,3] = 6
+                kernal[3,2], kernal[3,4], kernal[2,3], kernal[4,3] = [4,4,4,4]
+                kernal[2,2], kernal[2,4], kernal[4,2], kernal[4,4] = [2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5] = [1,1,1,1,1]
+                kernal[5,1], kernal[5,2], kernal[5,3], kernal[5,4], kernal[5,5] = [1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1] = [1,1,1]
+                kernal[2,5], kernal[3,5], kernal[4,5] = [1,1,1]
+                kernal = kernal/16
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "9*9_First":
+                kernal = 0 - (np.ones((9,9), np.float32))
+                kernal[4,4] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            else:
+                kernal = 0 - (np.ones((9,9), np.float32))
+                kernal[4,4] = 6
+                kernal=kernal/16                
+                output = cv2.filter2D(img, -1, kernal)
+            
+        elif filter_type == 'LPF':
+            if kernal == "3*3_First":
+                kernal = (np.ones((3,3), np.float32))
+                kernal[1,1] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "3*3_Second":
+                kernal = (np.ones((3,3), np.float32))
+                kernal[1,1] = 12
+                kernal[1,0], kernal[1,2], kernal[0,1], kernal[2,1] = [-2,-2,-2,-2]
+                kernal = kernal/16
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "5*5_First":
+                kernal = (np.ones((5,5), np.float32))
+                kernal[2,2] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "5*5_Second":
+                kernal = (np.ones((5,5), np.float32))
+                kernal[2,2] = 4
+                kernal[1,2], kernal[3,2], kernal[2,1], kernal[2,3] = [2,2,2,2]
+                kernal[1,1], kernal[1,3], kernal[3,1], kernal[3,3] = [1,1,1,1]
+                kernal = kernal/16
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "7*7_First":
+                kernal = (np.ones((7,7), np.float32))
+                kernal[3,3] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "7*7_Second":
+                kernal = (np.ones((7,7), np.float32))
+                kernal[3,3] = 6
+                kernal[3,2], kernal[3,4], kernal[2,3], kernal[4,3] = [4,4,4,4]
+                kernal[2,2], kernal[2,4], kernal[4,2], kernal[4,4] = [2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5] = [1,1,1,1,1]
+                kernal[5,1], kernal[5,2], kernal[5,3], kernal[5,4], kernal[5,5] = [1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1] = [1,1,1]
+                kernal[2,5], kernal[3,5], kernal[4,5] = [1,1,1]
+                kernal = kernal/16
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "9*9_First":
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 8
+                kernal = kernal/9
+                output = cv2.filter2D(img, -1, kernal)
+            else:
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 6
+                kernal=kernal/16                
+                output = cv2.filter2D(img, -1, kernal)
+
+        elif filter_type == 'BPF':
+            if kernal == "3*3_First":
+                kernal = (np.ones((3,3), np.float32))
+                kernal[1,1] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((3,3), np.float32))
+                kernal[1,1] = 12
+                kernal[1,0], kernal[1,2], kernal[0,1], kernal[2,1] = [-2,-2,-2,-2]
+                kernal2 = kernal/16
+
+                output = cv2.filter2D(img, -0, kernal1-kernal2)
+            elif kernal == "3*3_Second":
+                kernal = (np.ones((3,3), np.float32))
+                kernal[1,1] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((3,3), np.float32))
+                kernal[1,1] = 12
+                kernal[1,0], kernal[1,2], kernal[0,1], kernal[2,1] = [-2,-2,-2,-2]
+                kernal2 = kernal/16
+
+                output = cv2.filter2D(img, -0, kernal2-kernal1)
+            elif kernal == "5*5_First":
+                kernal = (np.ones((5,5), np.float32))
+                kernal[2,2] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((5,5), np.float32))
+                kernal[2,2] = 4
+                kernal[1,2], kernal[3,2], kernal[2,1], kernal[2,3] = [2,2,2,2]
+                kernal[1,1], kernal[1,3], kernal[3,1], kernal[3,3] = [1,1,1,1]
+                kernal2 = kernal/16
+
+                output = cv2.filter2D(img, -0, kernal2-kernal1)
+            elif kernal == "5*5_Second":
+                kernal = (np.ones((5,5), np.float32))
+                kernal[2,2] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((5,5), np.float32))
+                kernal[2,2] = 4
+                kernal[1,2], kernal[3,2], kernal[2,1], kernal[2,3] = [2,2,2,2]
+                kernal[1,1], kernal[1,3], kernal[3,1], kernal[3,3] = [1,1,1,1]
+                kernal2 = kernal/16
+                output = cv2.filter2D(img, -0, kernal1-kernal2)
+            elif kernal == "7*7_First":
+                kernal = (np.ones((7,7), np.float32))
+                kernal[3,3] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((7,7), np.float32))
+                kernal[3,3] = 6
+                kernal[3,2], kernal[3,4], kernal[2,3], kernal[4,3] = [4,4,4,4]
+                kernal[2,2], kernal[2,4], kernal[4,2], kernal[4,4] = [2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5] = [1,1,1,1,1]
+                kernal[5,1], kernal[5,2], kernal[5,3], kernal[5,4], kernal[5,5] = [1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1] = [1,1,1]
+                kernal[2,5], kernal[3,5], kernal[4,5] = [1,1,1]
+                kernal2 = kernal/16
+
+                output = cv2.filter2D(img, -0, kernal1-kernal2)
+            elif kernal == "7*7_Second":
+                kernal = (np.ones((7,7), np.float32))
+                kernal[3,3] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((7,7), np.float32))
+                kernal[3,3] = 6
+                kernal[3,2], kernal[3,4], kernal[2,3], kernal[4,3] = [4,4,4,4]
+                kernal[2,2], kernal[2,4], kernal[4,2], kernal[4,4] = [2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5] = [1,1,1,1,1]
+                kernal[5,1], kernal[5,2], kernal[5,3], kernal[5,4], kernal[5,5] = [1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1] = [1,1,1]
+                kernal[2,5], kernal[3,5], kernal[4,5] = [1,1,1]
+                kernal2 = kernal/16
+                output = cv2.filter2D(img, -0, kernal2-kernal1)
+
+            elif kernal == "9*9_First":
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 6
+                kernal2 = kernal/16
+
+                output = cv2.filter2D(img, -0, kernal1-kernal2)
+            else:
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 8
+                kernal1 = kernal/9
+
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 6
+                kernal2=kernal/16                
+                output = cv2.filter2D(img, -0, kernal2-kernal1)
+
         else:
             output = img
-        print('filter is runnig')
+
         return output
 
 
@@ -180,7 +414,7 @@ class Image_processing():
         copy_filter = method.copy_filter
         copy_kernal = method.copy_kernal    
         
-
+        print(original_filter, copy_filter)
         new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
         hsvImg = cv2.cvtColor(new_img,cv2.COLOR_BGR2HSV)
         #multiple by a factor to change the saturation
@@ -297,7 +531,7 @@ class Image_processing():
         copy_kernal = method.copy_kernal  
         '''for y in range(img.shape[0]):
             for x in range(img.shape[1]):
-                for c in range(img.shape[2]):
+                for c in range(img.shape[1]):
                     new_img[y,x,c] = np.clip(original_alpha*img[y,x,c] + original_beta, 0, 255)
                     #new_img_2[y,x,c] = np.clip(copy_alpha*img[y,x,c] + copy_beta, 0, 255)'''
 
