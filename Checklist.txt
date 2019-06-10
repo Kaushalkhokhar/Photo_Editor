@@ -1,0 +1,33 @@
+GENERAL
+Test max (optimal) file size for image to process within 30 seconds 
+(can reduce uploaded image to this size for processing. 
+Example reduce 8 MBs image captured by cam to this optimal size then process).
+Display progress icon as image is being processed
+Add for Video Images
+Publish API for Android device
+Clean up the User Interfaces for User and Admin to make it look neat and simple to use
+Ensure the app is functional on my Linode account that I gave you access to, I will give you the domain to use
+
+ADMIN SCREEN
+More control of filters not just two kernel options
+Add BPF, HPF, LPF
+Levels and HSL to Contrast, Brightness, Intensity
+Add Intensity (Y-axis) and Wavelength (X-axis) of Graph - Result image only
+Add Entropy - Result Image only
+Increase text contrast on menu labels
+Display the labels (names) of Methods in use 
+Display labels for Original, Copy and Result images
+
+USER SCREEN
+Add save/share button Result image
+Increase text contrast on menu labels
+Display only activated profiles as options
+Remove histogram
+Add Spectrograph - Intensity (Y-axis) and Wavelength (X-axis) of Graph - Uploaded image and Result image
+Add Entropy Value - Uploaded image and Result image
+Display the Entropy value and the Wavelength graph under uploaded image - test with mobile they both show on same screen
+Display the Entropy Value and the Wavelength graph under Result image - test with mobile they both show on same screen
+
+scp -r D:/Programming/Python/Flask/Web_App/Photo_Editor kaushalk@172.105.28.197:~/
+ssh kaushalk@172.105.28.197
+sudo supervisorctl reload

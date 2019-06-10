@@ -1,4 +1,5 @@
 import os, cv2
+import time
 import shutil
 import random
 import numpy as np
@@ -18,6 +19,15 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
 
+
+@app.route('/index', methods = ['GET', 'POST'])
+def index():
+    return render_template('index.html')
+
+@app.route('/ajax/index')
+def ajax_index():
+    time.sleep(5)
+    return '<h1>Done!</h1>'
 
 @app.route('/database')
 def database():
@@ -98,6 +108,8 @@ def display_image():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
+    time.sleep(5)
+
     methods = Methods.query.all() 
     
     original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
@@ -117,7 +129,7 @@ def display_image():
     image = cv2.imread(os.path.join(original, filename))
     height, width, cha = image.shape
     
-    scale = 680 / height
+    scale = 590 / height
     height = scale * height
     width = scale * width
     if width > 1380:
@@ -128,7 +140,7 @@ def display_image():
 
     # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
     return render_template('display.html', filename=filename, height=height, methods=methods) # In this filename will be the name of image file which is uploaded last in all files
-                    
+                        
     
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])

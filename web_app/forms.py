@@ -82,18 +82,21 @@ class AdminForm(FlaskForm):
     result_contrast = IntegerRangeField('contrast', default=50)
     result_brightness = IntegerRangeField('Brightness', default=50)
     result_intensity = IntegerRangeField('Intensity', default=50)
-    original_filter = SelectField('Filter', choices=[('five', 'Without_Filter'), ('one', 'Averaging'), 
-                                                    ('two', 'Gaussian_Blur'), ('three', 'Median_Blur'), 
-                                                    ('four', 'Bilateral_blur'), ('five', 'HPF'),
-                                                    ('six', 'LPF'), ('seven', 'BPF')])
+    original_filter = SelectField('Filter', choices=[('one', 'Without_Filter'), ('two', 'Averaging'), 
+                                                    ('three', 'Gaussian_Blur'), ('four', 'Median_Blur'), 
+                                                    ('five', 'Bilateral_Blur'), ('six', 'HPF'),
+                                                    ('seven', 'LPF'), ('eight', 'BPF'),
+                                                    ('nine', 'NOTCH')])
+    copy_filter = SelectField('Filter', choices=[('one', 'Without_Filter'), ('two', 'Averaging'), 
+                                                 ('three', 'Gaussian_Blur'), ('four', 'Median_Blur'), 
+                                                 ('five', 'Bilateral_blur'), ('six', 'HPF'),
+                                                 ('seven', 'LPF'), ('eight', 'BPF'),
+                                                 ('nine', 'NOTCH')])
+
     original_kernal = SelectField('Kernal', choices=[('one', '3*3_First'), ('two', '3*3_Second'), 
                                                      ('three', '5*5_First'), ('four', '5*5_Second'),
                                                      ('five', '7*7_First'), ('six', '7*7_Second'),
-                                                     ('seven', '9*9_First'), ('eight', '9*9_Second')])
-    copy_filter = SelectField('Filter', choices=[('five', 'Without_Filter'), ('one', 'Averaging'), 
-                                                 ('two', 'Gaussian_Blur'), ('three', 'Median_Blur'), 
-                                                 ('four', 'Bilateral_blur'), ('five', 'HPF'),
-                                                 ('six', 'LPF'), ('seven', 'BPF')])
+                                                     ('seven', '9*9_First'), ('eight', '9*9_Second')])    
     copy_kernal = SelectField('Kernal', choices=[('one', '3*3_First'), ('two', '3*3_Second'), 
                                                  ('three', '5*5_First'), ('four', '5*5_Second'),
                                                  ('five', '7*7_First'), ('six', '7*7_Second'),

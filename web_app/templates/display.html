@@ -1,25 +1,17 @@
 {% extends "layout.html" %}
-{% block script %}
-<style>    
-    
-
-    
-</style>
-    
-{% endblock script %}
 
 {% block navbar %}
     
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-        METHOD
-        </a>  
-    <div class="dropdown-menu">
-        {% for method in methods %}
-            <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ method.method_id }}</a>
-        {% endfor %}
-    </div>
-    </li>    
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+    METHOD
+    </a>  
+<div class="dropdown-menu">
+    {% for method in methods %}
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ method.method_id }}</a>
+    {% endfor %}
+</div>
+</li>    
 {% endblock navbar %}
 
 {% block content %} 

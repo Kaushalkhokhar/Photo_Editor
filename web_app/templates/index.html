@@ -1,0 +1,18 @@
+
+<div id="content">
+    {% extends "layout.html" %}
+    {% block content %}
+       <div>
+            Loading...
+       </div> 
+    {% endblock content %}
+
+    {% block ajax %}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            $(function () { 
+                $("#content").load("{{ url_for('ajax_index') }}"); 
+            });
+        </script>
+    {% endblock ajax %}
+</div>
