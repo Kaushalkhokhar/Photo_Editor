@@ -68,18 +68,18 @@ class GeneralForm(FlaskForm):
     other = IntegerRangeField('Other', default=50)
 
 class AdminForm(FlaskForm):
-    method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,12)])
+    method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,20)])
     image_operation = SelectField('Operations', choices=[('one', 'Addition'), \
                                     ('two', 'Subtraction'), ('three', 'Multiplication')])
     method_title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
     active_state = BooleanField('Active State',default=True)
-    original_contrast = IntegerRangeField('contrast', default=50)
+    original_contrast = IntegerRangeField('Contrast', default=50)
     original_brightness = IntegerRangeField('Brightness', default=50)
     original_intensity = IntegerRangeField('Intensity', default=50)
-    copy_contrast = IntegerRangeField('contrast', default=50)
+    copy_contrast = IntegerRangeField('Contrast', default=50)
     copy_brightness = IntegerRangeField('Brightness', default=50)
     copy_intensity = IntegerRangeField('Intensity', default=50)
-    result_contrast = IntegerRangeField('contrast', default=50)
+    result_contrast = IntegerRangeField('Contrast', default=50)
     result_brightness = IntegerRangeField('Brightness', default=50)
     result_intensity = IntegerRangeField('Intensity', default=50)
     original_filter = SelectField('Filter', choices=[('one', 'Without_Filter'), ('two', 'Averaging'), 

@@ -31,3 +31,7 @@ Display the Entropy Value and the Wavelength graph under Result image - test wit
 scp -r D:/Programming/Python/Flask/Web_App/Photo_Editor kaushalk@172.105.28.197:~/
 ssh kaushalk@172.105.28.197
 sudo supervisorctl reload
+50.116.10.249
+
+
+

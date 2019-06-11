@@ -7,12 +7,16 @@
     METHOD
     </a>  
 <div class="dropdown-menu">
-    {% for method in methods %}
-        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ method.method_id }}</a>
+    {% for method in methods  %}
+        <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ loop.index }}</a>
     {% endfor %}
 </div>
 </li>    
-{% endblock navbar %}
+{% endblock %}
+
+{% block nav %}
+    <li class="nav-item "><a class="nav-link" href="{{ url_for('load_chart', filename=filename, method=method, end_point='settings') }}">HISTOGRAM</a></li>
+{% endblock %}
 
 {% block content %} 
     <div class="container">

@@ -81,9 +81,9 @@ class MyAdminIndexView(AdminIndexView):
     def inaccessible_callback(self, username):
         return 'You cannot view page'
 
-#admin = Admin(app, index_view=MyAdminIndexView())
-#admin.add_view(MyModelView(User, db.session))
-#admin.add_view(MyModelView(Methods, db.session))
+admin = Admin(app, index_view=MyAdminIndexView())
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(Methods, db.session))
 
 
 

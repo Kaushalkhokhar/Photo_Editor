@@ -2,6 +2,7 @@
 
 
 {% block script %}
+    
     <script>
             function outputUpdateOriginalContrast(contrast) {
                 document.querySelector('#original_contrast').value = contrast;
@@ -31,7 +32,68 @@
                 document.querySelector('#result_intensity').value = intensity;
             }
     </script>
+    <style>
+        
+        .left {
+            text-align: left !important;
+        }
+
+        .myrange {
+            color: rgb(29, 26, 26) !important;
+            width: 100%;
+        }
+
+        .card-title {
+            text-align:center;
+            font-size: 24px;
+            margin: 0%;
+        }
+
+        .select-filter {
+            margin-left: 20px;
+            padding-left: 5px;
+            width: 130px;
+            height: 30px;
+        }
+
+        .select-kernal {
+            margin-left: 11px;
+            padding-left: 5px;
+            width: 130px;
+            height: 30px;
+        }
+
+        .list-group-item {
+            padding:5px 20px;
+        }
+
+        .submit-settings {
+            padding: 8px;
+            margin: 8px 70px;
+            width: 250px;
+            font-size: 22px;
+        }
+    </style>    
 {% endblock %} 
+
+{% block navbar %}
+    
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        METHOD
+        </a>  
+    <div class="dropdown-menu">
+        {% for method in methods %}
+            <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ loop.index }}</a>
+        {% endfor %}
+    </div>
+    </li> 
+
+{% endblock %}
+
+{% block nav %}
+    <li class="nav-item "><a class="nav-link" href="{{ url_for('load_chart', filename=filename, method=method, end_point='settings') }}">HISTOGRAM</a></li>
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -57,117 +119,149 @@
         </div>
         <div class="row">
             <div class="col">
-                <div>
-                    <img src="{{ url_for('show_original_two', filename=file_name[0]) }}" 
-                    class="img-fluid" alt="Image" height="150" width="150">
-                </div>
-                <div>
-                    {{ form.original_contrast.label }} = <output 
-                    for="original_contrast" id="original_contrast">
-                    {{ form.original_contrast.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.original_contrast(min=0, max=100, onchange="outputUpdateOriginalContrast(value)") }}
-                </div>
-                <div>
-                    {{ form.original_brightness.label }} = <output 
-                    for="original_brightness" id="original_brightness">
-                    {{ form.original_brightness.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.original_brightness(min=0, max=100, onchange="outputUpdateOriginalBrightness(value)") }}
-                </div>
-                <div>
-                    {{ form.original_intensity.label }} = <output 
-                    for="original_intensity" id="original_intensity">
-                    {{ form.original_intensity.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.original_intensity(min=0, max=100, onchange="outputUpdateOriginalIntensity(value)") }}
-                </div>
-                <div>
-                    {{ form.original_filter.label }}
-                    {{ form.original_filter }}
-                </div>
-                <div>
-                    {{ form.original_kernal.label }}
-                    {{ form.original_kernal }}
-                </div>
-            </div>
-            <div class="col">
-                <div>
-                    <img src="{{ url_for('show_second', filename=file_name[1]) }}" 
-                    class="img-fluid" alt="Image" height="150" width="150">
-                </div>
-                <div>
-                    {{ form.copy_contrast.label }} = <output 
-                    for="copy_contrast" id="copy_contrast">
-                    {{ form.copy_contrast.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.copy_contrast(min=0, max=100, onchange="outputUpdateCopyContrast(value)") }}
-                </div>
-                <div>
-                    {{ form.copy_brightness.label }} = <output 
-                    for="copy_brightness" id="copy_brightness">
-                    {{ form.copy_brightness.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.copy_brightness(min=0, max=100, onchange="outputUpdateCopyBrightness(value)") }}
-                </div>
-                <div>
-                    {{ form.copy_intensity.label }} = <output 
-                    for="copy_intensity" id="copy_intensity">
-                    {{ form.copy_intensity.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.copy_intensity(min=0, max=100, onchange="outputUpdateCopyIntensity(value)") }}
-                </div>
-                <div>
-                    {{ form.copy_filter.label }}
-                    {{ form.copy_filter }}
-                </div>
-                <div>
-                    {{ form.copy_kernal.label }}
-                    {{ form.copy_kernal }}
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="{{ url_for('show_original_two', filename=file_name[0]) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Original</h5>
+                        </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.original_contrast.label }} = <output 
+                                for="original_contrast" id="original_contrast">
+                                {{ form.original_contrast.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.original_contrast(min=0, max=100, onchange="outputUpdateOriginalContrast(value)", class="myrange") }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.original_brightness.label }} = <output 
+                                for="original_brightness" id="original_brightness">
+                                {{ form.original_brightness.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.original_brightness(min=0, max=100, onchange="outputUpdateOriginalBrightness(value)", class="myrange") }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.original_intensity.label }} = <output 
+                                for="original_intensity" id="original_intensity">
+                                {{ form.original_intensity.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.original_intensity(min=0, max=100, onchange="outputUpdateOriginalIntensity(value)", class="myrange") }}
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <div>
+                            {{ form.original_filter.label }}
+                            {{ form.original_filter(class="select-filter") }}
+                        </div>
+                        <div>
+                            {{ form.original_kernal.label }}
+                            {{ form.original_kernal(class="select-kernal") }}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col">
-                <div>
-                    <img src="{{ url_for('show_result', filename=file_name[-1]) }}" 
-                    class="img-fluid" alt="Image" height="150" width="150">
+                 <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="{{ url_for('show_second', filename=file_name[1]) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Copy</h5>
+                        </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.copy_contrast.label }} = <output 
+                                for="copy_contrast" id="copy_contrast">
+                                {{ form.copy_contrast.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.copy_contrast(min=0, max=100, onchange="outputUpdateCopyContrast(value)", class="myrange") }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.copy_brightness.label }} = <output 
+                                for="copy_brightness" id="copy_brightness">
+                                {{ form.copy_brightness.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.copy_brightness(min=0, max=100, onchange="outputUpdateCopyBrightness(value)", class="myrange") }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.copy_intensity.label }} = <output 
+                                for="copy_intensity" id="copy_intensity">
+                                {{ form.copy_intensity.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.copy_intensity(min=0, max=100, onchange="outputUpdateCopyIntensity(value)", class="myrange") }}
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <div>
+                            {{ form.copy_filter.label }}
+                            {{ form.copy_filter(class="select-filter") }}
+                        </div>
+                        <div>
+                            {{ form.copy_kernal.label }}
+                            {{ form.copy_kernal(class="select-kernal") }}
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    {{ form.result_contrast.label }} = <output 
-                    for="result_contrast" id="result_contrast">
-                    {{ form.result_contrast.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.result_contrast(min=0, max=100, onchange="outputUpdateCopyResultContrast(value)") }}
-                </div>
-                <div>
-                    {{ form.result_brightness.label }} = <output 
-                    for="result_brightness" id="result_brightness">
-                    {{ form.result_brightness.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.result_brightness(min=0, max=100, onchange="outputUpdateResultBrightness(value)") }}
-                </div>
-                <div>
-                    {{ form.result_intensity.label }} = <output 
-                    for="result_intensity" id="result_intensity">
-                    {{ form.result_intensity.data }}</output>
-                </div>
-                <div class="range"> 
-                    {{ form.result_intensity(min=0, max=100, onchange="outputUpdateResultIntensity(value)") }}
-                </div>                
-                <div class="row">
-                    {{ form.submit }}
-                </div>
-                <div class="row">
-                    <p>To load histogram and level adjustment panel click on given link.
-                    <a href="{{ url_for('load_chart', filename=filename, method=method, end_point='settings') }}">Load Histogram</a></p>
-                </div>
+            </div>
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="{{ url_for('show_result', filename=file_name[-1]) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Result</h5>
+                        </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.result_contrast.label }} = <output 
+                                for="result_contrast" id="result_contrast">
+                                {{ form.result_contrast.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.result_contrast(min=0, max=100, onchange="outputUpdateCopyResultContrast(value)", class="myrange") }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.result_brightness.label }} = <output 
+                                for="result_brightness" id="result_brightness">
+                                {{ form.result_brightness.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.result_brightness(min=0, max=100, onchange="outputUpdateResultBrightness(value)", class="myrange") }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="left">
+                                {{ form.result_intensity.label }} = <output 
+                                for="result_intensity" id="result_intensity">
+                                {{ form.result_intensity.data }}</output>
+                            </div>
+                            <div class="range"> 
+                                {{ form.result_intensity(min=0, max=100, onchange="outputUpdateResultIntensity(value)", class="myrange") }}
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <div class="row">
+                            {{ form.submit(class="submit-settings") }}
+                        </div>
+                    </div>
+                </div>                  
             </div>
         </div>
     </form>

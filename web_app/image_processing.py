@@ -638,7 +638,7 @@ class Image_processing():
         new_add = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
 
-        filename_result = Image_processing.addition.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
+        filename_result = "Processed1" + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     file_id + file_extension
         destination = "/".join([result, filename_result])
         b, g, r = cv2.split(new_add)
@@ -649,7 +649,7 @@ class Image_processing():
 
 
         if current_user.email == admin_user:
-            filename_original_two = Image_processing.addition.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
+            filename_original_two = "Processed1" + str(random.randint(501,1000)*random.randint(0,500)) + \
                         file_id + file_extension
             destination = "/".join([original_two, filename_original_two])
             b, g, r = cv2.split(new_img)
@@ -657,7 +657,7 @@ class Image_processing():
             im = Image.fromarray(new_img)
             im.save(destination) 
 
-            filename_second = Image_processing.addition.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+            filename_second = "Processed1" + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                         file_id + file_extension
             destination = "/".join([second, filename_second])
             b, g, r = cv2.split(new_img_2)
@@ -766,7 +766,7 @@ class Image_processing():
         new_sub = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
 
-        filename_result = Image_processing.subtraction.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
+        filename_result = "Processed2" + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     file_id + file_extension
         destination = "/".join([result, filename_result])
         b, g, r = cv2.split(new_sub)
@@ -776,7 +776,7 @@ class Image_processing():
         filename = [filename_result]
 
         if current_user.email == admin_user:
-            filename_original_two = Image_processing.subtraction.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
+            filename_original_two = "Processed2" + str(random.randint(501,1000)*random.randint(0,500)) + \
                         file_id + file_extension
             destination = "/".join([original_two, filename_original_two])
             b, g, r = cv2.split(new_img)
@@ -784,7 +784,7 @@ class Image_processing():
             im = Image.fromarray(new_img)
             im.save(destination) 
 
-            filename_second = Image_processing.subtraction.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+            filename_second = "Processed2"  + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                         file_id + file_extension
             destination = "/".join([second, filename_second])
             b, g, r = cv2.split(new_img_2)
@@ -894,7 +894,7 @@ class Image_processing():
         new_mul = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
 
-        filename_result = Image_processing.multiplication.__name__ + str(random.randint(0,500)*random.randint(1001,1500)) + \
+        filename_result = "Processed3" + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     file_id + file_extension
         destination = "/".join([result, filename_result])
         b, g, r = cv2.split(new_mul)
@@ -904,7 +904,7 @@ class Image_processing():
         filename = [filename_result]
 
         if current_user.email == admin_user:
-            filename_original_two = Image_processing.multiplication.__name__ + str(random.randint(501,1000)*random.randint(0,500)) + \
+            filename_original_two = "Processed3" + str(random.randint(501,1000)*random.randint(0,500)) + \
                         file_id + file_extension
             destination = "/".join([original_two, filename_original_two])
             b, g, r = cv2.split(new_img)
@@ -912,7 +912,7 @@ class Image_processing():
             im = Image.fromarray(new_img)
             im.save(destination) 
 
-            filename_second = Image_processing.multiplication.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+            filename_second = "Processed3" + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                         file_id + file_extension
             destination = "/".join([second, filename_second])
             b, g, r = cv2.split(new_img_2)

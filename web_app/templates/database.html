@@ -20,6 +20,21 @@
 </style>
 {% endblock %}
 
+{% block navbar %}
+    
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+        METHOD
+        </a>  
+    <div class="dropdown-menu">
+        {% for method in methods %}
+            <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ loop.index }}</a>
+        {% endfor %}
+    </div>
+    </li> 
+       
+{% endblock %}
+
 {% block content %}
     <table>
         <tr>

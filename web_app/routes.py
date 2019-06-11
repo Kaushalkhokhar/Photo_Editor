@@ -31,9 +31,10 @@ def ajax_index():
 
 @app.route('/database')
 def database():
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    filename = os.listdir(original)[0] 
     methods = Methods.query.all()
-    return render_template('admin.html', methods=methods)
-
+    return render_template('database.html', filename=filename, methods=methods)
 
 @app.route('/')
 @app.route('/home')
@@ -107,8 +108,6 @@ def display_image():
     
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-
-    time.sleep(5)
 
     methods = Methods.query.all() 
     
@@ -231,6 +230,17 @@ def show_result_histo(filename):
     else:
         filename = os.listdir(result)[0]
         return send_from_directory(str(current_user.username) + '_result', filename)
+
+@app.route('/download/<filename>', methods=['GET', 'POST'])
+def download(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+    if os.listdir(result):
+        filename = os.listdir(result)[0]        
+        return send_from_directory(str(current_user.username) + '_result', filename=filename, as_attachment=True)        
+    else:
+        filename = os.listdir(original)[0]
+        return send_from_directory(str(current_user.username) + '_original', filename=filename, as_attachment=True)
 
 @app.route('/demo/<filename>', methods=['GET', 'POST'])
 def demo(filename):          
@@ -418,6 +428,7 @@ def settings():
     filename_second = os.listdir(original)[0]
     filename_result = os.listdir(original)[0]
 
+    methods = Methods.query.all()
     file_name = [filename_original_two, filename_second, filename_result]
     form = AdminForm()
     method = 1
@@ -457,7 +468,6 @@ def settings():
             hist = Histogram()
             script, div = hist.histogram_plot(current_user)
             method = form.method_id.data
-            flash('Method is created', 'info')            
 
         else:
             method = Methods.query.filter_by(method_id=form.method_id.data).first()
@@ -489,13 +499,12 @@ def settings():
             hist = Histogram()
             script, div = hist.histogram_plot(current_user)
             method = form.method_id.data
-            flash('Method is updated')
 
 
     return render_template('settings.html', form=form, filename=filename,
                             file_name=file_name,
                             scripts=script, div=div,
-                            method=method)
+                            method=method, methods=methods)
 
 @app.route('/testing', methods=['GET', 'POST'])
 def testing():    
