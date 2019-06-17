@@ -206,11 +206,11 @@ class Image_processing():
                 kernal[3,2], kernal[4,2], kernal[5,2] = [-4,-4,-4]
                 kernal[3,6], kernal[4,6], kernal[5,6] = [-4,-4,-4]
                 kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7] = [-2,-2,-2,-2,-2,-2,-2]
-                kernal[2,1], kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7] = [-2,-2,-2,-2,-2,-2,-2]
+                kernal[7,1], kernal[7,7], kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [-2,-2,-2,-2,-2,-2,-2]
                 kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1] = [-2,-2,-2,-2,-2]
                 kernal[2,7], kernal[3,7], kernal[4,7], kernal[5,7], kernal[6,7] = [-2,-2,-2,-2,-2]                
                 output = cv2.filter2D(img, -1, kernal)
-            else:
+            elif kernal == "9*9_Second":
                 kernal = 0 - (np.ones((9,9), np.float32))
                 kernal[4,4] = 124
                 kernal[4,3], kernal[4,5], kernal[3,4], kernal[5,4] = [-8,-8,-8,-8]
@@ -220,10 +220,46 @@ class Image_processing():
                 kernal[3,2], kernal[4,2], kernal[5,2] = [-2,-2,-2]
                 kernal[3,6], kernal[4,6], kernal[5,6] = [-2,-2,-2]
                 kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7] = [-1,-1,-1,-1,-1,-1,-1]
-                kernal[2,1], kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7] = [-1,-1,-1,-1,-1,-1,-1]
+                kernal[7,1], kernal[7,7], kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[2,7] = [-1,-1,-1,-1,-1,-1,-1]
                 kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1] = [-1,-1,-1,-1,-1]
                 kernal[2,7], kernal[3,7], kernal[4,7], kernal[5,7], kernal[6,7] = [-1,-1,-1,-1,-1]
                 kernal = kernal         
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "11*11_First":
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 400
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [-32,-32,-32,-32]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [-16,-16,-16,-16]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [-8,-8,-8,-8,-8]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [-8,-8,-8,-8,-8]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [-8,-8,-8]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [-8,-8,-8]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [-4,-4,-4,-4,-4,-4,-4]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [-4,-4,-4,-4,-4,-4,-4]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [-4,-4,-4,-4,-4]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [-4,-4,-4,-4,-4]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [-2,-2,-2,-2,-2,-2,-2,-2,-2]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [-2,-2,-2,-2,-2,-2,-2,-2,-2]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [-2,-2,-2,-2,-2,-2,-2]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [-2,-2,-2,-2,-2,-2,-2]                
+                output = cv2.filter2D(img, -1, kernal)
+            else:
+                kernal = 0 - (np.ones((11,11), np.float32))
+                kernal[5,5] = 200
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [-16,-16,-16,-16]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [-8,-8,-8,-8]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [-4,-4,-4,-4,-4]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [-4,-4,-4,-4,-4]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [-4,-4,-4]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [-4,-4,-4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [-2,-2,-2,-2,-2,-2,-2]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [-2,-2,-2,-2,-2,-2,-2]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [-2,-2,-2,-2,-2]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [-2,-2,-2,-2,-2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [-1,-1,-1,-1,-1,-1,-1,-1,-1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [-1,-1,-1,-1,-1,-1,-1]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [-1,-1,-1,-1,-1,-1,-1]                
                 output = cv2.filter2D(img, -1, kernal)
             
         elif filter_type == 'LPF':
@@ -236,45 +272,79 @@ class Image_processing():
                 kernal = (np.ones((3,3), np.float32))
                 kernal[1,1] = 12
                 kernal[1,0], kernal[1,2], kernal[0,1], kernal[2,1] = [2,2,2,2]
-                kernal = kernal/16
+                kernal = kernal/32
                 output = cv2.filter2D(img, -1, kernal)
             elif kernal == "5*5_First":
                 kernal = (np.ones((5,5), np.float32))
                 kernal[2,2] = 8
-                kernal = kernal/9
+                kernal = kernal/22
                 output = cv2.filter2D(img, -1, kernal)
             elif kernal == "5*5_Second":
                 kernal = (np.ones((5,5), np.float32))
-                kernal[2,2] = 4
+                kernal[2,2] = 12
                 kernal[1,2], kernal[3,2], kernal[2,1], kernal[2,3] = [2,2,2,2]
                 kernal[1,1], kernal[1,3], kernal[3,1], kernal[3,3] = [1,1,1,1]
-                kernal = kernal/16
+                kernal = kernal/32
                 output = cv2.filter2D(img, -1, kernal)
             elif kernal == "7*7_First":
                 kernal = (np.ones((7,7), np.float32))
                 kernal[3,3] = 8
-                kernal = kernal/9
+                kernal = kernal/36
                 output = cv2.filter2D(img, -1, kernal)
             elif kernal == "7*7_Second":
                 kernal = (np.ones((7,7), np.float32))
-                kernal[3,3] = 6
+                kernal[3,3] = 24
                 kernal[3,2], kernal[3,4], kernal[2,3], kernal[4,3] = [4,4,4,4]
                 kernal[2,2], kernal[2,4], kernal[4,2], kernal[4,4] = [2,2,2,2]
                 kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5] = [1,1,1,1,1]
                 kernal[5,1], kernal[5,2], kernal[5,3], kernal[5,4], kernal[5,5] = [1,1,1,1,1]
                 kernal[2,1], kernal[3,1], kernal[4,1] = [1,1,1]
                 kernal[2,5], kernal[3,5], kernal[4,5] = [1,1,1]
-                kernal = kernal/16
+                kernal = kernal/64
                 output = cv2.filter2D(img, -1, kernal)
             elif kernal == "9*9_First":
                 kernal = (np.ones((9,9), np.float32))
                 kernal[4,4] = 8
-                kernal = kernal/9
+                kernal = kernal/52
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "9*9_Second":
+                kernal = (np.ones((9,9), np.float32))
+                kernal[4,4] = 48
+                kernal[4,3], kernal[4,5], kernal[3,4], kernal[5,4] = [8,8,8,8]
+                kernal[3,3], kernal[3,5], kernal[5,3], kernal[5,5] = [4,4,4,4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6] = [2,2,2,2,2]
+                kernal[6,2], kernal[6,3], kernal[6,4], kernal[6,5], kernal[6,6] = [2,2,2,2,2]
+                kernal[3,2], kernal[4,2], kernal[5,2] = [2,2,2]
+                kernal[3,6], kernal[4,6], kernal[5,6] = [2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7] = [1,1,1,1,1,1,1]
+                kernal[7,1], kernal[7,7], kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[2,7] = [1,1,1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1] = [1,1,1,1,1]
+                kernal[2,7], kernal[3,7], kernal[4,7], kernal[5,7], kernal[6,7] = [1,1,1,1,1]
+                kernal=kernal/128               
+                output = cv2.filter2D(img, -1, kernal)
+            elif kernal == "11*11_First":
+                kernal = (np.ones((11,11), np.float32))
+                kernal[5,5] = 8
+                kernal = kernal/96  
                 output = cv2.filter2D(img, -1, kernal)
             else:
-                kernal = (np.ones((9,9), np.float32))
-                kernal[4,4] = 6
-                kernal=kernal/16                
+                kernal = (np.ones((11,11), np.float32))
+                kernal[5,5] = 64
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [16,16,16,16]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [8,8,8,8]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [4,4,4,4,4]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [4,4,4,4,4]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [4,4,4]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [4,4,4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [2,2,2,2,2,2,2]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [2,2,2,2,2,2,2]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [2,2,2,2,2]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [2,2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [1,1,1,1,1,1,1]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [1,1,1,1,1,1,1]                
+                kernal=kernal/256
                 output = cv2.filter2D(img, -1, kernal)
 
         elif filter_type == 'BPF':
@@ -375,7 +445,7 @@ class Image_processing():
                 kernal2 = kernal/24
 
                 output = cv2.filter2D(img, -1, kernal1-kernal2)
-            else:
+            elif kernal == "9*9_Second":
                 kernal = (np.ones((9,9), np.float32))
                 kernal[4,4] = 8
                 kernal1 = kernal/9
@@ -393,6 +463,54 @@ class Image_processing():
                 kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1] = [1,1,1,1,1]
                 kernal[2,7], kernal[3,7], kernal[4,7], kernal[5,7], kernal[6,7] = [1,1,1,1,1]
                 kernal2 = kernal/12               
+                output = cv2.filter2D(img, -1, kernal2-kernal1)
+            elif kernal == "11*11_First":
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 8
+                kernal1 = kernal/9                
+            
+                kernal = 0 - (np.ones((11,11), np.float32))
+                kernal[5,5] = 32
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [16,16,16,16]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [8,8,8,8]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [4,4,4,4,4]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [4,4,4,4,4]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [4,4,4]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [4,4,4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [2,2,2,2,2,2,2]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [2,2,2,2,2,2,2]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [2,2,2,2,2]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [2,2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [1,1,1,1,1,1,1]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [1,1,1,1,1,1,1]                
+                kernal2 = kernal/50
+                output = cv2.filter2D(img, -1, kernal1-kernal2)
+            
+            else:
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 8
+                kernal1 = kernal/9
+                
+            
+                kernal = 0 - (np.ones((11,11), np.float32))
+                kernal[5,5] = 32
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [16,16,16,16]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [8,8,8,8]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [4,4,4,4,4]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [4,4,4,4,4]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [4,4,4]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [4,4,4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [2,2,2,2,2,2,2]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [2,2,2,2,2,2,2]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [2,2,2,2,2]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [2,2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [1,1,1,1,1,1,1]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [1,1,1,1,1,1,1]                
+                kernal2 = kernal/24
                 output = cv2.filter2D(img, -1, kernal2-kernal1)
         
         elif filter_type == 'NOTCH':
@@ -521,7 +639,7 @@ class Image_processing():
                 kernal = kernal/16
 
                 output = cv2.filter2D(img, -1, kernal-(kernal1-kernal2))
-            else:
+            elif kernal == "9*9_second":
                 kernal = (np.ones((9,9), np.float32))
                 kernal[4,4] = 8
                 kernal1 = kernal/9
@@ -546,6 +664,64 @@ class Image_processing():
 
                 output = cv2.filter2D(img, -1, kernal-(kernal2-kernal1))
 
+            elif kernal == "11*11_First":
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 8
+                kernal1 = kernal/9                
+            
+                kernal = 0 - (np.ones((11,11), np.float32))
+                kernal[5,5] = 32
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [16,16,16,16]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [8,8,8,8]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [4,4,4,4,4]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [4,4,4,4,4]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [4,4,4]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [4,4,4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [2,2,2,2,2,2,2]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [2,2,2,2,2,2,2]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [2,2,2,2,2]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [2,2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [1,1,1,1,1,1,1]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [1,1,1,1,1,1,1]                
+                kernal2 = kernal/50
+
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 1
+                kernal1 = kernal/16   
+                output = cv2.filter2D(img, -1, kernal - (kernal1-kernal2))
+            
+            else:
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 8
+                kernal1 = kernal/9
+                
+            
+                kernal = 0 - (np.ones((11,11), np.float32))
+                kernal[5,5] = 32
+                kernal[5,4], kernal[5,6], kernal[4,5], kernal[6,5] = [16,16,16,16]
+                kernal[4,4], kernal[4,6], kernal[6,4], kernal[6,6] = [8,8,8,8]
+                kernal[3,3], kernal[3,4], kernal[3,5], kernal[3,6], kernal[3,7] = [4,4,4,4,4]
+                kernal[7,3], kernal[7,4], kernal[7,5], kernal[7,6], kernal[7,7] = [4,4,4,4,4]
+                kernal[6,3], kernal[4,3], kernal[5,3] = [4,4,4]
+                kernal[6,7], kernal[4,7], kernal[5,7] = [4,4,4]
+                kernal[2,2], kernal[2,3], kernal[2,4], kernal[2,5], kernal[2,6], kernal[2,7], kernal[2,8] = [2,2,2,2,2,2,2]
+                kernal[8,2], kernal[8,3], kernal[8,4], kernal[8,5], kernal[8,6], kernal[8,7], kernal[8,8] = [2,2,2,2,2,2,2]
+                kernal[3,2], kernal[4,2], kernal[5,2], kernal[6,2], kernal[7,2] = [2,2,2,2,2]
+                kernal[2,8], kernal[3,8], kernal[4,8], kernal[5,8], kernal[6,8] = [2,2,2,2,2]
+                kernal[1,1], kernal[1,2], kernal[1,3], kernal[1,4], kernal[1,5], kernal[1,6], kernal[1,7], kernal[1,8], kernal[1,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[9,1], kernal[9,2], kernal[9,3], kernal[9,4], kernal[9,5], kernal[9,6], kernal[9,7], kernal[9,8], kernal[9,9] = [1,1,1,1,1,1,1,1,1]
+                kernal[2,1], kernal[3,1], kernal[4,1], kernal[5,1], kernal[6,1], kernal[7,1], kernal[8,1] = [1,1,1,1,1,1,1]
+                kernal[2,9], kernal[3,9], kernal[4,9], kernal[5,9], kernal[6,9], kernal[7,9], kernal[8,9] = [1,1,1,1,1,1,1]                
+                kernal2 = kernal/24
+
+                kernal = 0 - ((np.ones((11,11), np.float32)))
+                kernal[5,5] = 1
+                kernal1 = kernal/16 
+
+                output = cv2.filter2D(img, -1, kernal - (kernal2-kernal1))
+
         else:
             output = img
 
@@ -558,7 +734,7 @@ class Image_processing():
             original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
             second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-            result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+            
             file_original = os.listdir(original)        
             file_id, file_extension = os.path.splitext(file_original[0]) #file_extension of uploaded image
             image_path = os.path.join(original, file_original[0]) #path of uploaded image 
@@ -613,7 +789,7 @@ class Image_processing():
         copy_filter = method.copy_filter
         copy_kernal = method.copy_kernal    
         
-        print(original_filter, copy_filter)
+        
         new_img = cv2.convertScaleAbs(img, alpha=original_alpha, beta=original_beta)
         hsvImg = cv2.cvtColor(new_img,cv2.COLOR_BGR2HSV)
         #multiple by a factor to change the saturation
@@ -637,6 +813,11 @@ class Image_processing():
         hsvImg[...,1] = hsvImg[...,1]*result_saturation
         new_add = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
+        result_black_point = method.result_black_point
+        result_midetone_slider = method.result_midetone_slider
+        result_white_point = method.result_white_point
+
+        new_add = Image_processing.LevelAdjustment(self,new_add, result_black_point, result_midetone_slider, result_white_point, current_user)
 
         filename_result = "Processed1" + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     file_id + file_extension
@@ -649,13 +830,25 @@ class Image_processing():
 
 
         if current_user.email == admin_user:
+            original_black_point = method.original_black_point
+            original_midetone_slider = method.original_midetone_slider
+            original_white_point = method.original_white_point
+
+            new_img = Image_processing.LevelAdjustment(self,new_img, original_black_point, original_midetone_slider, original_white_point, current_user)
+            
             filename_original_two = "Processed1" + str(random.randint(501,1000)*random.randint(0,500)) + \
                         file_id + file_extension
             destination = "/".join([original_two, filename_original_two])
             b, g, r = cv2.split(new_img)
             new_img = cv2.merge((r,g,b))        
             im = Image.fromarray(new_img)
-            im.save(destination) 
+            im.save(destination)
+
+            copy_black_point = method.copy_black_point
+            copy_midetone_slider = method.copy_midetone_slider
+            copy_white_point = method.copy_white_point
+
+            new_img_2 = Image_processing.LevelAdjustment(self,new_img_2, copy_black_point, copy_midetone_slider, copy_white_point, current_user) 
 
             filename_second = "Processed1" + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                         file_id + file_extension
@@ -674,7 +867,7 @@ class Image_processing():
             original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
             second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-            result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+            
             file_original = os.listdir(original)        
             file_id, file_extension = os.path.splitext(file_original[0]) #file_extension of uploaded image
             image_path = os.path.join(original, file_original[0]) #path of uploaded image 
@@ -765,33 +958,51 @@ class Image_processing():
         hsvImg[...,1] = hsvImg[...,1]*result_saturation
         new_sub = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
+        result_black_point = method.result_black_point
+        result_midetone_slider = method.result_midetone_slider
+        result_white_point = method.result_white_point
 
-        filename_result = "Processed2" + str(random.randint(0,500)*random.randint(1001,1500)) + \
+        new_sub = Image_processing.LevelAdjustment(self,new_sub, result_black_point, result_midetone_slider, result_white_point, current_user)
+
+        filename_result = "Processed1" + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     file_id + file_extension
         destination = "/".join([result, filename_result])
         b, g, r = cv2.split(new_sub)
-        new_sub = cv2.merge((r,g,b))       
+        new_sub = cv2.merge((r,g,b))        
         im = Image.fromarray(new_sub)
         im.save(destination)
         filename = [filename_result]
 
+
         if current_user.email == admin_user:
-            filename_original_two = "Processed2" + str(random.randint(501,1000)*random.randint(0,500)) + \
+            original_black_point = method.original_black_point
+            original_midetone_slider = method.original_midetone_slider
+            original_white_point = method.original_white_point
+
+            new_img = Image_processing.LevelAdjustment(self,new_img, original_black_point, original_midetone_slider, original_white_point, current_user)
+            
+            filename_original_two = "Processed1" + str(random.randint(501,1000)*random.randint(0,500)) + \
                         file_id + file_extension
             destination = "/".join([original_two, filename_original_two])
             b, g, r = cv2.split(new_img)
             new_img = cv2.merge((r,g,b))        
             im = Image.fromarray(new_img)
-            im.save(destination) 
+            im.save(destination)
 
-            filename_second = "Processed2"  + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+            copy_black_point = method.copy_black_point
+            copy_midetone_slider = method.copy_midetone_slider
+            copy_white_point = method.copy_white_point
+
+            new_img_2 = Image_processing.LevelAdjustment(self,new_img_2, copy_black_point, copy_midetone_slider, copy_white_point, current_user) 
+
+            filename_second = "Processed1" + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                         file_id + file_extension
             destination = "/".join([second, filename_second])
             b, g, r = cv2.split(new_img_2)
             new_img_2 = cv2.merge((r,g,b))        
             im = Image.fromarray(new_img_2)
             im.save(destination)
-            filename = [filename_original_two, filename_second, filename_result]
+            filename = [filename_original_two, filename_second, filename_result]         
         
         return filename
 
@@ -801,7 +1012,7 @@ class Image_processing():
             original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
             second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-            result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+            
             file_original = os.listdir(original)        
             file_id, file_extension = os.path.splitext(file_original[0]) #file_extension of uploaded image
             image_path = os.path.join(original, file_original[0]) #path of uploaded image 
@@ -893,8 +1104,13 @@ class Image_processing():
         hsvImg[...,1] = hsvImg[...,1]*original_saturation
         new_mul = cv2.cvtColor(hsvImg,cv2.COLOR_HSV2BGR)
 
+        result_black_point = method.result_black_point
+        result_midetone_slider = method.result_midetone_slider
+        result_white_point = method.result_white_point
 
-        filename_result = "Processed3" + str(random.randint(0,500)*random.randint(1001,1500)) + \
+        new_mul = Image_processing.LevelAdjustment(self,new_mul, result_black_point, result_midetone_slider, result_white_point, current_user)
+
+        filename_result = "Processed1" + str(random.randint(0,500)*random.randint(1001,1500)) + \
                     file_id + file_extension
         destination = "/".join([result, filename_result])
         b, g, r = cv2.split(new_mul)
@@ -903,16 +1119,29 @@ class Image_processing():
         im.save(destination)
         filename = [filename_result]
 
+
         if current_user.email == admin_user:
-            filename_original_two = "Processed3" + str(random.randint(501,1000)*random.randint(0,500)) + \
+            original_black_point = method.original_black_point
+            original_midetone_slider = method.original_midetone_slider
+            original_white_point = method.original_white_point
+
+            new_img = Image_processing.LevelAdjustment(self,new_img, original_black_point, original_midetone_slider, original_white_point, current_user)
+            
+            filename_original_two = "Processed1" + str(random.randint(501,1000)*random.randint(0,500)) + \
                         file_id + file_extension
             destination = "/".join([original_two, filename_original_two])
             b, g, r = cv2.split(new_img)
             new_img = cv2.merge((r,g,b))        
             im = Image.fromarray(new_img)
-            im.save(destination) 
+            im.save(destination)
 
-            filename_second = "Processed3" + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+            copy_black_point = method.copy_black_point
+            copy_midetone_slider = method.copy_midetone_slider
+            copy_white_point = method.copy_white_point
+
+            new_img_2 = Image_processing.LevelAdjustment(self,new_img_2, copy_black_point, copy_midetone_slider, copy_white_point, current_user) 
+
+            filename_second = "Processed1" + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                         file_id + file_extension
             destination = "/".join([second, filename_second])
             b, g, r = cv2.split(new_img_2)
@@ -924,20 +1153,20 @@ class Image_processing():
         return filename
 
    
-    def LevelAdjustment(self, black_point, midetone_slider, white_point, current_user):
-        original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
-        result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+    def LevelAdjustment(self, img, black_point, midetone_slider, white_point, current_user):
+        '''original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+        
         file_original = os.listdir(original)        
         file_id, file_extension = os.path.splitext(file_original[0]) #file_extension of uploaded image
         result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')      
-        image_path = os.path.join(result, os.listdir(result)[0]) #path of uploaded image 
-        image = cv2.imread(image_path)
+        #image_path = os.path.join(result, os.listdir(result)[0]) #path of uploaded image''' 
+        image = img
         
         counter = 0
         pixel_to_match = 20
 
         for i in range(pixel_to_match):
-            pixel = image[random.randint(0,image.shape[0]), random.randint(0, image.shape[1])]
+            pixel = image[random.randint(0,image.shape[0]-1), random.randint(0, image.shape[1]-1)]
             if pixel[0] == pixel[1] and pixel[0] == pixel[2]:
                 counter += 1
             else:
@@ -975,14 +1204,15 @@ class Image_processing():
         # apply gamma correction using the lookup table
         image = cv2.LUT(image, table)
 
-
-        filename = Image_processing.LevelAdjustment.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
+        return image
+        
+        '''filename = Image_processing.LevelAdjustment.__name__ + str(random.randint(1001,1500)*random.randint(501,1000)) + \
                     file_id + file_extension
         destination = "/".join([result_histo, filename])
         b, g, r = cv2.split(image)
         image = cv2.merge((r,g,b))        
         im = Image.fromarray(image)
-        im.save(destination)
+        im.save(destination)'''
         
         
         

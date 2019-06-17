@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+
+
+{% block spectograph %}
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.2.0.min.css" type="text/css" />
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.2.0.min.js"></script>
+    <!-- COPY/PASTE SCRIPT HERE -->
+    {{ scripts|safe }}
+    <style>
+        .bk-root{
+            margin: 0%;
+            padding: 0%;
+            margin-top: 15px;
+            
+        }
+
+        .spectograph {
+            margin-top: 25px;
+            margin-left: 55px; 
+        }
+
+        .spectograph+ .col{
+            margin: 0%;
+            padding-right: 25px;
+        }
+    </style>
+{% endblock spectograph %}
+
+{% block navbar %}
+    
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+    METHOD
+    </a>  
+<div class="dropdown-menu">
+    {% for method in methods  %}
+        <a class="dropdown-item" href="{{ url_for('processing', filename='filename', method=method.method_id) }}">Method{{ loop.index }}</a>
+    {% endfor %}
+</div>
+</li>    
+{% endblock %}
+
+{% block specto_body %}
+    
+    <div class="row">
+        <div class="col spectograph">
+            <!-- INSERT DIVS HERE -->
+            {{ div|safe }}
+        </div>
+        
+        
+        <div class="col">
+            <div class="d-flex align-items-start flex-column" style="height: 200px;">   
+            <div><p>Result Image</p></div>
+            <div><img src="{{ url_for('show_result', filename=filename2) }}" width="600"  
+                class="img-fluid" alt="Image" >
+            </div>
+            </div>
+        </div>
+        
+    </div>
+    
+{% endblock specto_body %}

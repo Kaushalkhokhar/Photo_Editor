@@ -63,15 +63,51 @@
             height: 30px;
         }
 
+        .settings-level-1 {
+            text-align: center;
+            margin-left: 25px;            
+            width: 50px;
+            height: 25px;
+        }
+
+        .settings-level-2 {
+            text-align: center;
+            margin-left: 12px;            
+            width: 50px;
+            height: 25px;
+        }
+
+        .settings-level-3 {
+            text-align: center;
+            margin-left: 20px;            
+            width: 50px;
+            height: 25px;
+        }
+
         .list-group-item {
             padding:5px 20px;
         }
 
         .submit-settings {
-            padding: 8px;
-            margin: 8px 70px;
-            width: 250px;
-            font-size: 22px;
+            margin: 14px;
+            height: 40px;            
+            width:75px;
+            font-size: 16px;
+        }
+
+        .settings-btn {
+            margin: 14px;
+            height: 40px;            
+            width:75px;
+            font-size: 16px;
+        }
+
+        .settings-dd {
+            background-color: transparent !important;
+        }
+
+        .settings-header {
+            height: 60px;
         }
     </style>    
 {% endblock %} 
@@ -92,7 +128,8 @@
 {% endblock %}
 
 {% block nav %}
-    <li class="nav-item "><a class="nav-link" href="{{ url_for('load_chart', filename=filename, method=method, end_point='settings') }}">HISTOGRAM</a></li>
+    <li class="nav-item "><a class="nav-link" 
+        href="{{ url_for('load_chart', method=method, end_point='settings') }}">SPECTOGRAPH</a></li>
 {% endblock %}
 
 {% block content %}
@@ -100,23 +137,22 @@
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <div class="row">
-            <div class="col">
-                {{ form.method_id.label }}
-                {{ form.method_id }}            
-            </div>
-            <div class="col">
-                {{ form.image_operation.label }}
-                {{ form.image_operation }}
-            </div>
-            <div class="col">
-                {{ form.method_title.label }}
-                {{ form.method_title }}
-            </div>
-            <div class="col">
-                {{ form.active_state }}
-                {{ form.active_state.label }}
+            <div class="card border-secondary mb-2 p-0" style="max-width: 1250px;">
+                <div class="card-body text-secondary p-2 settings-header">
+                    <div class="d-flex flex-row" style="width: 1070px;">
+                        <div class="ml-5 mt-2 pl-4">{{ form.method_id.label }}</div>
+                        <div class="ml-3 mt-1">{{ form.method_id(class="form-control form-control-sm border-secondary") }}</div>
+                        <div class="ml-5 mt-2 pl-3">{{ form.image_operation.label }}</div>
+                        <div class="ml-3 mt-1">{{ form.image_operation(class="form-control form-control-sm border-secondary") }}</div>
+                        <div class="ml-5 mt-2 pl-3">{{ form.method_title.label }}</div>
+                        <div class="ml-3 mt-1">{{ form.method_title(class="form-control form-control-sm border-secondary") }}</div>
+                        <div class="ml-5 mt-2 pl-3">{{ form.active_state }}</div>
+                        <div class="ml-2 mt-2">{{ form.active_state.label }}</div>
+                    </div>
+                </div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col">
                 <div class="card" style="width: 18rem;">
@@ -159,11 +195,11 @@
                     <div class="card-body">
                         <div>
                             {{ form.original_filter.label }}
-                            {{ form.original_filter(class="select-filter") }}
+                            {{ form.original_filter(class="select-filter border-secondary") }}
                         </div>
                         <div>
                             {{ form.original_kernal.label }}
-                            {{ form.original_kernal(class="select-kernal") }}
+                            {{ form.original_kernal(class="select-kernal border-secondary") }}
                         </div>
                     </div>
                 </div>
@@ -209,11 +245,11 @@
                     <div class="card-body">
                         <div>
                             {{ form.copy_filter.label }}
-                            {{ form.copy_filter(class="select-filter") }}
+                            {{ form.copy_filter(class="select-filter border-secondary") }}
                         </div>
                         <div>
                             {{ form.copy_kernal.label }}
-                            {{ form.copy_kernal(class="select-kernal") }}
+                            {{ form.copy_kernal(class="select-kernal border-secondary") }}
                         </div>
                     </div>
                 </div>
@@ -258,7 +294,37 @@
                     </ul>
                     <div class="card-body">
                         <div class="row">
-                            {{ form.submit(class="submit-settings") }}
+                            <div class="col">
+                                <div class="btn-group dropup settings-btn">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Level
+                                    </button>
+                                    <div class="dropdown-menu p-0 settings-dd">
+                                        <!-- Dropdown menu links -->
+                                        <div class="card" style="width: 14rem;">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    {{ form.result_black_point.label }}
+                                                    {{ form.result_black_point(class="settings-level-1") }}
+                                                </li>
+                                                <li class="list-group-item">
+                                                    {{ form.result_midetone_slider.label }}
+                                                    {{ form.result_midetone_slider(class="settings-level-2") }}
+                                                </li>
+                                                <li class="list-group-item">
+                                                    {{ form.result_white_point.label }}
+                                                    {{ form.result_white_point(class="settings-level-3") }}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div>                           
+                                    {{ form.submit(class="submit-settings") }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>                  

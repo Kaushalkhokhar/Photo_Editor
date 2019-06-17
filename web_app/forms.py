@@ -96,11 +96,22 @@ class AdminForm(FlaskForm):
     original_kernal = SelectField('Kernal', choices=[('one', '3*3_First'), ('two', '3*3_Second'), 
                                                      ('three', '5*5_First'), ('four', '5*5_Second'),
                                                      ('five', '7*7_First'), ('six', '7*7_Second'),
-                                                     ('seven', '9*9_First'), ('eight', '9*9_Second')])    
+                                                     ('seven', '9*9_First'), ('eight', '9*9_Second'),
+                                                     ('nine', '11*11_First'), ('ten', '11*11_Second')])    
     copy_kernal = SelectField('Kernal', choices=[('one', '3*3_First'), ('two', '3*3_Second'), 
                                                  ('three', '5*5_First'), ('four', '5*5_Second'),
                                                  ('five', '7*7_First'), ('six', '7*7_Second'),
-                                                 ('seven', '9*9_First'), ('eight', '9*9_Second')])    
+                                                 ('seven', '9*9_First'), ('eight', '9*9_Second'),
+                                                 ('nine', '11*11_First'), ('ten', '11*11_Second')])
+    original_black_point = IntegerField('Black Point', default=0, validators=[DataRequired(), NumberRange(min=0, max=127)])
+    original_white_point = IntegerField('White Point', default=255, validators=[DataRequired(), NumberRange(min=128, max=255)])
+    original_midetone_slider = FloatField('Middle Point', default=1, validators=[DataRequired(), NumberRange(min=0, max=2)])
+    copy_black_point = IntegerField('Black Point', default=0, validators=[DataRequired(), NumberRange(min=0, max=127)])
+    copy_white_point = IntegerField('White Point', default=255, validators=[DataRequired(), NumberRange(min=128, max=255)])
+    copy_midetone_slider = FloatField('Middle Point', default=1, validators=[DataRequired(), NumberRange(min=0, max=2)])
+    result_black_point = IntegerField('Black Point', default=0, validators=[DataRequired(), NumberRange(min=0, max=127)])
+    result_white_point = IntegerField('White Point', default=255, validators=[DataRequired(), NumberRange(min=128, max=255)])
+    result_midetone_slider = FloatField('Middle Point', default=1, validators=[DataRequired(), NumberRange(min=0, max=2)])
     submit = SubmitField('Submit')
 
 class HistogramForm(FlaskForm):

@@ -1,10 +1,20 @@
 import os, shutil, cv2
 import numpy as np
+import random
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
 from bokeh.embed import components
+from bokeh.palettes import Spectral6
+from bokeh.transform import linear_cmap
 from web_app import APP_ROOT
+
+
+
+
+
+
+
 
 class Histogram():    
     def __init__(self):            
@@ -62,7 +72,7 @@ class Histogram():
 
         #To design layout of figure '''plot_width=1000, plot_height=500,'''
         plot = figure(
-            title='Histogram of Image', plot_width=700, plot_height=400,
+            title='Histogram of Image', plot_width=1200, plot_height=400,
             min_border=0, toolbar_location='right') # toolbar_location can be edited to change logo 
 
         #Creating and adding glyph to plot

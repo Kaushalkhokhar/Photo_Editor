@@ -16,22 +16,34 @@
         </a>  
         <div class="dropdown-menu">
             {% for method in methods %}
-                <a class="dropdown-item" href="{{ url_for('processing', filename=filename, method=method.method_id) }}">Method{{ loop.index }}</a>
+                <a class="dropdown-item" 
+                href="{{ url_for('processing', filename=filename, method=method.method_id) }}">
+                Method{{ loop.index }}</a>
             {% endfor %}
         </div>
     </li> 
 {% endblock navbar %}
     
 {% block nav %}
-    <li class="nav-item "><a class="nav-link" href="{{ url_for('load_chart', filename=filename, method=method, end_point='settings') }}">HISTOGRAM</a></li>
-    <li class="nav-item "><a class="nav-link" href="{{ url_for('download', filename=filename) }}">SAVE</a></li>
+    {% if current_uer == admin_user %}
+        <li class="nav-item "><a class="nav-link" 
+            href="{{ url_for('load_chart', method=method, end_point='settings') }}">
+            SPECTOGRAPH</a></li>
+    {% else %}
+        <li class="nav-item "><a class="nav-link" 
+            href="{{ url_for('load_chart', method=method, end_point='processing') }}">
+            SPECTOGRAPH</a></li>
+    {% endif %}
+    <li class="nav-item "><a class="nav-link" 
+        href="{{ url_for('download', filename=filename) }}">SAVE</a></li>
 {% endblock nav %}
 
 {% block content %}
 
 <div class="container">
     <div class="row justify-content-md-center">
-        <img id="image" src="{{ url_for('show_result', filename=filename) }}" height="{{ height }}" alt="Image">
+        <img id="image" src="{{ url_for('show_result', filename=filename) }}" 
+        height="{{ height }}" alt="Image">
     </div>        
 </div>
 

@@ -7,7 +7,7 @@ from flask import render_template, flash, redirect, url_for, request, send_from_
 from bokeh.embed import components
 from web_app import app, APP_ROOT, bcrypt, db, mail, admin_user
 from web_app.image_processing import Image_processing
-from web_app.histogram import Histogram 
+from web_app.spectograph import Spectograph 
 from bokeh.plotting import figure, show, output_file, save
 from bokeh.models import ColumnDataSource
 from bokeh.models.glyphs import VBar
@@ -31,35 +31,28 @@ def ajax_index():
 
 @app.route('/database')
 def database():
+    if not (current_user.is_authenticated and current_user.email == admin_user):
+        flash('Please login as admin user', 'info')
+        return redirect(url_for('login'))
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    
+    if not os.listdir(original):
+        flash('Upload file first', 'info')
+        return redirect(url_for('upload'))
+
     original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
     filename = os.listdir(original)[0] 
     methods = Methods.query.all()
-    return render_template('database.html', filename=filename, methods=methods)
+    return render_template('database.html', filename=filename, methods=methods, admin_user=admin_user)
 
 @app.route('/')
 @app.route('/home')
 def home():           
-    return render_template('home.html', title='Home')
+    return render_template('home.html', title='Home', admin_user=admin_user)
 
 @app.route('/upload')
 def upload():
-    '''if os.path.isdir(original):
-        shutil.rmtree(original)
-        shutil.rmtree(original_two)
-        shutil.rmtree(second)
-        shutil.rmtree(result)
-        shutil.rmtree(result_histo)
-        os.mkdir(original)
-        os.mkdir(second)
-        os.mkdir(result)
-        os.mkdir(original_two)
-        os.mkdir(result_histo)
-    else:    
-        os.mkdir(original)
-        os.mkdir(second)
-        os.mkdir(result)
-        os.mkdir(original_two)
-        os.mkdir(result_histo)'''
+    
     
     if current_user.is_authenticated:
         if current_user.email == admin_user:
@@ -67,24 +60,24 @@ def upload():
             original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
             second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-            result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+            
             if os.path.isdir(original):
                 shutil.rmtree(original)
                 shutil.rmtree(original_two)
                 shutil.rmtree(second)
                 shutil.rmtree(result)
-                shutil.rmtree(result_histo)
+                
                 os.mkdir(original)
                 os.mkdir(second)
                 os.mkdir(result)
                 os.mkdir(original_two)
-                os.mkdir(result_histo)
+                
             else:    
                 os.mkdir(original)
                 os.mkdir(second)
                 os.mkdir(result)
                 os.mkdir(original_two)
-                os.mkdir(result_histo)
+                
         else:
             original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
@@ -101,7 +94,7 @@ def upload():
     else:
         return redirect(url_for('login'))       
         
-    return render_template('upload.html', title='Upload')
+    return render_template('upload.html', title='Upload', admin_user=admin_user)
 
 @app.route('/display', methods = ['GET', 'POST'])
 def display_image():  
@@ -138,7 +131,7 @@ def display_image():
       
 
     # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
-    return render_template('display.html', filename=filename, height=height, methods=methods) # In this filename will be the name of image file which is uploaded last in all files
+    return render_template('display.html', filename=filename, height=height, methods=methods, admin_user=admin_user) # In this filename will be the name of image file which is uploaded last in all files
                         
     
 
@@ -180,7 +173,8 @@ def processing(filename, method):
         filename = Image_processing().multiplication(method, current_user)    
         
     # we need to store processed file in our static folder then we can render by giving filename qual to our processed file 
-    return render_template('processing.html', filename=filename, method=method, height=height, methods=methods)
+    return render_template('processing.html', filename=filename, method=method, \
+                            height=height, methods=methods, admin_user=admin_user)
 
 @app.route('/desplay_original/<filename>', methods=['GET', 'POST'])
 def show_original_two(filename):
@@ -218,18 +212,11 @@ def show_result(filename):
         filename = os.listdir(original)[0]
         return send_from_directory(str(current_user.username) + '_original', filename)
 
-@app.route('/display_result_histo/<filename>', methods=['GET', 'POST'])
-def show_result_histo(filename):
+@app.route('/display_result_specto/<filename>', methods=['GET', 'POST'])
+def show_result_specto(filename):
     result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-    result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
-    if os.listdir(result_histo): 
-        if current_user.email == admin_user:
-            filename = os.listdir(result_histo)[0]
-            return send_from_directory(str(current_user.username) + '_result_histo', filename)        
-        
-    else:
-        filename = os.listdir(result)[0]
-        return send_from_directory(str(current_user.username) + '_result', filename)
+    filename = os.listdir(result)[0]
+    return send_from_directory(str(current_user.username) + '_result', filename)
 
 @app.route('/download/<filename>', methods=['GET', 'POST'])
 def download(filename):
@@ -253,44 +240,41 @@ def new_session():
         shutil.rmtree(original_two)
         shutil.rmtree(second)
         shutil.rmtree(result)
-        shutil.rmtree(result_histo)
+        
         os.mkdir(original)
         os.mkdir(second)
         os.mkdir(result)
         os.mkdir(original_two)
-        os.mkdir(result_histo)
+        
     else:    
         os.mkdir(original)
         os.mkdir(second)
         os.mkdir(result)
         os.mkdir(original_two)
-        os.mkdir(result_histo)           
+                   
     return redirect(url_for('upload'))
 
 @app.route('/load_chart/<method>/<end_point>', methods=['GET', 'POST'])
 def load_chart(method, end_point):
-    if current_user.email == admin_user:
-        result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
-        if os.path.isdir(result_histo):
-            shutil.rmtree(result_histo)
-            os.mkdir(result_histo)
-        else:
-            os.mkdir(result_histo) 
-            
+                
     filename1 = str(random.randint(0,1000)*random.randint(1000,2000))
     filename2 = str(random.randint(2000,3000)*random.randint(3000,4000))
-
-    # Here Method means method-id of current working method. and filename means name of file store in result folder.
-    if end_point == 'processing':
-        return_url = request.referrer # get the url from which request has initiated.
-        hist = Histogram()
-        script, div = hist.histogram_plot(current_user) 
-        return render_template('histogram.html', scripts=script, div=div, return_url=return_url, filename2=filename2)              
     
-    else:
+    # Here Method means method-id of current working method. and filename means name of file store in result folder.
+    # if end_point == 'processing' or method == 'original':
+    return_url = request.referrer # get the url from which request has initiated.
+    spect = Spectograph()
+    script, div = spect.spectograph_plot(current_user) 
+    methods = Methods.query.all()
+
+    return render_template('spectograph.html', scripts=script, div=div, \
+                            return_url=return_url, filename2=filename2, \
+                            admin_user=admin_user, methods=methods)              
+    
+    '''else:
         return_url = request.referrer
-        hist = Histogram()
-        script, div = hist.histogram_plot(current_user)
+        spect = Spectograph()
+        script, div = spect.histogram_plot(current_user)
         form = HistogramForm()
 
         if request.method == 'POST' :
@@ -305,8 +289,9 @@ def load_chart(method, end_point):
             white_point = form.white_point.data
             Image_processing().LevelAdjustment(black_point, midetone_slider, white_point, current_user)
         
-        return render_template('histogram_admin.html', scripts=script, div=div, return_url=return_url,
-                                form=form, filename1=filename1, filename2=filename2)
+        return render_template('histogram.html', scripts=script, div=div, return_url=return_url,
+                                form=form, filename1=filename1, filename2=filename2, \
+                                admin_user=admin_user)'''
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -350,14 +335,14 @@ def logout():
         original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
         second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
         result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-        result_histo = os.path.join(APP_ROOT, str(current_user.username) + '_result_histo/')
+        
         #To delete previous uploaded image and directory and creates new directory every time it runs home route    
         if os.path.isdir(original):
             shutil.rmtree(original)
             shutil.rmtree(original_two)
             shutil.rmtree(second)
             shutil.rmtree(result)
-            shutil.rmtree(result_histo)
+            
     else:
         original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
         result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
@@ -432,8 +417,8 @@ def settings():
     file_name = [filename_original_two, filename_second, filename_result]
     form = AdminForm()
     method = 1
-    hist = Histogram()
-    script, div = hist.histogram_plot(current_user)
+    spect = Spectograph()
+    script, div = spect.spectograph_plot(current_user)
 
     if request.method == 'POST':
         
@@ -453,8 +438,18 @@ def settings():
                             original_filter=dict(form.original_filter.choices).get(form.original_filter.data), 
                             original_kernal=dict(form.original_kernal.choices).get(form.original_kernal.data), 
                             copy_filter=dict(form.copy_filter.choices).get(form.copy_filter.data), 
-                            copy_kernal=dict(form.copy_kernal.choices).get(form.copy_kernal.data), 
-                            active_state=form.active_state.data)
+                            copy_kernal=dict(form.copy_kernal.choices).get(form.copy_kernal.data),
+                            original_black_point = form.original_black_point.data,
+                            original_midetone_slider = form.original_midetone_slider.data,
+                            original_white_point = form.original_white_point.data, 
+                            copy_black_point = form.copy_black_point.data,
+                            copy_midetone_slider = form.copy_midetone_slider.data,
+                            copy_white_point = form.copy_white_point.data, 
+                            result_black_point = form.result_black_point.data,
+                            result_midetone_slider = form.result_midetone_slider.data,
+                            result_white_point = form.result_white_point.data, 
+                            active_state=form.active_state.data
+                            )
             db.session.add(method)
             db.session.commit()
 
@@ -465,8 +460,8 @@ def settings():
             elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
                 file_name = Image_processing().multiplication(form.method_id.data, current_user)
 
-            hist = Histogram()
-            script, div = hist.histogram_plot(current_user)
+            specto = Spectograph()
+            script, div = specto.spectograph_plot(current_user)
             method = form.method_id.data
 
         else:
@@ -487,6 +482,15 @@ def settings():
             method.original_kernal = dict(form.original_kernal.choices).get(form.original_kernal.data)
             method.copy_filter = dict(form.copy_filter.choices).get(form.copy_filter.data)
             method.copy_kernal = dict(form.copy_kernal.choices).get(form.copy_kernal.data)
+            method.original_black_point = form.original_black_point.data
+            method.original_midetone_slider = form.original_midetone_slider.data
+            method.original_white_point = form.original_white_point.data
+            method.copy_black_point = form.copy_black_point.data
+            method.copy_midetone_slider = form.copy_midetone_slider.data
+            method.copy_white_point = form.copy_white_point.data
+            method.result_black_point = form.result_black_point.data
+            method.result_midetone_slider = form.result_midetone_slider.data
+            method.result_white_point = form.result_white_point.data
             db.session.commit()
 
             if Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Addition":             
@@ -496,15 +500,16 @@ def settings():
             elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
                 file_name = Image_processing().multiplication(form.method_id.data, current_user)
             
-            hist = Histogram()
-            script, div = hist.histogram_plot(current_user)
+            specto = Spectograph()
+            script, div = specto.spectograph_plot(current_user)
             method = form.method_id.data
 
 
     return render_template('settings.html', form=form, filename=filename,
                             file_name=file_name,
                             scripts=script, div=div,
-                            method=method, methods=methods)
+                            method=method, methods=methods,
+                            admin_user=admin_user)
 
 @app.route('/testing', methods=['GET', 'POST'])
 def testing():    
