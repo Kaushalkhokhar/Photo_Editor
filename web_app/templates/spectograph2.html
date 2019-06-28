@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+
+
+{% block spectograph %}
+    
+    <style>        
+
+        .spectograph {
+            margin-top: 0px;
+            margin-left: 55px; 
+        }
+
+        .spectograph+ .col{
+            margin: 0px;
+            padding-right: 25px;
+        }
+
+        
+    </style>
+{% endblock spectograph %}
+
+{% block navbar %}
+    
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+    METHOD
+    </a>  
+<div class="dropdown-menu">
+    {% for method in methods  %}
+        <a class="dropdown-item" href="{{ url_for('processing_processing', filename='filename', method=method.method_id) }}">Method{{ loop.index }}</a>
+    {% endfor %}
+</div>
+</li>    
+{% endblock %}
+
+{% block specto_body %}
+    
+    <div class="row mr-0">
+        <div class="col spectograph">
+            <div class="d-flex align-items-start flex-column" style="width: auto;">   
+                <div><p>Spectograph Image</p></div>
+                <div><img src="{{ url_for('show_result_specto', filename=filename2) }}" width="auto"  
+                    class="img-fluid" alt="Image" >
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="col">
+            <div class="d-flex align-items-start flex-column" style="width: auto;">   
+            <div><p>Result Image</p></div>
+            <div><img src="{{ url_for('show_result', filename=filename2) }}" width="auto"  
+                class="img-fluid" alt="Image" >
+            </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock specto_body %}

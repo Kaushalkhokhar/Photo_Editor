@@ -68,11 +68,11 @@ class GeneralForm(FlaskForm):
     other = IntegerRangeField('Other', default=50)
 
 class AdminForm(FlaskForm):
-    method_id = SelectField('Method ID', choices=[(str(i), str(i)) for i in range(1,20)])
+    method_id = SelectField('Method_ID', choices=[(str(i), str(i)) for i in range(1,20)])
     image_operation = SelectField('Operations', choices=[('one', 'Addition'), \
                                     ('two', 'Subtraction'), ('three', 'Multiplication')])
     method_title = StringField('Title', validators=[DataRequired(), Length(min=2, max=20)])
-    active_state = BooleanField('Active State',default=True)
+    active_state = BooleanField('Active_State',default=True)
     original_contrast = IntegerRangeField('Contrast', default=50)
     original_brightness = IntegerRangeField('Brightness', default=50)
     original_intensity = IntegerRangeField('Intensity', default=50)

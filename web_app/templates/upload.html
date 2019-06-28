@@ -1,23 +1,13 @@
 {% extends "layout.html" %}
 
-{% block script %}
-    <style>
-        .upload {
-            position: inherit;
-            margin: 150px !important;
-            padding: 150px !important;
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
 <div class="d-flex justify-content-center">    
-    <div class="card col-4 ">
+    <div class="card">
         <div class="card-header">
             <h2>Upload Image Here</h2>
         </div>
         <div class="card-body">
-            <form action="{{ url_for('display_image')}}" method = 'POST' enctype="multipart/form-data">          
+            <form action="{{ url_for('processing_display') }}" method = 'POST' enctype="multipart/form-data">          
                 <div class="form-group">
                     <input type="file" class="form-control-file" id="exampleFormControlFile1" \
                     name='image' accept="image/*" multiple>

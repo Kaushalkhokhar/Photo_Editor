@@ -759,17 +759,14 @@ class Image_processing():
                 shutil.rmtree(result)
                 os.mkdir(result)
             else:    
-                os.mkdir(result)
-                
-
+                os.mkdir(result)   
 
         #file_second = os.listdir(second)
         #image_path_2 = os.path.join(second, file_second[0])  
         img = cv2.imread(image_path)
         img_2 = img
 
-        method = Methods.query.filter_by(method_id=method_id).first()     
-        
+        method = Methods.query.filter_by(method_id=method_id).first()   
         
         new_img = np.zeros(img.shape, img.dtype)
         new_img_2 = new_img

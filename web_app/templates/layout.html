@@ -48,7 +48,6 @@
         display: block;
         margin-top: 0; // remove the gap so it doesn't close 
     }
-    
     body {
         background-color: #F2F2F2;
     }
@@ -73,10 +72,13 @@
                 
                 <ul class="navbar-nav mr-auto">                    
                     <li class="nav-item "><a class="nav-link" href="#">ABOUT</a></li>
-                    {% if current_user.email == admin_user %}
-                        <li class="nav-item "><a class="nav-link" href="{{ url_for('settings') }}">SETTINGS</a></li>
-                        <li class="nav-item "><a class="nav-link" href="{{ url_for('database') }}">DISPLAY</a></li>
-                    {% endif %}
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.email == admin_user %}
+                            <li class="nav-item "><a class="nav-link" href="{{ url_for('admin.index') }}">ADMIN</a></li>
+                            <li class="nav-item "><a class="nav-link" href="{{ url_for('processing_settings') }}">SETTINGS</a></li>
+                            <li class="nav-item "><a class="nav-link" href="{{ url_for('database') }}">DISPLAY</a></li>                        
+                        {% endif %}
+                    {% endif %}                    
                     {% block navbar %}{% endblock %}
                 </ul>
                 
@@ -97,8 +99,10 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                    {{ message }}
+                    <div class="d-flex justify-content-center">
+                        <div class="alert alert-{{ category }}">
+                        {{ message }}
+                        </div>
                     </div>
                 {% endfor %}
                 {% endif %}

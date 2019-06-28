@@ -1,0 +1,20 @@
+<div id="content">
+        {% extends "layout.html" %}
+
+        {% block content %}
+
+           <div class="d-flex justify-content-center">
+                Loading...
+           </div> 
+
+        {% endblock content %}
+    
+        {% block ajax %}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script>
+                $(function () { 
+                    $("#content").load("{{ url_for('settings', method=method) }}"); 
+                });
+            </script>
+        {% endblock ajax %}
+</div>

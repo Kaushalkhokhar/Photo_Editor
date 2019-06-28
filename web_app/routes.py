@@ -1,8 +1,10 @@
 import os, cv2
 import time
+from PIL import Image
 import shutil
 import random
 import numpy as np
+from werkzeug.datastructures import MultiDict
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from bokeh.embed import components
 from web_app import app, APP_ROOT, bcrypt, db, mail, admin_user
@@ -18,16 +20,13 @@ from web_app.model import User, Methods
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+@app.route('/admin')
+def admin():
+    if not (current_user.is_authenticated and current_user.email == admin_user):
+        flash('Please login as admin user', 'info')
+        return redirect(url_for('login'))
 
-
-@app.route('/index', methods = ['GET', 'POST'])
-def index():
-    return render_template('index.html')
-
-@app.route('/ajax/index')
-def ajax_index():
-    time.sleep(5)
-    return '<h1>Done!</h1>'
+    return "you are now in admin zone"
 
 @app.route('/database')
 def database():
@@ -37,7 +36,7 @@ def database():
     original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
     
     if not os.listdir(original):
-        flash('Upload file first', 'info')
+        flash('Upload File', 'info')
         return redirect(url_for('upload'))
 
     original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
@@ -60,41 +59,65 @@ def upload():
             original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
             second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+            result_specto = os.path.join(APP_ROOT, str(current_user.username) + '_result_specto/')
             
             if os.path.isdir(original):
                 shutil.rmtree(original)
                 shutil.rmtree(original_two)
                 shutil.rmtree(second)
                 shutil.rmtree(result)
-                
+                shutil.rmtree(result_specto)                
                 os.mkdir(original)
                 os.mkdir(second)
                 os.mkdir(result)
                 os.mkdir(original_two)
+                os.mkdir(result_specto)
                 
             else:    
                 os.mkdir(original)
                 os.mkdir(second)
                 os.mkdir(result)
                 os.mkdir(original_two)
+                os.mkdir(result_specto)
                 
         else:
             original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
             result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+            result_specto = os.path.join(APP_ROOT, str(current_user.username) + '_result_specto/')
             if os.path.isdir(original):
                 shutil.rmtree(original)
                 shutil.rmtree(result)
+                shutil.rmtree(result_specto)
                 os.mkdir(original)
                 os.mkdir(result)
+                os.mkdir(result_specto)
             else:    
                 os.mkdir(original)
                 os.mkdir(result)
+                os.mkdir(result_specto)
 
         
     else:
         return redirect(url_for('login'))       
         
     return render_template('upload.html', title='Upload', admin_user=admin_user)
+
+@app.route('/processing_display', methods = ['GET', 'POST'])
+def processing_display():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))  
+    
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+
+    if not os.listdir(original):    
+        #To get the files uploaded to home page and stores it to target directory
+        for file in request.files.getlist('image'):
+            filename = file.filename     
+            if not os.listdir(original):
+                destination = "/".join([original, filename])                
+                file.save(destination)       
+    
+    return render_template('processing_display.html')
 
 @app.route('/display', methods = ['GET', 'POST'])
 def display_image():  
@@ -106,19 +129,56 @@ def display_image():
     
     original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
 
-    if not os.listdir(original):    
+    #if not os.listdir(original):
+    if os.listdir(original):    
         #To get the files uploaded to home page and stores it to target directory
-        for file in request.files.getlist('image'):
-            filename = file.filename            
-            if not os.listdir(original):
-                destination = "/".join([original, filename])                
-                file.save(destination)  
+        #for file in request.files.getlist('image'):
+        #filename = file.filename
+        filename = os.listdir(original)[0]
+        '''if not os.listdir(original):
+            destination = "/".join([original, filename])                
+            file.save(destination)'''
+        
+        img = cv2.imread("/".join([original, filename]))
+        height, width, cha = img.shape
+        if height > 600:
+            scale = 600/ height
+            height = scale * height
+            width = scale * width
+            if width > 1000:
+                scale = 1000 / width
+                height = scale * height
+                width = scale * width
+        elif width > 1000:
+            scale = 1000/width
+            height = scale * height
+            width = scale * width
+            if height > 600:
+                scale = 600 / width
+                height = scale * height
+                width = scale * width
+
+        height = int(height)
+        width = int(width)
+
+        dim = (width, height)
+        # resize image
+        resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+                    
+        shutil.rmtree(original)
+        os.mkdir(original)
+        destination = "/".join([original, filename])                                
+        b, g, r = cv2.split(resized)
+        resized = cv2.merge((r,g,b)) 
+        im = Image.fromarray(resized)
+        im.save(destination)   
 
     else:
-        #0return redirect(url_for('upload'))
-        filename = os.listdir(original)[0]   
-
-    image = cv2.imread(os.path.join(original, filename))
+        return redirect(url_for('upload'))
+        #filename = os.listdir(original)[0]   
+    
+    
+    '''image = cv2.imread(os.path.join(original, filename))
     height, width, cha = image.shape
     
     scale = 590 / height
@@ -127,13 +187,24 @@ def display_image():
     if width > 1380:
         scale = 1380 / width
         height = scale * height
-        width = scale * width
+        width = scale * width'''
       
 
     # return send_from_directory('static', filename, as_attachment=True) # Can be used to download the uploaded images
-    return render_template('display.html', filename=filename, height=height, methods=methods, admin_user=admin_user) # In this filename will be the name of image file which is uploaded last in all files
-                        
+    return render_template('display.html', filename=filename, 
+                            methods=methods, admin_user=admin_user) # In this filename will be the name of image file which is uploaded last in all files                
+
+@app.route('/processing_processing/<filename>/<method>', methods = ['GET', 'POST'])
+def processing_processing(filename, method):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login')) 
+
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+
+    if not os.listdir(original):
+        return redirect(url_for('upload'))         
     
+    return render_template('processing_processing.html',filename=filename, method=method)
 
 @app.route('/processing/<filename>/<method>', methods=['GET', 'POST'])
 def processing(filename, method):
@@ -176,83 +247,9 @@ def processing(filename, method):
     return render_template('processing.html', filename=filename, method=method, \
                             height=height, methods=methods, admin_user=admin_user)
 
-@app.route('/desplay_original/<filename>', methods=['GET', 'POST'])
-def show_original_two(filename):
-    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
-    original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
-    filename = os.listdir(original_two)    
-    if not filename:
-        filename = os.listdir(original)[0]
-        return send_from_directory(str(current_user.username) + '_original', filename)
-    else:
-        filename = filename[0]
-        return send_from_directory(str(current_user.username) + '_original_two', filename)
-
-@app.route('/display_second/<filename>', methods=['GET', 'POST'])
-def show_second(filename):
-    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
-    second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
-    filename = os.listdir(second)    
-    if not filename:
-        filename = os.listdir(original)[0]
-        return send_from_directory(str(current_user.username) + '_original', filename)
-    else:
-        filename = filename[0]
-        return send_from_directory(str(current_user.username) + '_second', filename)
-        
-
-@app.route('/display_result/<filename>', methods=['GET', 'POST'])
-def show_result(filename):
-    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
-    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-    if os.listdir(result):
-        filename = os.listdir(result)[0]        
-        return send_from_directory(str(current_user.username) + '_result', filename)        
-    else:
-        filename = os.listdir(original)[0]
-        return send_from_directory(str(current_user.username) + '_original', filename)
-
-@app.route('/display_result_specto/<filename>', methods=['GET', 'POST'])
-def show_result_specto(filename):
-    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-    filename = os.listdir(result)[0]
-    return send_from_directory(str(current_user.username) + '_result', filename)
-
-@app.route('/download/<filename>', methods=['GET', 'POST'])
-def download(filename):
-    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
-    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-    if os.listdir(result):
-        filename = os.listdir(result)[0]        
-        return send_from_directory(str(current_user.username) + '_result', filename=filename, as_attachment=True)        
-    else:
-        filename = os.listdir(original)[0]
-        return send_from_directory(str(current_user.username) + '_original', filename=filename, as_attachment=True)
-
-@app.route('/demo/<filename>', methods=['GET', 'POST'])
-def demo(filename):          
-    return send_from_directory('sample_images', filename)
-
-@app.route('/session', methods=['GET', 'POST'])
-def new_session():
-    if os.path.isdir(original_two):
-        shutil.rmtree(original)
-        shutil.rmtree(original_two)
-        shutil.rmtree(second)
-        shutil.rmtree(result)
-        
-        os.mkdir(original)
-        os.mkdir(second)
-        os.mkdir(result)
-        os.mkdir(original_two)
-        
-    else:    
-        os.mkdir(original)
-        os.mkdir(second)
-        os.mkdir(result)
-        os.mkdir(original_two)
-                   
-    return redirect(url_for('upload'))
+@app.route('/processing_load_chart//<method>/<end_point>', methods = ['GET', 'POST'])
+def processing_load_chart(method, end_point):
+    return render_template('processing_load_chart.html',end_point=end_point, method=method)
 
 @app.route('/load_chart/<method>/<end_point>', methods=['GET', 'POST'])
 def load_chart(method, end_point):
@@ -267,7 +264,7 @@ def load_chart(method, end_point):
     script, div = spect.spectograph_plot(current_user) 
     methods = Methods.query.all()
 
-    return render_template('spectograph.html', scripts=script, div=div, \
+    return render_template('spectograph2.html', scripts=script, div=div, \
                             return_url=return_url, filename2=filename2, \
                             admin_user=admin_user, methods=methods)              
     
@@ -293,6 +290,87 @@ def load_chart(method, end_point):
                                 form=form, filename1=filename1, filename2=filename2, \
                                 admin_user=admin_user)'''
 
+@app.route('/desplay_original/<filename>', methods=['GET', 'POST'])
+def show_original_two(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
+    filename = os.listdir(original_two)    
+    if not filename:
+        filename = os.listdir(original)[0]
+        return send_from_directory(str(current_user.username) + '_original', filename)
+    else:
+        filename = filename[0]
+        return send_from_directory(str(current_user.username) + '_original_two', filename)
+
+@app.route('/display_second/<filename>', methods=['GET', 'POST'])
+def show_second(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
+    filename = os.listdir(second)    
+    if not filename:
+        filename = os.listdir(original)[0]
+        return send_from_directory(str(current_user.username) + '_original', filename)
+    else:
+        filename = filename[0]
+        return send_from_directory(str(current_user.username) + '_second', filename)
+        
+@app.route('/display_result/<filename>', methods=['GET', 'POST'])
+def show_result(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+    if os.listdir(result):
+        filename = os.listdir(result)[0]        
+        return send_from_directory(str(current_user.username) + '_result', filename)        
+    else:
+        filename = os.listdir(original)[0]
+        return send_from_directory(str(current_user.username) + '_original', filename)
+
+@app.route('/display_result_specto/<filename>', methods=['GET', 'POST'])
+def show_result_specto(filename):
+    result_specto = os.path.join(APP_ROOT, str(current_user.username) + '_result_specto/')
+    filename = os.listdir(result_specto)[0]
+    return send_from_directory(str(current_user.username) + '_result_specto', filename)
+
+@app.route('/download/<filename>', methods=['GET', 'POST'])
+def download(filename):
+    original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
+    result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+    if os.listdir(result):
+        filename = os.listdir(result)[0]        
+        return send_from_directory(str(current_user.username) + '_result', filename=filename, as_attachment=True)        
+    else:
+        filename = os.listdir(original)[0]
+        return send_from_directory(str(current_user.username) + '_original', filename=filename, as_attachment=True)
+
+@app.route('/demo/', methods=['GET', 'POST'])
+def demo():          
+    return send_from_directory('sample_images', 'Untitled5.png')
+
+@app.route('/demo_2/', methods=['GET', 'POST'])
+def demo_2():          
+    return send_from_directory('sample_images', 'input.png')
+
+@app.route('/session', methods=['GET', 'POST'])
+def new_session():
+    if os.path.isdir(original_two):
+        shutil.rmtree(original)
+        shutil.rmtree(original_two)
+        shutil.rmtree(second)
+        shutil.rmtree(result)
+        
+        os.mkdir(original)
+        os.mkdir(second)
+        os.mkdir(result)
+        os.mkdir(original_two)
+        
+    else:    
+        os.mkdir(original)
+        os.mkdir(second)
+        os.mkdir(result)
+        os.mkdir(original_two)
+                   
+    return redirect(url_for('upload'))
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:        
@@ -309,7 +387,6 @@ def register():
         return redirect(url_for('login'))
     
     return render_template('register.html', title='Register', form=form)
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -335,21 +412,23 @@ def logout():
         original_two = os.path.join(APP_ROOT, str(current_user.username) + '_original_two/')
         second = os.path.join(APP_ROOT, str(current_user.username) + '_second/')
         result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
-        
+        result_specto = os.path.join(APP_ROOT, str(current_user.username) + '_result_specto/')
         #To delete previous uploaded image and directory and creates new directory every time it runs home route    
         if os.path.isdir(original):
             shutil.rmtree(original)
             shutil.rmtree(original_two)
             shutil.rmtree(second)
             shutil.rmtree(result)
+            shutil.rmtree(result_specto)
             
     else:
         original = os.path.join(APP_ROOT, str(current_user.username) + '_original/')
         result = os.path.join(APP_ROOT, str(current_user.username) + '_result/')
+        result_specto = os.path.join(APP_ROOT, str(current_user.username) + '_result_specto/')
         if os.path.isdir(original):
             shutil.rmtree(original)
             shutil.rmtree(result)
-        
+            shutil.rmtree(result_specto)
 
     logout_user()
     return redirect(url_for('home'))
@@ -365,7 +444,6 @@ If you did not make this request then simply ignore this email and no changes wi
 '''
     mail.send(msg)
 
-
 @app.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
@@ -377,7 +455,6 @@ def reset_request():
         flash('An email has been sent with instructions to reset your password.', 'info')
         return redirect(url_for('login'))
     return render_template('reset_request.html', title='Reset Password', form=form)
-
 
 @app.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_token(token):
@@ -396,9 +473,79 @@ def reset_token(token):
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
+@app.route('/processing_settings', methods = ['GET', 'POST'])
+def processing_settings():
+    method = "None"    
+    if request.method == 'POST':
+        form = AdminForm()
+        if Methods.query.filter_by(method_id=form.method_id.data).first() is None:
+            method = Methods(method_id=form.method_id.data, 
+                            method_title=form.method_title.data, 
+                            image_operation=dict(form.image_operation.choices).get(form.image_operation.data), 
+                            result_contrast=form.result_contrast.data, 
+                            result_brightness=form.result_brightness.data,
+                            result_intensity=form.result_intensity.data, 
+                            original_contrast=form.original_contrast.data, 
+                            original_brightness=form.original_brightness.data, 
+                            original_intensity=form.original_intensity.data, 
+                            copy_contrast=form.copy_contrast.data, 
+                            copy_brightness=form.copy_brightness.data, 
+                            copy_intensity=form.copy_intensity.data, 
+                            original_filter=dict(form.original_filter.choices).get(form.original_filter.data), 
+                            original_kernal=dict(form.original_kernal.choices).get(form.original_kernal.data), 
+                            copy_filter=dict(form.copy_filter.choices).get(form.copy_filter.data), 
+                            copy_kernal=dict(form.copy_kernal.choices).get(form.copy_kernal.data),
+                            original_black_point = form.original_black_point.data,
+                            original_midetone_slider = form.original_midetone_slider.data,
+                            original_white_point = form.original_white_point.data, 
+                            copy_black_point = form.copy_black_point.data,
+                            copy_midetone_slider = form.copy_midetone_slider.data,
+                            copy_white_point = form.copy_white_point.data, 
+                            result_black_point = form.result_black_point.data,
+                            result_midetone_slider = form.result_midetone_slider.data,
+                            result_white_point = form.result_white_point.data, 
+                            active_state=form.active_state.data
+                            )
+            db.session.add(method)
+            db.session.commit()
 
-@app.route('/settings', methods=['GET', 'POST'])
-def settings():
+            method = form.method_id.data
+
+        else:
+            method = Methods.query.filter_by(method_id=form.method_id.data).first()
+            method.image_operation = dict(form.image_operation.choices).get(form.image_operation.data)            
+            method.method_title = form.method_title.data
+            method.active_state = form.active_state.data
+            method.original_contrast = form.original_contrast.data
+            method.original_brightness = form.original_brightness.data
+            method.original_intensity = form.original_intensity.data
+            method.copy_contrast = form.copy_contrast.data
+            method.copy_brightness = form.copy_brightness.data
+            method.copy_intensity = form.copy_intensity.data
+            method.result_contrast = form.result_contrast.data
+            method.result_brightness = form.result_brightness.data
+            method.result_intensity = form.result_intensity.data
+            method.original_filter = dict(form.original_filter.choices).get(form.original_filter.data)
+            method.original_kernal = dict(form.original_kernal.choices).get(form.original_kernal.data)
+            method.copy_filter = dict(form.copy_filter.choices).get(form.copy_filter.data)
+            method.copy_kernal = dict(form.copy_kernal.choices).get(form.copy_kernal.data)
+            method.original_black_point = form.original_black_point.data
+            method.original_midetone_slider = form.original_midetone_slider.data
+            method.original_white_point = form.original_white_point.data
+            method.copy_black_point = form.copy_black_point.data
+            method.copy_midetone_slider = form.copy_midetone_slider.data
+            method.copy_white_point = form.copy_white_point.data
+            method.result_black_point = form.result_black_point.data
+            method.result_midetone_slider = form.result_midetone_slider.data
+            method.result_white_point = form.result_white_point.data
+            db.session.commit()   
+
+            method = form.method_id.data
+    
+    return render_template('processing_settings.html', method=method)
+
+@app.route('/settings/<method>', methods=['GET', 'POST'])
+def settings(method):
     if not (current_user.is_authenticated and current_user.email == admin_user):
         flash('Please login as admin user', 'info')
         return redirect(url_for('login'))
@@ -415,12 +562,57 @@ def settings():
 
     methods = Methods.query.all()
     file_name = [filename_original_two, filename_second, filename_result]
-    form = AdminForm()
-    method = 1
+
+    if method != 'None':
+        method_query = Methods.query.filter_by(method_id=method).first()
+        form = AdminForm(formdata=MultiDict({'method_id': method_query.method_id,
+                                             'image_operation': method_query.image_operation,
+                                             'method_title': method_query.method_title,
+                                             'active_state': method_query.active_state,
+                                             'original_contrast': method_query.original_contrast,
+                                             'original_brightness': method_query.original_brightness,
+                                             'original_intensity': method_query.original_intensity,
+                                             'copy_contrast': method_query.copy_contrast,
+                                             'copy_brightness': method_query.copy_brightness,
+                                             'copy_intensity': method_query.copy_intensity,
+                                             'result_contrast': method_query.result_contrast,
+                                             'result_brightness': method_query.result_brightness,
+                                             'result_intensity': method_query.result_intensity,
+                                             'original_filter': method_query.original_filter,
+                                             'original_kernal': method_query.original_kernal,
+                                             'copy_filter': method_query.copy_filter,
+                                             'copy_kernal': method_query.copy_kernal,
+                                             'original_black_point': method_query.original_black_point,
+                                             'original_white_point': method_query.original_white_point,
+                                             'original_midetone_slider': method_query.original_midetone_slider,
+                                             'copy_black_point': method_query.copy_black_point,
+                                             'copy_white_point': method_query.copy_white_point,
+                                             'copy_midetone_slider': method_query.copy_midetone_slider,
+                                             'result_black_point': method_query.result_black_point,
+                                             'result_white_point': method_query.result_white_point,
+                                             'result_midetone_slider': method_query.result_midetone_slider,
+                                             }))
+
+    else:
+        form = AdminForm()
+    
+    #method = 1
     spect = Spectograph()
     script, div = spect.spectograph_plot(current_user)
 
-    if request.method == 'POST':
+    if method != "None":
+        if method_query.image_operation ==  "Addition":             
+            file_name = Image_processing().addition(method, current_user)       
+        elif method_query.image_operation ==  "Subtraction":                  
+            file_name = Image_processing().subtraction(method, current_user)           
+        elif method_query.image_operation ==  "Multiplication":            
+            file_name = Image_processing().multiplication(method, current_user)
+
+        specto = Spectograph()
+        script, div = specto.spectograph_plot(current_user)
+        method = method
+
+    '''if request_method == 'POST':
         
         if Methods.query.filter_by(method_id=form.method_id.data).first() is None:
             method = Methods(method_id=form.method_id.data, 
@@ -453,18 +645,7 @@ def settings():
             db.session.add(method)
             db.session.commit()
 
-            if Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Addition":             
-                file_name = Image_processing().addition(form.method_id.data, current_user)       
-            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Subtraction":                  
-                file_name = Image_processing().subtraction(form.method_id.data, current_user)           
-            elif Methods.query.filter_by(method_id=form.method_id.data).first().image_operation ==  "Multiplication":            
-                file_name = Image_processing().multiplication(form.method_id.data, current_user)
-
-            specto = Spectograph()
-            script, div = specto.spectograph_plot(current_user)
-            method = form.method_id.data
-
-        else:
+       else:
             method = Methods.query.filter_by(method_id=form.method_id.data).first()
             method.image_operation = dict(form.image_operation.choices).get(form.image_operation.data)            
             method.method_title = form.method_title.data
@@ -502,7 +683,7 @@ def settings():
             
             specto = Spectograph()
             script, div = specto.spectograph_plot(current_user)
-            method = form.method_id.data
+            method = form.method_id.data'''
 
 
     return render_template('settings.html', form=form, filename=filename,
@@ -511,6 +692,6 @@ def settings():
                             method=method, methods=methods,
                             admin_user=admin_user)
 
-@app.route('/testing', methods=['GET', 'POST'])
-def testing():    
-    return render_template("testing.html")
+@app.route("/learning", methods=['GET', 'POST'])
+def learning():    
+    return render_template('learning.html')

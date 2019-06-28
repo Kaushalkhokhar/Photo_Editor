@@ -48,9 +48,9 @@ class Methods(db.Model):
     copy_contrast = db.Column(db.Integer, default=50)
     copy_brightness = db.Column(db.Integer, default=50)
     copy_intensity = db.Column(db.Integer, default=50)
-    original_filter = db.Column(db.String, default="averaging")
+    original_filter = db.Column(db.String, default="without_filter")
     original_kernal = db.Column(db.String, default="3*3")
-    copy_filter = db.Column(db.String, default="averaging")
+    copy_filter = db.Column(db.String, default="without_filter")
     copy_kernal = db.Column(db.String, default="3*3")
     original_black_point = db.Column(db.Integer,default=0)
     original_midetone_slider = db.Column(db.Float, default=1)
@@ -87,10 +87,9 @@ class MyAdminIndexView(AdminIndexView):
     def inaccessible_callback(self, username):
         return 'You cannot view page'
 
+
 admin = Admin(app, index_view=MyAdminIndexView())
 admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Methods, db.session))
-
-
 
 

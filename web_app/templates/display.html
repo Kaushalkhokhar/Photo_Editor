@@ -1,5 +1,32 @@
 {% extends "layout.html" %}
 
+{% block script %}
+    
+    <style> 
+    .myimage {
+        display: block;
+        width: 100%;
+        position: relative;
+        height: 0;
+        padding: 55% 0 0 0;
+        overflow: hidden;
+    }
+    
+    .img-1 {
+        position: absolute;
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+    }
+    
+    </style>
+{% endblock script %}
+
 {% block navbar %}
     
 <li class="nav-item dropdown">
@@ -9,7 +36,7 @@
 <div class="dropdown-menu">
     {% for method in methods  %}
         <a class="dropdown-item" 
-        href="{{ url_for('processing', filename=filename, method=method.method_id) }}">
+        href="{{ url_for('processing_processing', filename=filename, method=method.method_id) }}">
         Method{{ loop.index }}</a>
     {% endfor %}
 </div>
@@ -19,20 +46,20 @@
 {% block nav %}
     {% if current_uer == admin_user %}
         <li class="nav-item "><a class="nav-link" 
-            href="{{ url_for('load_chart', method='original', end_point='processing') }}">
+            href="{{ url_for('processing_load_chart', method='original', end_point='processing') }}">
             SPECTOGRAPH</a></li>
     {% else %}
         <li class="nav-item "><a class="nav-link" 
-            href="{{ url_for('load_chart', method='original', end_point='processing') }}">
+            href="{{ url_for('processing_load_chart', method='original', end_point='processing') }}">
             SPECTOGRAPH</a></li>
     {% endif %}
 {% endblock %}
 
 {% block content %} 
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <img id="image" src="{{ url_for('show_result', filename=filename) }}" 
-            height="{{ height }}" alt="Image">
+    <div class="container mp-0">
+        <div class="myimage">
+            <img class="img-1" src="{{ url_for('show_result', filename=filename) }}" 
+            alt="Image">
         </div>        
     </div>
 {% endblock content %}

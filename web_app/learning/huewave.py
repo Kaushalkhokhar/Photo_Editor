@@ -92,20 +92,16 @@ if __name__ == "__main__":
 
         max_intensity.append(maxintensity)
 
-    print(max_intensity)
-
-    '''barlist=plt.bar(u_wavelength, max_intensity)
+    barlist=plt.bar(u_wavelength, max_intensity)
     for i , wave_len in enumerate(u_wavelength):
         RGBcolors = wavelength_to_rgb(int(wave_len))
         barlist[i].set_color(RGBcolors)
-
-    print(max_intensity)
 
     # Add title and axis names
     plt.title('Specturm of the Colors')
     plt.xlabel('Wavelength')
     plt.ylabel('Intensity')
-    plt.show()'''
+    plt.show()
 
     mapper = linear_cmap(field_name='x1', palette=Spectral6 ,low=min(u_wavelength) ,high=max(u_wavelength))
 
@@ -118,8 +114,6 @@ if __name__ == "__main__":
     plot = figure(
         title='Spectograph of Image', plot_width=700, plot_height=400,
         min_border=0, toolbar_location='right') # toolbar_location can be edited to change logo 
-
-    
 
     #Creating and adding glyph to plot
     glyph_b = VBar(x="x1", top="b_hist", bottom=0, width=1, fill_alpha=1, fill_color=mapper)
